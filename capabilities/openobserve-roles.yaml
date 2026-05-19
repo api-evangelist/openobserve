@@ -1,0 +1,327 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Roles
+  description: 'openobserve — Roles. 6 operations. Lead operation: List organization roles. Self-contained Naftiko capability
+    covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Roles
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-roles
+    baseUri: ''
+    description: openobserve — Roles business capability. Self-contained, no shared references.
+    resources:
+    - name: api-org_id-roles
+      path: /api/{org_id}/roles
+      operations:
+      - name: listroles
+        method: GET
+        description: List organization roles
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+      - name: createroles
+        method: POST
+        description: Create custom role
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-roles-role_id
+      path: /api/{org_id}/roles/{role_id}
+      operations:
+      - name: updateroles
+        method: PUT
+        description: Update role permissions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: role_id
+          in: path
+          type: string
+          description: Role Id
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deleterole
+        method: DELETE
+        description: Delete custom role
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: role_id
+          in: path
+          type: string
+          description: Role Id
+          required: true
+    - name: api-org_id-roles-role_id-permissions-resource
+      path: /api/{org_id}/roles/{role_id}/permissions/{resource}
+      operations:
+      - name: getresourcepermission
+        method: GET
+        description: Get role permissions for resource
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: role_id
+          in: path
+          type: string
+          description: Role Id
+          required: true
+        - name: resource
+          in: path
+          type: string
+          description: resource
+          required: true
+    - name: api-org_id-roles-role_id-users
+      path: /api/{org_id}/roles/{role_id}/users
+      operations:
+      - name: getroleusers
+        method: GET
+        description: Get users assigned to role
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: role_id
+          in: path
+          type: string
+          description: Role Id
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-roles-rest
+    port: 8080
+    description: REST adapter for openobserve — Roles. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/api/{org-id}/roles
+      name: api-org-id-roles
+      description: REST surface for api-org_id-roles.
+      operations:
+      - method: GET
+        name: listroles
+        description: List organization roles
+        call: openobserve-roles.listroles
+        with:
+          org_id: rest.org_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createroles
+        description: Create custom role
+        call: openobserve-roles.createroles
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/roles/{role-id}
+      name: api-org-id-roles-role-id
+      description: REST surface for api-org_id-roles-role_id.
+      operations:
+      - method: PUT
+        name: updateroles
+        description: Update role permissions
+        call: openobserve-roles.updateroles
+        with:
+          org_id: rest.org_id
+          role_id: rest.role_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleterole
+        description: Delete custom role
+        call: openobserve-roles.deleterole
+        with:
+          org_id: rest.org_id
+          role_id: rest.role_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/roles/{role-id}/permissions/{resource}
+      name: api-org-id-roles-role-id-permissions-resource
+      description: REST surface for api-org_id-roles-role_id-permissions-resource.
+      operations:
+      - method: GET
+        name: getresourcepermission
+        description: Get role permissions for resource
+        call: openobserve-roles.getresourcepermission
+        with:
+          org_id: rest.org_id
+          role_id: rest.role_id
+          resource: rest.resource
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/roles/{role-id}/users
+      name: api-org-id-roles-role-id-users
+      description: REST surface for api-org_id-roles-role_id-users.
+      operations:
+      - method: GET
+        name: getroleusers
+        description: Get users assigned to role
+        call: openobserve-roles.getroleusers
+        with:
+          org_id: rest.org_id
+          role_id: rest.role_id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-roles-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Roles. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-organization-roles
+      description: List organization roles
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-roles.listroles
+      with:
+        org_id: tools.org_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-custom-role
+      description: Create custom role
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-roles.createroles
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-role-permissions
+      description: Update role permissions
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-roles.updateroles
+      with:
+        org_id: tools.org_id
+        role_id: tools.role_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-custom-role
+      description: Delete custom role
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-roles.deleterole
+      with:
+        org_id: tools.org_id
+        role_id: tools.role_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-role-permissions-resource
+      description: Get role permissions for resource
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-roles.getresourcepermission
+      with:
+        org_id: tools.org_id
+        role_id: tools.role_id
+        resource: tools.resource
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-users-assigned-role
+      description: Get users assigned to role
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-roles.getroleusers
+      with:
+        org_id: tools.org_id
+        role_id: tools.role_id
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,250 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Logs
+  description: 'openobserve — Logs. 4 operations. Lead operation: Bulk ingest logs (Elasticsearch compatible). Self-contained
+    Naftiko capability covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Logs
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-logs
+    baseUri: ''
+    description: openobserve — Logs business capability. Self-contained, no shared references.
+    resources:
+    - name: api-org_id-_bulk
+      path: /api/{org_id}/_bulk
+      operations:
+      - name: logsingestionbulk
+        method: POST
+        description: Bulk ingest logs (Elasticsearch compatible)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-loki-api-v1-push
+      path: /api/{org_id}/loki/api/v1/push
+      operations:
+      - name: logsingestionloki
+        method: POST
+        description: Ingest logs via Loki API
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-stream_name-_json
+      path: /api/{org_id}/{stream_name}/_json
+      operations:
+      - name: logsingestionjson
+        method: POST
+        description: Ingest logs via JSON array
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: stream_name
+          in: path
+          type: string
+          description: Stream name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-stream_name-_multi
+      path: /api/{org_id}/{stream_name}/_multi
+      operations:
+      - name: logsingestionmulti
+        method: POST
+        description: Ingest logs via multi-line JSON
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: stream_name
+          in: path
+          type: string
+          description: Stream name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-logs-rest
+    port: 8080
+    description: REST adapter for openobserve — Logs. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/api/{org-id}/bulk
+      name: api-org-id-bulk
+      description: REST surface for api-org_id-_bulk.
+      operations:
+      - method: POST
+        name: logsingestionbulk
+        description: Bulk ingest logs (Elasticsearch compatible)
+        call: openobserve-logs.logsingestionbulk
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/loki/api/v1/push
+      name: api-org-id-loki-api-v1-push
+      description: REST surface for api-org_id-loki-api-v1-push.
+      operations:
+      - method: POST
+        name: logsingestionloki
+        description: Ingest logs via Loki API
+        call: openobserve-logs.logsingestionloki
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/{stream-name}/json
+      name: api-org-id-stream-name-json
+      description: REST surface for api-org_id-stream_name-_json.
+      operations:
+      - method: POST
+        name: logsingestionjson
+        description: Ingest logs via JSON array
+        call: openobserve-logs.logsingestionjson
+        with:
+          org_id: rest.org_id
+          stream_name: rest.stream_name
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/{stream-name}/multi
+      name: api-org-id-stream-name-multi
+      description: REST surface for api-org_id-stream_name-_multi.
+      operations:
+      - method: POST
+        name: logsingestionmulti
+        description: Ingest logs via multi-line JSON
+        call: openobserve-logs.logsingestionmulti
+        with:
+          org_id: rest.org_id
+          stream_name: rest.stream_name
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-logs-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Logs. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: bulk-ingest-logs-elasticsearch-compatible
+      description: Bulk ingest logs (Elasticsearch compatible)
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: openobserve-logs.logsingestionbulk
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: ingest-logs-loki-api
+      description: Ingest logs via Loki API
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-logs.logsingestionloki
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: ingest-logs-json-array
+      description: Ingest logs via JSON array
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-logs.logsingestionjson
+      with:
+        org_id: tools.org_id
+        stream_name: tools.stream_name
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: ingest-logs-multi-line-json
+      description: Ingest logs via multi-line JSON
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-logs.logsingestionmulti
+      with:
+        org_id: tools.org_id
+        stream_name: tools.stream_name
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

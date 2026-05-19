@@ -1,0 +1,770 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Reports
+  description: 'openobserve — Reports. 15 operations. Lead operation: List dashboard reports (v2). Self-contained Naftiko
+    capability covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Reports
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-reports
+    baseUri: ''
+    description: openobserve — Reports business capability. Self-contained, no shared references.
+    resources:
+    - name: api-v2-org_id-reports
+      path: /api/v2/{org_id}/reports
+      operations:
+      - name: listreportsv2
+        method: GET
+        description: List dashboard reports (v2)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID filter
+        - name: dashboard_id
+          in: query
+          type: string
+          description: Dashboard ID filter
+        - name: cache
+          in: query
+          type: boolean
+          description: Filter destination-less (cache) reports
+      - name: createreportv2
+        method: POST
+        description: Create dashboard report (v2)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID (defaults to 'default')
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-v2-org_id-reports-bulk
+      path: /api/v2/{org_id}/reports/bulk
+      operations:
+      - name: deletereportbulkv2
+        method: DELETE
+        description: Delete multiple dashboard reports by ID (v2)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-v2-org_id-reports-move
+      path: /api/v2/{org_id}/reports/move
+      operations:
+      - name: movereports
+        method: PATCH
+        description: Move reports between folders (v2)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-v2-org_id-reports-report_id
+      path: /api/v2/{org_id}/reports/{report_id}
+      operations:
+      - name: getreportv2
+        method: GET
+        description: Get dashboard report by ID (v2)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: report_id
+          in: path
+          type: string
+          description: Report ID (KSUID)
+          required: true
+      - name: updatereportv2
+        method: PUT
+        description: Update dashboard report by ID (v2)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: report_id
+          in: path
+          type: string
+          description: Report ID (KSUID)
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Move to this folder ID
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletereportv2
+        method: DELETE
+        description: Delete dashboard report by ID (v2)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: report_id
+          in: path
+          type: string
+          description: Report ID (KSUID)
+          required: true
+    - name: api-v2-org_id-reports-report_id-enable
+      path: /api/v2/{org_id}/reports/{report_id}/enable
+      operations:
+      - name: enablereportv2
+        method: PATCH
+        description: Enable or disable a report by ID (v2)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: report_id
+          in: path
+          type: string
+          description: Report ID (KSUID)
+          required: true
+        - name: value
+          in: query
+          type: boolean
+          description: true to enable, false to disable
+          required: true
+    - name: api-v2-org_id-reports-report_id-trigger
+      path: /api/v2/{org_id}/reports/{report_id}/trigger
+      operations:
+      - name: triggerreportv2
+        method: PUT
+        description: Manually trigger a report by ID (v2)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: report_id
+          in: path
+          type: string
+          description: Report ID (KSUID)
+          required: true
+    - name: api-org_id-reports
+      path: /api/{org_id}/reports
+      operations:
+      - name: listreports
+        method: GET
+        description: List dashboard reports
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+      - name: createreport
+        method: POST
+        description: Create dashboard report
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-reports-name
+      path: /api/{org_id}/reports/{name}
+      operations:
+      - name: getreport
+        method: GET
+        description: Get dashboard report
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: name
+          in: path
+          type: string
+          description: Report name
+          required: true
+      - name: updatereport
+        method: PUT
+        description: Update dashboard report
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: name
+          in: path
+          type: string
+          description: Report name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletereport
+        method: DELETE
+        description: Delete dashboard report
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: name
+          in: path
+          type: string
+          description: Report name
+          required: true
+    - name: api-org_id-reports-name-trigger
+      path: /api/{org_id}/reports/{name}/trigger
+      operations:
+      - name: triggerreport
+        method: PUT
+        description: Manually trigger dashboard report
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: name
+          in: path
+          type: string
+          description: Report name
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-reports-rest
+    port: 8080
+    description: REST adapter for openobserve — Reports. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api/v2/{org-id}/reports
+      name: api-v2-org-id-reports
+      description: REST surface for api-v2-org_id-reports.
+      operations:
+      - method: GET
+        name: listreportsv2
+        description: List dashboard reports (v2)
+        call: openobserve-reports.listreportsv2
+        with:
+          org_id: rest.org_id
+          folder: rest.folder
+          dashboard_id: rest.dashboard_id
+          cache: rest.cache
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createreportv2
+        description: Create dashboard report (v2)
+        call: openobserve-reports.createreportv2
+        with:
+          org_id: rest.org_id
+          folder: rest.folder
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/reports/bulk
+      name: api-v2-org-id-reports-bulk
+      description: REST surface for api-v2-org_id-reports-bulk.
+      operations:
+      - method: DELETE
+        name: deletereportbulkv2
+        description: Delete multiple dashboard reports by ID (v2)
+        call: openobserve-reports.deletereportbulkv2
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/reports/move
+      name: api-v2-org-id-reports-move
+      description: REST surface for api-v2-org_id-reports-move.
+      operations:
+      - method: PATCH
+        name: movereports
+        description: Move reports between folders (v2)
+        call: openobserve-reports.movereports
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/reports/{report-id}
+      name: api-v2-org-id-reports-report-id
+      description: REST surface for api-v2-org_id-reports-report_id.
+      operations:
+      - method: GET
+        name: getreportv2
+        description: Get dashboard report by ID (v2)
+        call: openobserve-reports.getreportv2
+        with:
+          org_id: rest.org_id
+          report_id: rest.report_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatereportv2
+        description: Update dashboard report by ID (v2)
+        call: openobserve-reports.updatereportv2
+        with:
+          org_id: rest.org_id
+          report_id: rest.report_id
+          folder: rest.folder
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletereportv2
+        description: Delete dashboard report by ID (v2)
+        call: openobserve-reports.deletereportv2
+        with:
+          org_id: rest.org_id
+          report_id: rest.report_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/reports/{report-id}/enable
+      name: api-v2-org-id-reports-report-id-enable
+      description: REST surface for api-v2-org_id-reports-report_id-enable.
+      operations:
+      - method: PATCH
+        name: enablereportv2
+        description: Enable or disable a report by ID (v2)
+        call: openobserve-reports.enablereportv2
+        with:
+          org_id: rest.org_id
+          report_id: rest.report_id
+          value: rest.value
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/reports/{report-id}/trigger
+      name: api-v2-org-id-reports-report-id-trigger
+      description: REST surface for api-v2-org_id-reports-report_id-trigger.
+      operations:
+      - method: PUT
+        name: triggerreportv2
+        description: Manually trigger a report by ID (v2)
+        call: openobserve-reports.triggerreportv2
+        with:
+          org_id: rest.org_id
+          report_id: rest.report_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/reports
+      name: api-org-id-reports
+      description: REST surface for api-org_id-reports.
+      operations:
+      - method: GET
+        name: listreports
+        description: List dashboard reports
+        call: openobserve-reports.listreports
+        with:
+          org_id: rest.org_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createreport
+        description: Create dashboard report
+        call: openobserve-reports.createreport
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/reports/{name}
+      name: api-org-id-reports-name
+      description: REST surface for api-org_id-reports-name.
+      operations:
+      - method: GET
+        name: getreport
+        description: Get dashboard report
+        call: openobserve-reports.getreport
+        with:
+          org_id: rest.org_id
+          name: rest.name
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatereport
+        description: Update dashboard report
+        call: openobserve-reports.updatereport
+        with:
+          org_id: rest.org_id
+          name: rest.name
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletereport
+        description: Delete dashboard report
+        call: openobserve-reports.deletereport
+        with:
+          org_id: rest.org_id
+          name: rest.name
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/reports/{name}/trigger
+      name: api-org-id-reports-name-trigger
+      description: REST surface for api-org_id-reports-name-trigger.
+      operations:
+      - method: PUT
+        name: triggerreport
+        description: Manually trigger dashboard report
+        call: openobserve-reports.triggerreport
+        with:
+          org_id: rest.org_id
+          name: rest.name
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-reports-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Reports. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-dashboard-reports-v2
+      description: List dashboard reports (v2)
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-reports.listreportsv2
+      with:
+        org_id: tools.org_id
+        folder: tools.folder
+        dashboard_id: tools.dashboard_id
+        cache: tools.cache
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-dashboard-report-v2
+      description: Create dashboard report (v2)
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-reports.createreportv2
+      with:
+        org_id: tools.org_id
+        folder: tools.folder
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-multiple-dashboard-reports-id
+      description: Delete multiple dashboard reports by ID (v2)
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-reports.deletereportbulkv2
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: move-reports-between-folders-v2
+      description: Move reports between folders (v2)
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-reports.movereports
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-dashboard-report-id-v2
+      description: Get dashboard report by ID (v2)
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-reports.getreportv2
+      with:
+        org_id: tools.org_id
+        report_id: tools.report_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-dashboard-report-id-v2
+      description: Update dashboard report by ID (v2)
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-reports.updatereportv2
+      with:
+        org_id: tools.org_id
+        report_id: tools.report_id
+        folder: tools.folder
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-dashboard-report-id-v2
+      description: Delete dashboard report by ID (v2)
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-reports.deletereportv2
+      with:
+        org_id: tools.org_id
+        report_id: tools.report_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: enable-disable-report-id-v2
+      description: Enable or disable a report by ID (v2)
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-reports.enablereportv2
+      with:
+        org_id: tools.org_id
+        report_id: tools.report_id
+        value: tools.value
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: manually-trigger-report-id-v2
+      description: Manually trigger a report by ID (v2)
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-reports.triggerreportv2
+      with:
+        org_id: tools.org_id
+        report_id: tools.report_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-dashboard-reports
+      description: List dashboard reports
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-reports.listreports
+      with:
+        org_id: tools.org_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-dashboard-report
+      description: Create dashboard report
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-reports.createreport
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-dashboard-report
+      description: Get dashboard report
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-reports.getreport
+      with:
+        org_id: tools.org_id
+        name: tools.name
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-dashboard-report
+      description: Update dashboard report
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-reports.updatereport
+      with:
+        org_id: tools.org_id
+        name: tools.name
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-dashboard-report
+      description: Delete dashboard report
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-reports.deletereport
+      with:
+        org_id: tools.org_id
+        name: tools.name
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: manually-trigger-dashboard-report
+      description: Manually trigger dashboard report
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-reports.triggerreport
+      with:
+        org_id: tools.org_id
+        name: tools.name
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,1394 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Alerts
+  description: 'openobserve — Alerts. 26 operations. Lead operation: List organization alerts. Self-contained Naftiko capability
+    covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Alerts
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-alerts
+    baseUri: ''
+    description: openobserve — Alerts business capability. Self-contained, no shared references.
+    resources:
+    - name: api-v2-org_id-alerts
+      path: /api/v2/{org_id}/alerts
+      operations:
+      - name: listalerts
+        method: GET
+        description: List organization alerts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Optional folder ID filter parameter.
+        - name: stream_type
+          in: query
+          type: string
+          description: Optional stream type filter parameter.
+        - name: stream_name
+          in: query
+          type: string
+          description: Optional stream name filter parameter.
+        - name: alert_name_substring
+          in: query
+          type: string
+          description: Optional case-insensitive name substring filter parameter.
+        - name: owner
+          in: query
+          type: string
+          description: Optional owner user filter parameter.
+        - name: enabled
+          in: query
+          type: boolean
+          description: Optional enabled filter parameter.
+        - name: page_size
+          in: query
+          type: integer
+          description: The optional number of alerts to retrieve. If not set then all alerts
+        - name: page_idx
+          in: query
+          type: integer
+          description: The optional page index. If not set then defaults to `0`.
+        - name: alert_type
+          in: query
+          type: string
+          description: 'Optional alert type filter: `all` (default), `scheduled`, `realtime`,'
+      - name: createalert
+        method: POST
+        description: Create new alert
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID (Required if alert folder is not the default folder)
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-v2-org_id-alerts-bulk-enable
+      path: /api/v2/{org_id}/alerts/bulk/enable
+      operations:
+      - name: enablealertbulk
+        method: POST
+        description: Enable or disable alert in bulk
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: value
+          in: query
+          type: boolean
+          description: Set to `true` to enable the alert or `false` to disable the alert.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-v2-org_id-alerts-generate_sql
+      path: /api/v2/{org_id}/alerts/generate_sql
+      operations:
+      - name: generatesql
+        method: POST
+        description: Generate SQL from alert query parameters
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-v2-org_id-alerts-move
+      path: /api/v2/{org_id}/alerts/move
+      operations:
+      - name: movealerts
+        method: PATCH
+        description: Move alerts between folders
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: From Folder ID (Required if RBAC enabled)
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-v2-org_id-alerts-alert_id
+      path: /api/v2/{org_id}/alerts/{alert_id}
+      operations:
+      - name: getalert
+        method: GET
+        description: Get alert details
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: alert_id
+          in: path
+          type: string
+          description: Alert ID
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID (Required if RBAC enabled)
+      - name: updatealert
+        method: PUT
+        description: Update alert configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: alert_id
+          in: path
+          type: string
+          description: Alert ID
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID (Required if RBAC enabled)
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletealert
+        method: DELETE
+        description: Delete alert
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: alert_id
+          in: path
+          type: string
+          description: Alert ID
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID (Required if RBAC enabled)
+    - name: api-v2-org_id-alerts-alert_id-clone
+      path: /api/v2/{org_id}/alerts/{alert_id}/clone
+      operations:
+      - name: clonealert
+        method: POST
+        description: Clone an alert or anomaly detection config
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: alert_id
+          in: path
+          type: string
+          description: Source alert or anomaly config ID
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-v2-org_id-alerts-alert_id-enable
+      path: /api/v2/{org_id}/alerts/{alert_id}/enable
+      operations:
+      - name: enablealert
+        method: PATCH
+        description: Enable or disable alert
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: alert_id
+          in: path
+          type: string
+          description: Alert ID
+          required: true
+        - name: value
+          in: query
+          type: boolean
+          description: Set to `true` to enable the alert or `false` to disable the alert.
+          required: true
+    - name: api-v2-org_id-alerts-alert_id-export
+      path: /api/v2/{org_id}/alerts/{alert_id}/export
+      operations:
+      - name: exportalert
+        method: POST
+        description: Export alert configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: alert_id
+          in: path
+          type: string
+          description: Alert ID
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID (Required if RBAC enabled)
+    - name: api-v2-org_id-alerts-alert_id-retrain
+      path: /api/v2/{org_id}/alerts/{alert_id}/retrain
+      operations:
+      - name: retrainalert
+        method: PATCH
+        description: Trigger retraining for an anomaly detection alert
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: alert_id
+          in: path
+          type: string
+          description: Anomaly detection alert ID
+          required: true
+    - name: api-v2-org_id-alerts-alert_id-trigger
+      path: /api/v2/{org_id}/alerts/{alert_id}/trigger
+      operations:
+      - name: triggeralert
+        method: PATCH
+        description: Manually trigger alert
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: alert_id
+          in: path
+          type: string
+          description: Alert ID
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID (Required if RBAC enabled)
+    - name: api-org_id-alerts-dedup-summary
+      path: /api/{org_id}/alerts/dedup/summary
+      operations:
+      - name: getdedupsummary
+        method: GET
+        description: Get deduplication summary statistics for an organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+    - name: api-org_id-alerts-deduplication-config
+      path: /api/{org_id}/alerts/deduplication/config
+      operations:
+      - name: getdeduplicationconfig
+        method: GET
+        description: Get deduplication configuration for an organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization ID
+          required: true
+      - name: setdeduplicationconfig
+        method: POST
+        description: Set deduplication configuration for an organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization ID
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletededuplicationconfig
+        method: DELETE
+        description: Delete deduplication configuration for an organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization ID
+          required: true
+    - name: api-org_id-alerts-deduplication-semantic-groups
+      path: /api/{org_id}/alerts/deduplication/semantic-groups
+      operations:
+      - name: getsemanticgroups
+        method: GET
+        description: Get semantic field groups for an organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization ID
+          required: true
+      - name: savesemanticgroups
+        method: PUT
+        description: Save semantic field groups for an organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization ID
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-alerts-deduplication-semantic-groups-preview-diff
+      path: /api/{org_id}/alerts/deduplication/semantic-groups/preview-diff
+      operations:
+      - name: previewsemanticgroupsdiff
+        method: POST
+        description: Preview diff between imported semantic groups and current DB state
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization ID
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-alerts-destinations
+      path: /api/{org_id}/alerts/destinations
+      operations:
+      - name: listdestinations
+        method: GET
+        description: List alert destinations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: module
+          in: query
+          type: string
+          description: Destination module filter, none, alert, or pipeline
+      - name: createdestination
+        method: POST
+        description: Create alert or pipeline destination
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: module
+          in: query
+          type: string
+          description: 'Destination module type: ''alert'' (default) or ''pipeline'''
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-alerts-destinations-destination_name
+      path: /api/{org_id}/alerts/destinations/{destination_name}
+      operations:
+      - name: getdestination
+        method: GET
+        description: Get alert destination
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: destination_name
+          in: path
+          type: string
+          description: Destination name
+          required: true
+      - name: updatedestination
+        method: PUT
+        description: Update alert or pipeline destination
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: destination_name
+          in: path
+          type: string
+          description: Destination name
+          required: true
+        - name: module
+          in: query
+          type: string
+          description: 'Destination module type: ''alert'' (default) or ''pipeline'''
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletealertdestination
+        method: DELETE
+        description: Delete alert destination
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: destination_name
+          in: path
+          type: string
+          description: Destination name
+          required: true
+    - name: api-org_id-alerts-history
+      path: /api/{org_id}/alerts/history
+      operations:
+      - name: getalerthistory
+        method: GET
+        description: Get alert execution history
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: alert_id
+          in: query
+          type: string
+          description: Filter by specific alert id
+        - name: start_time
+          in: query
+          type: integer
+          description: Start time in Unix timestamp microseconds
+        - name: end_time
+          in: query
+          type: integer
+          description: End time in Unix timestamp microseconds
+        - name: from
+          in: query
+          type: integer
+          description: 'Pagination offset (default: 0)'
+        - name: size
+          in: query
+          type: integer
+          description: 'Number of results to return (default: 100, max: 1000)'
+        - name: sort_by
+          in: query
+          type: string
+          description: 'Field to sort by: timestamp, alert_name, status, is_realtime, is_silenced, start_time, end_time, duration,
+            retries, delay_in_secs, evaluation_took_in_secs, sour'
+        - name: sort_order
+          in: query
+          type: string
+          description: 'Sort order: asc or desc (default: desc)'
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-alerts-rest
+    port: 8080
+    description: REST adapter for openobserve — Alerts. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/api/v2/{org-id}/alerts
+      name: api-v2-org-id-alerts
+      description: REST surface for api-v2-org_id-alerts.
+      operations:
+      - method: GET
+        name: listalerts
+        description: List organization alerts
+        call: openobserve-alerts.listalerts
+        with:
+          org_id: rest.org_id
+          folder: rest.folder
+          stream_type: rest.stream_type
+          stream_name: rest.stream_name
+          alert_name_substring: rest.alert_name_substring
+          owner: rest.owner
+          enabled: rest.enabled
+          page_size: rest.page_size
+          page_idx: rest.page_idx
+          alert_type: rest.alert_type
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createalert
+        description: Create new alert
+        call: openobserve-alerts.createalert
+        with:
+          org_id: rest.org_id
+          folder: rest.folder
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/alerts/bulk/enable
+      name: api-v2-org-id-alerts-bulk-enable
+      description: REST surface for api-v2-org_id-alerts-bulk-enable.
+      operations:
+      - method: POST
+        name: enablealertbulk
+        description: Enable or disable alert in bulk
+        call: openobserve-alerts.enablealertbulk
+        with:
+          org_id: rest.org_id
+          value: rest.value
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/alerts/generate-sql
+      name: api-v2-org-id-alerts-generate-sql
+      description: REST surface for api-v2-org_id-alerts-generate_sql.
+      operations:
+      - method: POST
+        name: generatesql
+        description: Generate SQL from alert query parameters
+        call: openobserve-alerts.generatesql
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/alerts/move
+      name: api-v2-org-id-alerts-move
+      description: REST surface for api-v2-org_id-alerts-move.
+      operations:
+      - method: PATCH
+        name: movealerts
+        description: Move alerts between folders
+        call: openobserve-alerts.movealerts
+        with:
+          org_id: rest.org_id
+          folder: rest.folder
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/alerts/{alert-id}
+      name: api-v2-org-id-alerts-alert-id
+      description: REST surface for api-v2-org_id-alerts-alert_id.
+      operations:
+      - method: GET
+        name: getalert
+        description: Get alert details
+        call: openobserve-alerts.getalert
+        with:
+          org_id: rest.org_id
+          alert_id: rest.alert_id
+          folder: rest.folder
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatealert
+        description: Update alert configuration
+        call: openobserve-alerts.updatealert
+        with:
+          org_id: rest.org_id
+          alert_id: rest.alert_id
+          folder: rest.folder
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletealert
+        description: Delete alert
+        call: openobserve-alerts.deletealert
+        with:
+          org_id: rest.org_id
+          alert_id: rest.alert_id
+          folder: rest.folder
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/alerts/{alert-id}/clone
+      name: api-v2-org-id-alerts-alert-id-clone
+      description: REST surface for api-v2-org_id-alerts-alert_id-clone.
+      operations:
+      - method: POST
+        name: clonealert
+        description: Clone an alert or anomaly detection config
+        call: openobserve-alerts.clonealert
+        with:
+          org_id: rest.org_id
+          alert_id: rest.alert_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/alerts/{alert-id}/enable
+      name: api-v2-org-id-alerts-alert-id-enable
+      description: REST surface for api-v2-org_id-alerts-alert_id-enable.
+      operations:
+      - method: PATCH
+        name: enablealert
+        description: Enable or disable alert
+        call: openobserve-alerts.enablealert
+        with:
+          org_id: rest.org_id
+          alert_id: rest.alert_id
+          value: rest.value
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/alerts/{alert-id}/export
+      name: api-v2-org-id-alerts-alert-id-export
+      description: REST surface for api-v2-org_id-alerts-alert_id-export.
+      operations:
+      - method: POST
+        name: exportalert
+        description: Export alert configuration
+        call: openobserve-alerts.exportalert
+        with:
+          org_id: rest.org_id
+          alert_id: rest.alert_id
+          folder: rest.folder
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/alerts/{alert-id}/retrain
+      name: api-v2-org-id-alerts-alert-id-retrain
+      description: REST surface for api-v2-org_id-alerts-alert_id-retrain.
+      operations:
+      - method: PATCH
+        name: retrainalert
+        description: Trigger retraining for an anomaly detection alert
+        call: openobserve-alerts.retrainalert
+        with:
+          org_id: rest.org_id
+          alert_id: rest.alert_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/alerts/{alert-id}/trigger
+      name: api-v2-org-id-alerts-alert-id-trigger
+      description: REST surface for api-v2-org_id-alerts-alert_id-trigger.
+      operations:
+      - method: PATCH
+        name: triggeralert
+        description: Manually trigger alert
+        call: openobserve-alerts.triggeralert
+        with:
+          org_id: rest.org_id
+          alert_id: rest.alert_id
+          folder: rest.folder
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/alerts/dedup/summary
+      name: api-org-id-alerts-dedup-summary
+      description: REST surface for api-org_id-alerts-dedup-summary.
+      operations:
+      - method: GET
+        name: getdedupsummary
+        description: Get deduplication summary statistics for an organization
+        call: openobserve-alerts.getdedupsummary
+        with:
+          org_id: rest.org_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/alerts/deduplication/config
+      name: api-org-id-alerts-deduplication-config
+      description: REST surface for api-org_id-alerts-deduplication-config.
+      operations:
+      - method: GET
+        name: getdeduplicationconfig
+        description: Get deduplication configuration for an organization
+        call: openobserve-alerts.getdeduplicationconfig
+        with:
+          org_id: rest.org_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: setdeduplicationconfig
+        description: Set deduplication configuration for an organization
+        call: openobserve-alerts.setdeduplicationconfig
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletededuplicationconfig
+        description: Delete deduplication configuration for an organization
+        call: openobserve-alerts.deletededuplicationconfig
+        with:
+          org_id: rest.org_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/alerts/deduplication/semantic-groups
+      name: api-org-id-alerts-deduplication-semantic-groups
+      description: REST surface for api-org_id-alerts-deduplication-semantic-groups.
+      operations:
+      - method: GET
+        name: getsemanticgroups
+        description: Get semantic field groups for an organization
+        call: openobserve-alerts.getsemanticgroups
+        with:
+          org_id: rest.org_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: savesemanticgroups
+        description: Save semantic field groups for an organization
+        call: openobserve-alerts.savesemanticgroups
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/alerts/deduplication/semantic-groups/preview-diff
+      name: api-org-id-alerts-deduplication-semantic-groups-preview-diff
+      description: REST surface for api-org_id-alerts-deduplication-semantic-groups-preview-diff.
+      operations:
+      - method: POST
+        name: previewsemanticgroupsdiff
+        description: Preview diff between imported semantic groups and current DB state
+        call: openobserve-alerts.previewsemanticgroupsdiff
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/alerts/destinations
+      name: api-org-id-alerts-destinations
+      description: REST surface for api-org_id-alerts-destinations.
+      operations:
+      - method: GET
+        name: listdestinations
+        description: List alert destinations
+        call: openobserve-alerts.listdestinations
+        with:
+          org_id: rest.org_id
+          module: rest.module
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createdestination
+        description: Create alert or pipeline destination
+        call: openobserve-alerts.createdestination
+        with:
+          org_id: rest.org_id
+          module: rest.module
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/alerts/destinations/{destination-name}
+      name: api-org-id-alerts-destinations-destination-name
+      description: REST surface for api-org_id-alerts-destinations-destination_name.
+      operations:
+      - method: GET
+        name: getdestination
+        description: Get alert destination
+        call: openobserve-alerts.getdestination
+        with:
+          org_id: rest.org_id
+          destination_name: rest.destination_name
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatedestination
+        description: Update alert or pipeline destination
+        call: openobserve-alerts.updatedestination
+        with:
+          org_id: rest.org_id
+          destination_name: rest.destination_name
+          module: rest.module
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletealertdestination
+        description: Delete alert destination
+        call: openobserve-alerts.deletealertdestination
+        with:
+          org_id: rest.org_id
+          destination_name: rest.destination_name
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/alerts/history
+      name: api-org-id-alerts-history
+      description: REST surface for api-org_id-alerts-history.
+      operations:
+      - method: GET
+        name: getalerthistory
+        description: Get alert execution history
+        call: openobserve-alerts.getalerthistory
+        with:
+          org_id: rest.org_id
+          alert_id: rest.alert_id
+          start_time: rest.start_time
+          end_time: rest.end_time
+          from: rest.from
+          size: rest.size
+          sort_by: rest.sort_by
+          sort_order: rest.sort_order
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-alerts-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Alerts. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-organization-alerts
+      description: List organization alerts
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.listalerts
+      with:
+        org_id: tools.org_id
+        folder: tools.folder
+        stream_type: tools.stream_type
+        stream_name: tools.stream_name
+        alert_name_substring: tools.alert_name_substring
+        owner: tools.owner
+        enabled: tools.enabled
+        page_size: tools.page_size
+        page_idx: tools.page_idx
+        alert_type: tools.alert_type
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-new-alert
+      description: Create new alert
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-alerts.createalert
+      with:
+        org_id: tools.org_id
+        folder: tools.folder
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: enable-disable-alert-bulk
+      description: Enable or disable alert in bulk
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-alerts.enablealertbulk
+      with:
+        org_id: tools.org_id
+        value: tools.value
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: generate-sql-alert-query-parameters
+      description: Generate SQL from alert query parameters
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: openobserve-alerts.generatesql
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: move-alerts-between-folders
+      description: Move alerts between folders
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.movealerts
+      with:
+        org_id: tools.org_id
+        folder: tools.folder
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-alert-details
+      description: Get alert details
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.getalert
+      with:
+        org_id: tools.org_id
+        alert_id: tools.alert_id
+        folder: tools.folder
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-alert-configuration
+      description: Update alert configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.updatealert
+      with:
+        org_id: tools.org_id
+        alert_id: tools.alert_id
+        folder: tools.folder
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-alert
+      description: Delete alert
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-alerts.deletealert
+      with:
+        org_id: tools.org_id
+        alert_id: tools.alert_id
+        folder: tools.folder
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: clone-alert-anomaly-detection-config
+      description: Clone an alert or anomaly detection config
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-alerts.clonealert
+      with:
+        org_id: tools.org_id
+        alert_id: tools.alert_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: enable-disable-alert
+      description: Enable or disable alert
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.enablealert
+      with:
+        org_id: tools.org_id
+        alert_id: tools.alert_id
+        value: tools.value
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: export-alert-configuration
+      description: Export alert configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-alerts.exportalert
+      with:
+        org_id: tools.org_id
+        alert_id: tools.alert_id
+        folder: tools.folder
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: trigger-retraining-anomaly-detection-alert
+      description: Trigger retraining for an anomaly detection alert
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.retrainalert
+      with:
+        org_id: tools.org_id
+        alert_id: tools.alert_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: manually-trigger-alert
+      description: Manually trigger alert
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.triggeralert
+      with:
+        org_id: tools.org_id
+        alert_id: tools.alert_id
+        folder: tools.folder
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-deduplication-summary-statistics-organization
+      description: Get deduplication summary statistics for an organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.getdedupsummary
+      with:
+        org_id: tools.org_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-deduplication-configuration-organization
+      description: Get deduplication configuration for an organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.getdeduplicationconfig
+      with:
+        org_id: tools.org_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: set-deduplication-configuration-organization
+      description: Set deduplication configuration for an organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-alerts.setdeduplicationconfig
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-deduplication-configuration-organization
+      description: Delete deduplication configuration for an organization
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-alerts.deletededuplicationconfig
+      with:
+        org_id: tools.org_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-semantic-field-groups-organization
+      description: Get semantic field groups for an organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.getsemanticgroups
+      with:
+        org_id: tools.org_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: save-semantic-field-groups-organization
+      description: Save semantic field groups for an organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.savesemanticgroups
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: preview-diff-between-imported-semantic
+      description: Preview diff between imported semantic groups and current DB state
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-alerts.previewsemanticgroupsdiff
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-alert-destinations
+      description: List alert destinations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.listdestinations
+      with:
+        org_id: tools.org_id
+        module: tools.module
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-alert-pipeline-destination
+      description: Create alert or pipeline destination
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-alerts.createdestination
+      with:
+        org_id: tools.org_id
+        module: tools.module
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-alert-destination
+      description: Get alert destination
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.getdestination
+      with:
+        org_id: tools.org_id
+        destination_name: tools.destination_name
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-alert-pipeline-destination
+      description: Update alert or pipeline destination
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.updatedestination
+      with:
+        org_id: tools.org_id
+        destination_name: tools.destination_name
+        module: tools.module
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-alert-destination
+      description: Delete alert destination
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-alerts.deletealertdestination
+      with:
+        org_id: tools.org_id
+        destination_name: tools.destination_name
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-alert-execution-history
+      description: Get alert execution history
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-alerts.getalerthistory
+      with:
+        org_id: tools.org_id
+        alert_id: tools.alert_id
+        start_time: tools.start_time
+        end_time: tools.end_time
+        from: tools.from
+        size: tools.size
+        sort_by: tools.sort_by
+        sort_order: tools.sort_order
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,628 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Folders
+  description: 'openobserve — Folders. 12 operations. Lead operation: List organization folders. Self-contained Naftiko capability
+    covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Folders
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-folders
+    baseUri: ''
+    description: openobserve — Folders business capability. Self-contained, no shared references.
+    resources:
+    - name: api-v2-org_id-folders-folder_type
+      path: /api/v2/{org_id}/folders/{folder_type}
+      operations:
+      - name: listfolders
+        method: GET
+        description: List organization folders
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder_type
+          in: path
+          type: string
+          description: Type of data the folder can contain
+          required: true
+      - name: createfolder
+        method: POST
+        description: Create new folder
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder_type
+          in: path
+          type: string
+          description: Type of data the folder can contain
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-v2-org_id-folders-folder_type-name-folder_name
+      path: /api/v2/{org_id}/folders/{folder_type}/name/{folder_name}
+      operations:
+      - name: getfolderbyname
+        method: GET
+        description: Get folder by name
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder_type
+          in: path
+          type: string
+          description: Type of data the folder can contain
+          required: true
+        - name: folder_name
+          in: path
+          type: string
+          description: Folder Name
+          required: true
+    - name: api-v2-org_id-folders-folder_type-folder_id
+      path: /api/v2/{org_id}/folders/{folder_type}/{folder_id}
+      operations:
+      - name: getfolder
+        method: GET
+        description: Get folder details
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder_type
+          in: path
+          type: string
+          description: Type of data the folder can contain
+          required: true
+        - name: folder_id
+          in: path
+          type: string
+          description: Folder ID
+          required: true
+      - name: updatefolder
+        method: PUT
+        description: Update folder details
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder_type
+          in: path
+          type: string
+          description: Type of data the folder can contain
+          required: true
+        - name: folder_id
+          in: path
+          type: string
+          description: Folder name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletefolder
+        method: DELETE
+        description: Delete folder
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder_type
+          in: path
+          type: string
+          description: Type of data the folder can contain
+          required: true
+        - name: folder_id
+          in: path
+          type: string
+          description: Folder ID
+          required: true
+    - name: api-org_id-folders
+      path: /api/{org_id}/folders
+      operations:
+      - name: listfoldersdeprecated
+        method: GET
+        description: List all folders (deprecated)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+      - name: createfolderdeprecated
+        method: POST
+        description: Create a new folder (deprecated)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-folders-name-folder_name
+      path: /api/{org_id}/folders/name/{folder_name}
+      operations:
+      - name: getfolderbynamedeprecated
+        method: GET
+        description: Get folder by name (deprecated)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder_name
+          in: path
+          type: string
+          description: Folder Name
+          required: true
+    - name: api-org_id-folders-folder_id
+      path: /api/{org_id}/folders/{folder_id}
+      operations:
+      - name: getfolderdeprecated
+        method: GET
+        description: Get folder by ID (deprecated)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder_id
+          in: path
+          type: string
+          description: Folder ID
+          required: true
+      - name: updatefolderdeprecated
+        method: PUT
+        description: Update an existing folder (deprecated)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder_id
+          in: path
+          type: string
+          description: Folder name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletefolderdeprecated
+        method: DELETE
+        description: Delete a folder (deprecated)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder_id
+          in: path
+          type: string
+          description: Folder ID
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-folders-rest
+    port: 8080
+    description: REST adapter for openobserve — Folders. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api/v2/{org-id}/folders/{folder-type}
+      name: api-v2-org-id-folders-folder-type
+      description: REST surface for api-v2-org_id-folders-folder_type.
+      operations:
+      - method: GET
+        name: listfolders
+        description: List organization folders
+        call: openobserve-folders.listfolders
+        with:
+          org_id: rest.org_id
+          folder_type: rest.folder_type
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createfolder
+        description: Create new folder
+        call: openobserve-folders.createfolder
+        with:
+          org_id: rest.org_id
+          folder_type: rest.folder_type
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/folders/{folder-type}/name/{folder-name}
+      name: api-v2-org-id-folders-folder-type-name-folder-name
+      description: REST surface for api-v2-org_id-folders-folder_type-name-folder_name.
+      operations:
+      - method: GET
+        name: getfolderbyname
+        description: Get folder by name
+        call: openobserve-folders.getfolderbyname
+        with:
+          org_id: rest.org_id
+          folder_type: rest.folder_type
+          folder_name: rest.folder_name
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/v2/{org-id}/folders/{folder-type}/{folder-id}
+      name: api-v2-org-id-folders-folder-type-folder-id
+      description: REST surface for api-v2-org_id-folders-folder_type-folder_id.
+      operations:
+      - method: GET
+        name: getfolder
+        description: Get folder details
+        call: openobserve-folders.getfolder
+        with:
+          org_id: rest.org_id
+          folder_type: rest.folder_type
+          folder_id: rest.folder_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatefolder
+        description: Update folder details
+        call: openobserve-folders.updatefolder
+        with:
+          org_id: rest.org_id
+          folder_type: rest.folder_type
+          folder_id: rest.folder_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletefolder
+        description: Delete folder
+        call: openobserve-folders.deletefolder
+        with:
+          org_id: rest.org_id
+          folder_type: rest.folder_type
+          folder_id: rest.folder_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/folders
+      name: api-org-id-folders
+      description: REST surface for api-org_id-folders.
+      operations:
+      - method: GET
+        name: listfoldersdeprecated
+        description: List all folders (deprecated)
+        call: openobserve-folders.listfoldersdeprecated
+        with:
+          org_id: rest.org_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createfolderdeprecated
+        description: Create a new folder (deprecated)
+        call: openobserve-folders.createfolderdeprecated
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/folders/name/{folder-name}
+      name: api-org-id-folders-name-folder-name
+      description: REST surface for api-org_id-folders-name-folder_name.
+      operations:
+      - method: GET
+        name: getfolderbynamedeprecated
+        description: Get folder by name (deprecated)
+        call: openobserve-folders.getfolderbynamedeprecated
+        with:
+          org_id: rest.org_id
+          folder_name: rest.folder_name
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/folders/{folder-id}
+      name: api-org-id-folders-folder-id
+      description: REST surface for api-org_id-folders-folder_id.
+      operations:
+      - method: GET
+        name: getfolderdeprecated
+        description: Get folder by ID (deprecated)
+        call: openobserve-folders.getfolderdeprecated
+        with:
+          org_id: rest.org_id
+          folder_id: rest.folder_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatefolderdeprecated
+        description: Update an existing folder (deprecated)
+        call: openobserve-folders.updatefolderdeprecated
+        with:
+          org_id: rest.org_id
+          folder_id: rest.folder_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletefolderdeprecated
+        description: Delete a folder (deprecated)
+        call: openobserve-folders.deletefolderdeprecated
+        with:
+          org_id: rest.org_id
+          folder_id: rest.folder_id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-folders-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Folders. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-organization-folders
+      description: List organization folders
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-folders.listfolders
+      with:
+        org_id: tools.org_id
+        folder_type: tools.folder_type
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-new-folder
+      description: Create new folder
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-folders.createfolder
+      with:
+        org_id: tools.org_id
+        folder_type: tools.folder_type
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-folder-name
+      description: Get folder by name
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-folders.getfolderbyname
+      with:
+        org_id: tools.org_id
+        folder_type: tools.folder_type
+        folder_name: tools.folder_name
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-folder-details
+      description: Get folder details
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-folders.getfolder
+      with:
+        org_id: tools.org_id
+        folder_type: tools.folder_type
+        folder_id: tools.folder_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-folder-details
+      description: Update folder details
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-folders.updatefolder
+      with:
+        org_id: tools.org_id
+        folder_type: tools.folder_type
+        folder_id: tools.folder_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-folder
+      description: Delete folder
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-folders.deletefolder
+      with:
+        org_id: tools.org_id
+        folder_type: tools.folder_type
+        folder_id: tools.folder_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-all-folders-deprecated
+      description: List all folders (deprecated)
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-folders.listfoldersdeprecated
+      with:
+        org_id: tools.org_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-new-folder-deprecated
+      description: Create a new folder (deprecated)
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-folders.createfolderdeprecated
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-folder-name-deprecated
+      description: Get folder by name (deprecated)
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-folders.getfolderbynamedeprecated
+      with:
+        org_id: tools.org_id
+        folder_name: tools.folder_name
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-folder-id-deprecated
+      description: Get folder by ID (deprecated)
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-folders.getfolderdeprecated
+      with:
+        org_id: tools.org_id
+        folder_id: tools.folder_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-existing-folder-deprecated
+      description: Update an existing folder (deprecated)
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-folders.updatefolderdeprecated
+      with:
+        org_id: tools.org_id
+        folder_id: tools.folder_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-folder-deprecated
+      description: Delete a folder (deprecated)
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-folders.deletefolderdeprecated
+      with:
+        org_id: tools.org_id
+        folder_id: tools.folder_id
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,187 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Rum
+  description: 'openobserve — Rum. 3 operations. Lead operation: Ingest RUM log events. Self-contained Naftiko capability
+    covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Rum
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-rum
+    baseUri: ''
+    description: openobserve — Rum business capability. Self-contained, no shared references.
+    resources:
+    - name: rum-v1-org_id-logs
+      path: /rum/v1/{org_id}/logs
+      operations:
+      - name: logingestionjson
+        method: POST
+        description: Ingest RUM log events
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rum-v1-org_id-replay
+      path: /rum/v1/{org_id}/replay
+      operations:
+      - name: replayingestionjson
+        method: POST
+        description: Ingest session replay data
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rum-v1-org_id-rum
+      path: /rum/v1/{org_id}/rum
+      operations:
+      - name: rumingestionmulti
+        method: POST
+        description: Ingest RUM data events
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-rum-rest
+    port: 8080
+    description: REST adapter for openobserve — Rum. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/rum/v1/{org-id}/logs
+      name: rum-v1-org-id-logs
+      description: REST surface for rum-v1-org_id-logs.
+      operations:
+      - method: POST
+        name: logingestionjson
+        description: Ingest RUM log events
+        call: openobserve-rum.logingestionjson
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/rum/v1/{org-id}/replay
+      name: rum-v1-org-id-replay
+      description: REST surface for rum-v1-org_id-replay.
+      operations:
+      - method: POST
+        name: replayingestionjson
+        description: Ingest session replay data
+        call: openobserve-rum.replayingestionjson
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/rum/v1/{org-id}/rum
+      name: rum-v1-org-id-rum
+      description: REST surface for rum-v1-org_id-rum.
+      operations:
+      - method: POST
+        name: rumingestionmulti
+        description: Ingest RUM data events
+        call: openobserve-rum.rumingestionmulti
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-rum-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Rum. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: ingest-rum-log-events
+      description: Ingest RUM log events
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-rum.logingestionjson
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: ingest-session-replay-data
+      description: Ingest session replay data
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-rum.replayingestionjson
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: ingest-rum-data-events
+      description: Ingest RUM data events
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-rum.rumingestionmulti
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

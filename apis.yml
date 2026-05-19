@@ -1,80 +1,141 @@
 aid: openobserve
 name: OpenObserve
-description: >-
-  OpenObserve is an open source petabyte-scale observability platform with
-  unified logs, metrics, traces, and front-end telemetry in a single UI with
-  SQL and PromQL querying. The HTTP API exposes ingestion, search, alerting,
-  dashboards, pipelines, RUM, and administration endpoints.
+description: OpenObserve is an open source petabyte-scale observability platform with unified logs, metrics, traces, and front-end
+  telemetry in a single UI with SQL and PromQL querying. The HTTP API exposes ingestion, search, alerting, dashboards, pipelines,
+  RUM, and administration endpoints.
 type: Index
 position: Consumer
 access: 3rd-Party
 image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-url: >-
-  https://raw.githubusercontent.com/api-evangelist/openobserve/refs/heads/main/apis.yml
+url: https://raw.githubusercontent.com/api-evangelist/openobserve/refs/heads/main/apis.yml
 tags:
+- Observability
+- Logs
+- Metrics
+- Traces
+- RUM
+- Open Source
+created: '2026-03-25'
+modified: '2026-05-19'
+specificationVersion: '0.19'
+apis:
+- aid: openobserve:openobserve
+  name: OpenObserve
+  description: OpenObserve HTTP API for ingesting logs, metrics, and traces; running SQL and PromQL search; managing alerts,
+    dashboards, folders, pipelines, reports, RUM, saved views, service streams, and short URLs; and administering organizations,
+    users, roles, groups, service accounts, rate limits, and meta resources.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
   - Observability
   - Logs
   - Metrics
   - Traces
   - RUM
-  - Open Source
-created: '2026-03-25'
-modified: '2026-04-28'
-specificationVersion: '0.19'
-apis:
-  - aid: openobserve:openobserve
-    name: OpenObserve
-    description: >-
-      OpenObserve HTTP API for ingesting logs, metrics, and traces; running
-      SQL and PromQL search; managing alerts, dashboards, folders, pipelines,
-      reports, RUM, saved views, service streams, and short URLs; and
-      administering organizations, users, roles, groups, service accounts,
-      rate limits, and meta resources.
-    humanURL: https://openobserve.ai
-    baseURL: https://api.openobserve.ai
-    tags:
-      - Observability
-      - Logs
-      - Metrics
-      - Traces
-      - RUM
-      - Search
-      - Alerts
-      - Dashboards
-      - Pipelines
-    properties:
-      - type: Documentation
-        url: https://openobserve.ai/docs/
-      - type: OpenAPI
-        url: >-
-          https://raw.githubusercontent.com/api-evangelist/openobserve/refs/heads/main/openapi/openobserve-openapi.json
-      - type: SwaggerUI
-        url: https://api.openobserve.ai/swagger/
-      - type: GitHubRepository
-        url: https://github.com/openobserve/openobserve
-common:
-  - type: Website
-    name: OpenObserve Website
-    url: https://openobserve.ai
+  - Search
+  - Alerts
+  - Dashboards
+  - Pipelines
+  properties:
   - type: Documentation
-    name: OpenObserve Documentation
     url: https://openobserve.ai/docs/
-  - type: GitHubOrg
-    name: OpenObserve GitHub
-    url: https://github.com/openobserve
-  - type: Integrations
-    url: https://openobserve.ai/partners/
+  - type: OpenAPI
+    url: https://raw.githubusercontent.com/api-evangelist/openobserve/refs/heads/main/openapi/openobserve-openapi.json
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+  - type: NaftikoCapability
+    url: capabilities/openobserve-actions.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-alerts.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-clusters.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-dashboards.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-folders.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-functions.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-groups.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-incidents.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-kv.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-key.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-keys.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-logs.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-mcp.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-meta.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-metrics.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-organizations.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-patterns.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-pipelines.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-ratelimit.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-report.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-reports.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-roles.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-rum.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-saved-views.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-search.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-search-jobs.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-service-streams.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-serviceaccounts.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-short-url.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-streams.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-templates.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-traces.yaml
+  - type: NaftikoCapability
+    url: capabilities/openobserve-users.yaml
+common:
+- type: LinkedIn
+  url: https://www.linkedin.com/company/openobserve
+- type: Website
+  name: OpenObserve Website
+  url: https://openobserve.ai
+- type: Documentation
+  name: OpenObserve Documentation
+  url: https://openobserve.ai/docs/
+- type: GitHubOrg
+  name: OpenObserve GitHub
+  url: https://github.com/openobserve
+- type: Integrations
+  url: https://openobserve.ai/partners/
 integrations:
-  - name: OpenObserve
-  - name: Mobile View Menu
-  - name: ISO 27001 Certification badge
-  - name: Official AICPA SOC badge
-  - name: Send Feedback
-  - name: Slack
-  - name: Twitter
-  - name: LinkedIn
-  - name: GitHub
-  - name: YouTube
+- name: OpenObserve
+- name: Mobile View Menu
+- name: ISO 27001 Certification badge
+- name: Official AICPA SOC badge
+- name: Send Feedback
+- name: Slack
+- name: Twitter
+- name: LinkedIn
+- name: GitHub
+- name: YouTube
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com

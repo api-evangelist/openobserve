@@ -1,0 +1,374 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Search Jobs
+  description: 'openobserve — Search Jobs. 7 operations. Lead operation: List search jobs. Self-contained Naftiko capability
+    covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Search Jobs
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-search-jobs
+    baseUri: ''
+    description: openobserve — Search Jobs business capability. Self-contained, no shared references.
+    resources:
+    - name: api-org_id-search_jobs
+      path: /api/{org_id}/search_jobs
+      operations:
+      - name: listsearchjobs
+        method: GET
+        description: List search jobs
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+      - name: submitsearchjob
+        method: POST
+        description: Submit search job
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-search_jobs-job_id
+      path: /api/{org_id}/search_jobs/{job_id}
+      operations:
+      - name: getsearchjobstatus
+        method: GET
+        description: Get search job status
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: job_id
+          in: path
+          type: string
+          description: Search job ID
+          required: true
+      - name: deletesearchjob
+        method: DELETE
+        description: Delete search job
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: job_id
+          in: path
+          type: string
+          description: Search job ID
+          required: true
+    - name: api-org_id-search_jobs-job_id-cancel
+      path: /api/{org_id}/search_jobs/{job_id}/cancel
+      operations:
+      - name: cancelsearchjob
+        method: POST
+        description: Cancel search job
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: job_id
+          in: path
+          type: string
+          description: Search job ID
+          required: true
+    - name: api-org_id-search_jobs-job_id-result
+      path: /api/{org_id}/search_jobs/{job_id}/result
+      operations:
+      - name: getsearchjobresult
+        method: GET
+        description: Get search job results
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: job_id
+          in: path
+          type: string
+          description: Search job ID
+          required: true
+        - name: from
+          in: query
+          type: integer
+          description: Pagination start offset
+        - name: size
+          in: query
+          type: integer
+          description: Number of results to return
+    - name: api-org_id-search_jobs-job_id-retry
+      path: /api/{org_id}/search_jobs/{job_id}/retry
+      operations:
+      - name: retrysearchjob
+        method: POST
+        description: Retry search job
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: job_id
+          in: path
+          type: string
+          description: Search job ID
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-search-jobs-rest
+    port: 8080
+    description: REST adapter for openobserve — Search Jobs. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api/{org-id}/search-jobs
+      name: api-org-id-search-jobs
+      description: REST surface for api-org_id-search_jobs.
+      operations:
+      - method: GET
+        name: listsearchjobs
+        description: List search jobs
+        call: openobserve-search-jobs.listsearchjobs
+        with:
+          org_id: rest.org_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: submitsearchjob
+        description: Submit search job
+        call: openobserve-search-jobs.submitsearchjob
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/search-jobs/{job-id}
+      name: api-org-id-search-jobs-job-id
+      description: REST surface for api-org_id-search_jobs-job_id.
+      operations:
+      - method: GET
+        name: getsearchjobstatus
+        description: Get search job status
+        call: openobserve-search-jobs.getsearchjobstatus
+        with:
+          org_id: rest.org_id
+          job_id: rest.job_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletesearchjob
+        description: Delete search job
+        call: openobserve-search-jobs.deletesearchjob
+        with:
+          org_id: rest.org_id
+          job_id: rest.job_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/search-jobs/{job-id}/cancel
+      name: api-org-id-search-jobs-job-id-cancel
+      description: REST surface for api-org_id-search_jobs-job_id-cancel.
+      operations:
+      - method: POST
+        name: cancelsearchjob
+        description: Cancel search job
+        call: openobserve-search-jobs.cancelsearchjob
+        with:
+          org_id: rest.org_id
+          job_id: rest.job_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/search-jobs/{job-id}/result
+      name: api-org-id-search-jobs-job-id-result
+      description: REST surface for api-org_id-search_jobs-job_id-result.
+      operations:
+      - method: GET
+        name: getsearchjobresult
+        description: Get search job results
+        call: openobserve-search-jobs.getsearchjobresult
+        with:
+          org_id: rest.org_id
+          job_id: rest.job_id
+          from: rest.from
+          size: rest.size
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/search-jobs/{job-id}/retry
+      name: api-org-id-search-jobs-job-id-retry
+      description: REST surface for api-org_id-search_jobs-job_id-retry.
+      operations:
+      - method: POST
+        name: retrysearchjob
+        description: Retry search job
+        call: openobserve-search-jobs.retrysearchjob
+        with:
+          org_id: rest.org_id
+          job_id: rest.job_id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-search-jobs-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Search Jobs. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-search-jobs
+      description: List search jobs
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-search-jobs.listsearchjobs
+      with:
+        org_id: tools.org_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: submit-search-job
+      description: Submit search job
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: openobserve-search-jobs.submitsearchjob
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-search-job-status
+      description: Get search job status
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-search-jobs.getsearchjobstatus
+      with:
+        org_id: tools.org_id
+        job_id: tools.job_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-search-job
+      description: Delete search job
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-search-jobs.deletesearchjob
+      with:
+        org_id: tools.org_id
+        job_id: tools.job_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cancel-search-job
+      description: Cancel search job
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: openobserve-search-jobs.cancelsearchjob
+      with:
+        org_id: tools.org_id
+        job_id: tools.job_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-search-job-results
+      description: Get search job results
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-search-jobs.getsearchjobresult
+      with:
+        org_id: tools.org_id
+        job_id: tools.job_id
+        from: tools.from
+        size: tools.size
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retry-search-job
+      description: Retry search job
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: openobserve-search-jobs.retrysearchjob
+      with:
+        org_id: tools.org_id
+        job_id: tools.job_id
+      outputParameters:
+      - type: object
+        mapping: $.

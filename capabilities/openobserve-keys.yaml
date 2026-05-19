@@ -1,0 +1,88 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Keys
+  description: 'openobserve — Keys. 1 operations. Lead operation: Delete encryption key. Self-contained Naftiko capability
+    covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Keys
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-keys
+    baseUri: ''
+    description: openobserve — Keys business capability. Self-contained, no shared references.
+    resources:
+    - name: api-org_id-cipher_keys-key_name
+      path: /api/{org_id}/cipher_keys/{key_name}
+      operations:
+      - name: deletecipherkey
+        method: DELETE
+        description: Delete encryption key
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: key_name
+          in: path
+          type: string
+          description: name of the key to delete
+          required: true
+        - name: org_id
+          in: path
+          type: string
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-keys-rest
+    port: 8080
+    description: REST adapter for openobserve — Keys. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/api/{org-id}/cipher-keys/{key-name}
+      name: api-org-id-cipher-keys-key-name
+      description: REST surface for api-org_id-cipher_keys-key_name.
+      operations:
+      - method: DELETE
+        name: deletecipherkey
+        description: Delete encryption key
+        call: openobserve-keys.deletecipherkey
+        with:
+          key_name: rest.key_name
+          org_id: rest.org_id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-keys-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Keys. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: delete-encryption-key
+      description: Delete encryption key
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-keys.deletecipherkey
+      with:
+        key_name: tools.key_name
+        org_id: tools.org_id
+      outputParameters:
+      - type: object
+        mapping: $.

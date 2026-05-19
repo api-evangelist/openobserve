@@ -1,0 +1,431 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Functions
+  description: 'openobserve — Functions. 8 operations. Lead operation: Create or update enrichment table. Self-contained Naftiko
+    capability covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Functions
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-functions
+    baseUri: ''
+    description: openobserve — Functions business capability. Self-contained, no shared references.
+    resources:
+    - name: api-org_id-enrichment_tables-table_name
+      path: /api/{org_id}/enrichment_tables/{table_name}
+      operations:
+      - name: createupdateenrichmenttable
+        method: POST
+        description: Create or update enrichment table
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: table_name
+          in: path
+          type: string
+          description: Table name
+          required: true
+    - name: api-org_id-enrichment_tables-table_name-url
+      path: /api/{org_id}/enrichment_tables/{table_name}/url
+      operations:
+      - name: createenrichmenttablefromurl
+        method: POST
+        description: Create enrichment table from URL
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: table_name
+          in: path
+          type: string
+          description: Table name
+          required: true
+        - name: append
+          in: query
+          type: boolean
+          description: 'Whether to append data to existing table (default: false)'
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-functions
+      path: /api/{org_id}/functions
+      operations:
+      - name: listfunctions
+        method: GET
+        description: List organization functions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+      - name: createfunction
+        method: POST
+        description: Create new function
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-functions-test
+      path: /api/{org_id}/functions/test
+      operations:
+      - name: testfunction
+        method: POST
+        description: Validate VRL function syntax
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-functions-name
+      path: /api/{org_id}/functions/{name}
+      operations:
+      - name: functionpipelinedependency
+        method: GET
+        description: Get function pipeline dependencies
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: name
+          in: path
+          type: string
+          description: Function name
+          required: true
+      - name: updatefunction
+        method: PUT
+        description: Update function
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: name
+          in: path
+          type: string
+          description: Function name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletefunction
+        method: DELETE
+        description: Delete function
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: name
+          in: path
+          type: string
+          description: Function name
+          required: true
+        - name: force
+          in: query
+          type: boolean
+          description: Force delete function regardless pipeline dependencies
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-functions-rest
+    port: 8080
+    description: REST adapter for openobserve — Functions. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api/{org-id}/enrichment-tables/{table-name}
+      name: api-org-id-enrichment-tables-table-name
+      description: REST surface for api-org_id-enrichment_tables-table_name.
+      operations:
+      - method: POST
+        name: createupdateenrichmenttable
+        description: Create or update enrichment table
+        call: openobserve-functions.createupdateenrichmenttable
+        with:
+          org_id: rest.org_id
+          table_name: rest.table_name
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/enrichment-tables/{table-name}/url
+      name: api-org-id-enrichment-tables-table-name-url
+      description: REST surface for api-org_id-enrichment_tables-table_name-url.
+      operations:
+      - method: POST
+        name: createenrichmenttablefromurl
+        description: Create enrichment table from URL
+        call: openobserve-functions.createenrichmenttablefromurl
+        with:
+          org_id: rest.org_id
+          table_name: rest.table_name
+          append: rest.append
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/functions
+      name: api-org-id-functions
+      description: REST surface for api-org_id-functions.
+      operations:
+      - method: GET
+        name: listfunctions
+        description: List organization functions
+        call: openobserve-functions.listfunctions
+        with:
+          org_id: rest.org_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createfunction
+        description: Create new function
+        call: openobserve-functions.createfunction
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/functions/test
+      name: api-org-id-functions-test
+      description: REST surface for api-org_id-functions-test.
+      operations:
+      - method: POST
+        name: testfunction
+        description: Validate VRL function syntax
+        call: openobserve-functions.testfunction
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/functions/{name}
+      name: api-org-id-functions-name
+      description: REST surface for api-org_id-functions-name.
+      operations:
+      - method: GET
+        name: functionpipelinedependency
+        description: Get function pipeline dependencies
+        call: openobserve-functions.functionpipelinedependency
+        with:
+          org_id: rest.org_id
+          name: rest.name
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatefunction
+        description: Update function
+        call: openobserve-functions.updatefunction
+        with:
+          org_id: rest.org_id
+          name: rest.name
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletefunction
+        description: Delete function
+        call: openobserve-functions.deletefunction
+        with:
+          org_id: rest.org_id
+          name: rest.name
+          force: rest.force
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-functions-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Functions. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: create-update-enrichment-table
+      description: Create or update enrichment table
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-functions.createupdateenrichmenttable
+      with:
+        org_id: tools.org_id
+        table_name: tools.table_name
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-enrichment-table-url
+      description: Create enrichment table from URL
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-functions.createenrichmenttablefromurl
+      with:
+        org_id: tools.org_id
+        table_name: tools.table_name
+        append: tools.append
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-organization-functions
+      description: List organization functions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-functions.listfunctions
+      with:
+        org_id: tools.org_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-new-function
+      description: Create new function
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-functions.createfunction
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: validate-vrl-function-syntax
+      description: Validate VRL function syntax
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: openobserve-functions.testfunction
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-function-pipeline-dependencies
+      description: Get function pipeline dependencies
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-functions.functionpipelinedependency
+      with:
+        org_id: tools.org_id
+        name: tools.name
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-function
+      description: Update function
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-functions.updatefunction
+      with:
+        org_id: tools.org_id
+        name: tools.name
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-function
+      description: Delete function
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-functions.deletefunction
+      with:
+        org_id: tools.org_id
+        name: tools.name
+        force: tools.force
+      outputParameters:
+      - type: object
+        mapping: $.

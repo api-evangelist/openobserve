@@ -1,0 +1,127 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — MCP
+  description: 'openobserve — MCP. 2 operations. Lead operation: Handler for OAuth 2.0 Authorization Server Metadata (Enterprise)
+
+    RFC 8414: https://datatracker.ietf.org/doc/html/rfc8414
+
+    This endpoint provides discovery information for OAuth clients
+
+    Must be publicly accessible (no auth) per OAuth spec. Self-contained Naftiko capability covering one Openobserve business
+    surface.'
+  tags:
+  - Openobserve
+  - MCP
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-mcp
+    baseUri: ''
+    description: openobserve — MCP business capability. Self-contained, no shared references.
+    resources:
+    - name: .well-known-oauth-authorization-server
+      path: /.well-known/oauth-authorization-server
+      operations:
+      - name: oauthservermetadata
+        method: POST
+        description: Handler for OAuth 2.0 Authorization Server Metadata (Enterprise)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: api-org_id-mcp
+      path: /api/{org_id}/mcp
+      operations:
+      - name: mcprequest
+        method: POST
+        description: Handler for MCP POST requests (single request/response)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-mcp-rest
+    port: 8080
+    description: REST adapter for openobserve — MCP. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/well-known/oauth-authorization-server
+      name: well-known-oauth-authorization-server
+      description: REST surface for .well-known-oauth-authorization-server.
+      operations:
+      - method: POST
+        name: oauthservermetadata
+        description: Handler for OAuth 2.0 Authorization Server Metadata (Enterprise)
+        call: openobserve-mcp.oauthservermetadata
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/mcp
+      name: api-org-id-mcp
+      description: REST surface for api-org_id-mcp.
+      operations:
+      - method: POST
+        name: mcprequest
+        description: Handler for MCP POST requests (single request/response)
+        call: openobserve-mcp.mcprequest
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-mcp-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — MCP. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: handler-oauth-2-0-authorization-server
+      description: Handler for OAuth 2.0 Authorization Server Metadata (Enterprise)
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-mcp.oauthservermetadata
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: handler-mcp-post-requests-single
+      description: Handler for MCP POST requests (single request/response)
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-mcp.mcprequest
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

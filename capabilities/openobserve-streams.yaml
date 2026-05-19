@@ -1,0 +1,426 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Streams
+  description: 'openobserve — Streams. 6 operations. Lead operation: List organization streams. Self-contained Naftiko capability
+    covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Streams
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-streams
+    baseUri: ''
+    description: openobserve — Streams business capability. Self-contained, no shared references.
+    resources:
+    - name: api-org_id-streams
+      path: /api/{org_id}/streams
+      operations:
+      - name: streamlist
+        method: GET
+        description: List organization streams
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: type
+          in: query
+          type: string
+          description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        - name: keyword
+          in: query
+          type: string
+          description: Keyword
+        - name: offset
+          in: query
+          type: integer
+          description: Offset
+        - name: limit
+          in: query
+          type: integer
+          description: Limit
+        - name: sort
+          in: query
+          type: string
+          description: Sort
+    - name: api-org_id-streams-stream_name
+      path: /api/{org_id}/streams/{stream_name}
+      operations:
+      - name: streamcreate
+        method: POST
+        description: Create new stream
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: stream_name
+          in: path
+          type: string
+          description: Stream name
+          required: true
+        - name: type
+          in: query
+          type: string
+          description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: streamdelete
+        method: DELETE
+        description: Delete stream
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: stream_name
+          in: path
+          type: string
+          description: Stream name
+          required: true
+        - name: type
+          in: query
+          type: string
+          description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        - name: delete_all
+          in: query
+          type: boolean
+          description: Delete all related feature resources
+          required: true
+    - name: api-org_id-streams-stream_name-delete_fields
+      path: /api/{org_id}/streams/{stream_name}/delete_fields
+      operations:
+      - name: streamdeletefields
+        method: PUT
+        description: Delete stream fields
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: stream_name
+          in: path
+          type: string
+          description: Stream name
+          required: true
+        - name: type
+          in: query
+          type: string
+          description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-streams-stream_name-schema
+      path: /api/{org_id}/streams/{stream_name}/schema
+      operations:
+      - name: streamschema
+        method: GET
+        description: Get stream schema
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: stream_name
+          in: path
+          type: string
+          description: Stream name
+          required: true
+        - name: type
+          in: query
+          type: string
+          description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        - name: keyword
+          in: query
+          type: string
+          description: 'Keyword filter for field names (default: empty)'
+        - name: offset
+          in: query
+          type: integer
+          description: 'Pagination offset (default: 0)'
+        - name: limit
+          in: query
+          type: integer
+          description: 'Pagination limit (default: 0 = all)'
+    - name: api-org_id-streams-stream_name-settings
+      path: /api/{org_id}/streams/{stream_name}/settings
+      operations:
+      - name: updatestreamsettings
+        method: PUT
+        description: Update stream settings
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: stream_name
+          in: path
+          type: string
+          description: Stream name
+          required: true
+        - name: type
+          in: query
+          type: string
+          description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-streams-rest
+    port: 8080
+    description: REST adapter for openobserve — Streams. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api/{org-id}/streams
+      name: api-org-id-streams
+      description: REST surface for api-org_id-streams.
+      operations:
+      - method: GET
+        name: streamlist
+        description: List organization streams
+        call: openobserve-streams.streamlist
+        with:
+          org_id: rest.org_id
+          type: rest.type
+          keyword: rest.keyword
+          offset: rest.offset
+          limit: rest.limit
+          sort: rest.sort
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/streams/{stream-name}
+      name: api-org-id-streams-stream-name
+      description: REST surface for api-org_id-streams-stream_name.
+      operations:
+      - method: POST
+        name: streamcreate
+        description: Create new stream
+        call: openobserve-streams.streamcreate
+        with:
+          org_id: rest.org_id
+          stream_name: rest.stream_name
+          type: rest.type
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: streamdelete
+        description: Delete stream
+        call: openobserve-streams.streamdelete
+        with:
+          org_id: rest.org_id
+          stream_name: rest.stream_name
+          type: rest.type
+          delete_all: rest.delete_all
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/streams/{stream-name}/delete-fields
+      name: api-org-id-streams-stream-name-delete-fields
+      description: REST surface for api-org_id-streams-stream_name-delete_fields.
+      operations:
+      - method: PUT
+        name: streamdeletefields
+        description: Delete stream fields
+        call: openobserve-streams.streamdeletefields
+        with:
+          org_id: rest.org_id
+          stream_name: rest.stream_name
+          type: rest.type
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/streams/{stream-name}/schema
+      name: api-org-id-streams-stream-name-schema
+      description: REST surface for api-org_id-streams-stream_name-schema.
+      operations:
+      - method: GET
+        name: streamschema
+        description: Get stream schema
+        call: openobserve-streams.streamschema
+        with:
+          org_id: rest.org_id
+          stream_name: rest.stream_name
+          type: rest.type
+          keyword: rest.keyword
+          offset: rest.offset
+          limit: rest.limit
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/streams/{stream-name}/settings
+      name: api-org-id-streams-stream-name-settings
+      description: REST surface for api-org_id-streams-stream_name-settings.
+      operations:
+      - method: PUT
+        name: updatestreamsettings
+        description: Update stream settings
+        call: openobserve-streams.updatestreamsettings
+        with:
+          org_id: rest.org_id
+          stream_name: rest.stream_name
+          type: rest.type
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-streams-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Streams. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-organization-streams
+      description: List organization streams
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-streams.streamlist
+      with:
+        org_id: tools.org_id
+        type: tools.type
+        keyword: tools.keyword
+        offset: tools.offset
+        limit: tools.limit
+        sort: tools.sort
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-new-stream
+      description: Create new stream
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-streams.streamcreate
+      with:
+        org_id: tools.org_id
+        stream_name: tools.stream_name
+        type: tools.type
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-stream
+      description: Delete stream
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-streams.streamdelete
+      with:
+        org_id: tools.org_id
+        stream_name: tools.stream_name
+        type: tools.type
+        delete_all: tools.delete_all
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-stream-fields
+      description: Delete stream fields
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-streams.streamdeletefields
+      with:
+        org_id: tools.org_id
+        stream_name: tools.stream_name
+        type: tools.type
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-stream-schema
+      description: Get stream schema
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-streams.streamschema
+      with:
+        org_id: tools.org_id
+        stream_name: tools.stream_name
+        type: tools.type
+        keyword: tools.keyword
+        offset: tools.offset
+        limit: tools.limit
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-stream-settings
+      description: Update stream settings
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-streams.updatestreamsettings
+      with:
+        org_id: tools.org_id
+        stream_name: tools.stream_name
+        type: tools.type
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

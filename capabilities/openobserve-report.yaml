@@ -1,0 +1,96 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Report
+  description: 'openobserve — Report. 1 operations. Lead operation: Enable or disable dashboard report. Self-contained Naftiko
+    capability covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Report
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-report
+    baseUri: ''
+    description: openobserve — Report business capability. Self-contained, no shared references.
+    resources:
+    - name: api-org_id-reports-name-enable
+      path: /api/{org_id}/reports/{name}/enable
+      operations:
+      - name: enablereport
+        method: PUT
+        description: Enable or disable dashboard report
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: name
+          in: path
+          type: string
+          description: Report name
+          required: true
+        - name: value
+          in: query
+          type: boolean
+          description: Enable or disable report
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-report-rest
+    port: 8080
+    description: REST adapter for openobserve — Report. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/api/{org-id}/reports/{name}/enable
+      name: api-org-id-reports-name-enable
+      description: REST surface for api-org_id-reports-name-enable.
+      operations:
+      - method: PUT
+        name: enablereport
+        description: Enable or disable dashboard report
+        call: openobserve-report.enablereport
+        with:
+          org_id: rest.org_id
+          name: rest.name
+          value: rest.value
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-report-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Report. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: enable-disable-dashboard-report
+      description: Enable or disable dashboard report
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-report.enablereport
+      with:
+        org_id: tools.org_id
+        name: tools.name
+        value: tools.value
+      outputParameters:
+      - type: object
+        mapping: $.

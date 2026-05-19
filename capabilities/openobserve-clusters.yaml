@@ -1,0 +1,72 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Clusters
+  description: 'openobserve — Clusters. 1 operations. Lead operation: List available clusters. Self-contained Naftiko capability
+    covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Clusters
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-clusters
+    baseUri: ''
+    description: openobserve — Clusters business capability. Self-contained, no shared references.
+    resources:
+    - name: api-clusters
+      path: /api/clusters
+      operations:
+      - name: listclusters
+        method: GET
+        description: List available clusters
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-clusters-rest
+    port: 8080
+    description: REST adapter for openobserve — Clusters. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api/clusters
+      name: api-clusters
+      description: REST surface for api-clusters.
+      operations:
+      - method: GET
+        name: listclusters
+        description: List available clusters
+        call: openobserve-clusters.listclusters
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-clusters-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Clusters. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-available-clusters
+      description: List available clusters
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-clusters.listclusters
+      outputParameters:
+      - type: object
+        mapping: $.

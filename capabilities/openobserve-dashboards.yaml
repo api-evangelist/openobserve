@@ -1,0 +1,914 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Dashboards
+  description: 'openobserve — Dashboards. 15 operations. Lead operation: List organization dashboards. Self-contained Naftiko
+    capability covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Dashboards
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-dashboards
+    baseUri: ''
+    description: openobserve — Dashboards business capability. Self-contained, no shared references.
+    resources:
+    - name: api-org_id-dashboards
+      path: /api/{org_id}/dashboards
+      operations:
+      - name: listdashboards
+        method: GET
+        description: List organization dashboards
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Optional folder ID filter parameter
+        - name: title
+          in: query
+          type: string
+          description: The optional case-insensitive title substring with which to filter
+        - name: pageSize
+          in: query
+          type: integer
+          description: The optional number of dashboards to retrieve. If not set then all
+      - name: createdashboard
+        method: POST
+        description: Create new dashboard
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID where the dashboard will be created. Used for RBAC checks in enterprise version. Defaults
+            to 'default' if not specified
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-dashboards-move
+      path: /api/{org_id}/dashboards/move
+      operations:
+      - name: movedashboards
+        method: PATCH
+        description: Move multiple dashboards
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-dashboards-dashboard_id
+      path: /api/{org_id}/dashboards/{dashboard_id}
+      operations:
+      - name: getdashboard
+        method: GET
+        description: Get dashboard details
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: dashboard_id
+          in: path
+          type: string
+          description: Dashboard ID
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID where the dashboard is located. Used for RBAC permission checks in enterprise version
+      - name: updatedashboard
+        method: PUT
+        description: Update existing dashboard
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: dashboard_id
+          in: path
+          type: string
+          description: Dashboard ID
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID where the dashboard is located
+          required: true
+        - name: hash
+          in: query
+          type: string
+          description: Hash value for conflict detection. Required when updating an existing dashboard to prevent concurrent
+            edit conflicts
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletedashboard
+        method: DELETE
+        description: Delete dashboard
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: dashboard_id
+          in: path
+          type: string
+          description: Dashboard ID
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID where the dashboard is located. Used for RBAC permission checks in enterprise version
+    - name: api-org_id-dashboards-dashboard_id-annotations
+      path: /api/{org_id}/dashboards/{dashboard_id}/annotations
+      operations:
+      - name: getannotations
+        method: GET
+        description: Get timed annotations for dashboard
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: panels
+          in: query
+          type: string
+          description: Commas separated list of panels
+        - name: start_time
+          in: query
+          type: integer
+          description: Time in microseconds
+          required: true
+        - name: end_time
+          in: query
+          type: integer
+          description: Time in microseconds
+          required: true
+        - name: org_id
+          in: path
+          type: string
+          required: true
+        - name: dashboard_id
+          in: path
+          type: string
+          required: true
+      - name: createannotations
+        method: POST
+        description: Create timed annotations for dashboard
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          required: true
+        - name: dashboard_id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deleteannotations
+        method: DELETE
+        description: Delete timed annotations from dashboard
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          required: true
+        - name: dashboard_id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-dashboards-dashboard_id-annotations-panels-timed_annotation_id
+      path: /api/{org_id}/dashboards/{dashboard_id}/annotations/panels/{timed_annotation_id}
+      operations:
+      - name: removetimedannotationfrompanel
+        method: DELETE
+        description: Remove timed annotation from panel
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          required: true
+        - name: dashboard_id
+          in: path
+          type: string
+          required: true
+        - name: timed_annotation_id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-dashboards-dashboard_id-annotations-timed_annotation_id
+      path: /api/{org_id}/dashboards/{dashboard_id}/annotations/{timed_annotation_id}
+      operations:
+      - name: updateannotations
+        method: PUT
+        description: Update timed annotation
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          required: true
+        - name: dashboard_id
+          in: path
+          type: string
+          required: true
+        - name: timed_annotation_id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-dashboards-dashboard_id-panels
+      path: /api/{org_id}/dashboards/{dashboard_id}/panels
+      operations:
+      - name: addpanel
+        method: POST
+        description: Add a panel to a dashboard
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: dashboard_id
+          in: path
+          type: string
+          description: Dashboard ID
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID where the dashboard is located
+        - name: hash
+          in: query
+          type: string
+          description: Hash value for conflict detection
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-dashboards-dashboard_id-panels-panel_id
+      path: /api/{org_id}/dashboards/{dashboard_id}/panels/{panel_id}
+      operations:
+      - name: updatepanel
+        method: PUT
+        description: Update a single panel in a dashboard
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: dashboard_id
+          in: path
+          type: string
+          description: Dashboard ID
+          required: true
+        - name: panel_id
+          in: path
+          type: string
+          description: Panel ID
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID where the dashboard is located
+        - name: hash
+          in: query
+          type: string
+          description: Hash value for conflict detection
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletepanel
+        method: DELETE
+        description: Delete a single panel from a dashboard
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: dashboard_id
+          in: path
+          type: string
+          description: Dashboard ID
+          required: true
+        - name: panel_id
+          in: path
+          type: string
+          description: Panel ID
+          required: true
+        - name: folder
+          in: query
+          type: string
+          description: Folder ID where the dashboard is located
+        - name: hash
+          in: query
+          type: string
+          description: Hash value for conflict detection
+          required: true
+        - name: tabId
+          in: query
+          type: string
+          description: Tab ID to search for the panel
+    - name: api-org_id-folders-dashboards-dashboard_id
+      path: /api/{org_id}/folders/dashboards/{dashboard_id}
+      operations:
+      - name: movedashboard
+        method: PUT
+        description: Move dashboard to folder
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: dashboard_id
+          in: path
+          type: string
+          description: Dashboard ID
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-dashboards-rest
+    port: 8080
+    description: REST adapter for openobserve — Dashboards. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api/{org-id}/dashboards
+      name: api-org-id-dashboards
+      description: REST surface for api-org_id-dashboards.
+      operations:
+      - method: GET
+        name: listdashboards
+        description: List organization dashboards
+        call: openobserve-dashboards.listdashboards
+        with:
+          org_id: rest.org_id
+          folder: rest.folder
+          title: rest.title
+          pageSize: rest.pageSize
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createdashboard
+        description: Create new dashboard
+        call: openobserve-dashboards.createdashboard
+        with:
+          org_id: rest.org_id
+          folder: rest.folder
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/dashboards/move
+      name: api-org-id-dashboards-move
+      description: REST surface for api-org_id-dashboards-move.
+      operations:
+      - method: PATCH
+        name: movedashboards
+        description: Move multiple dashboards
+        call: openobserve-dashboards.movedashboards
+        with:
+          org_id: rest.org_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/dashboards/{dashboard-id}
+      name: api-org-id-dashboards-dashboard-id
+      description: REST surface for api-org_id-dashboards-dashboard_id.
+      operations:
+      - method: GET
+        name: getdashboard
+        description: Get dashboard details
+        call: openobserve-dashboards.getdashboard
+        with:
+          org_id: rest.org_id
+          dashboard_id: rest.dashboard_id
+          folder: rest.folder
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatedashboard
+        description: Update existing dashboard
+        call: openobserve-dashboards.updatedashboard
+        with:
+          org_id: rest.org_id
+          dashboard_id: rest.dashboard_id
+          folder: rest.folder
+          hash: rest.hash
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletedashboard
+        description: Delete dashboard
+        call: openobserve-dashboards.deletedashboard
+        with:
+          org_id: rest.org_id
+          dashboard_id: rest.dashboard_id
+          folder: rest.folder
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/dashboards/{dashboard-id}/annotations
+      name: api-org-id-dashboards-dashboard-id-annotations
+      description: REST surface for api-org_id-dashboards-dashboard_id-annotations.
+      operations:
+      - method: GET
+        name: getannotations
+        description: Get timed annotations for dashboard
+        call: openobserve-dashboards.getannotations
+        with:
+          panels: rest.panels
+          start_time: rest.start_time
+          end_time: rest.end_time
+          org_id: rest.org_id
+          dashboard_id: rest.dashboard_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createannotations
+        description: Create timed annotations for dashboard
+        call: openobserve-dashboards.createannotations
+        with:
+          org_id: rest.org_id
+          dashboard_id: rest.dashboard_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteannotations
+        description: Delete timed annotations from dashboard
+        call: openobserve-dashboards.deleteannotations
+        with:
+          org_id: rest.org_id
+          dashboard_id: rest.dashboard_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/dashboards/{dashboard-id}/annotations/panels/{timed-annotation-id}
+      name: api-org-id-dashboards-dashboard-id-annotations-panels-timed-annotation-id
+      description: REST surface for api-org_id-dashboards-dashboard_id-annotations-panels-timed_annotation_id.
+      operations:
+      - method: DELETE
+        name: removetimedannotationfrompanel
+        description: Remove timed annotation from panel
+        call: openobserve-dashboards.removetimedannotationfrompanel
+        with:
+          org_id: rest.org_id
+          dashboard_id: rest.dashboard_id
+          timed_annotation_id: rest.timed_annotation_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/dashboards/{dashboard-id}/annotations/{timed-annotation-id}
+      name: api-org-id-dashboards-dashboard-id-annotations-timed-annotation-id
+      description: REST surface for api-org_id-dashboards-dashboard_id-annotations-timed_annotation_id.
+      operations:
+      - method: PUT
+        name: updateannotations
+        description: Update timed annotation
+        call: openobserve-dashboards.updateannotations
+        with:
+          org_id: rest.org_id
+          dashboard_id: rest.dashboard_id
+          timed_annotation_id: rest.timed_annotation_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/dashboards/{dashboard-id}/panels
+      name: api-org-id-dashboards-dashboard-id-panels
+      description: REST surface for api-org_id-dashboards-dashboard_id-panels.
+      operations:
+      - method: POST
+        name: addpanel
+        description: Add a panel to a dashboard
+        call: openobserve-dashboards.addpanel
+        with:
+          org_id: rest.org_id
+          dashboard_id: rest.dashboard_id
+          folder: rest.folder
+          hash: rest.hash
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/dashboards/{dashboard-id}/panels/{panel-id}
+      name: api-org-id-dashboards-dashboard-id-panels-panel-id
+      description: REST surface for api-org_id-dashboards-dashboard_id-panels-panel_id.
+      operations:
+      - method: PUT
+        name: updatepanel
+        description: Update a single panel in a dashboard
+        call: openobserve-dashboards.updatepanel
+        with:
+          org_id: rest.org_id
+          dashboard_id: rest.dashboard_id
+          panel_id: rest.panel_id
+          folder: rest.folder
+          hash: rest.hash
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletepanel
+        description: Delete a single panel from a dashboard
+        call: openobserve-dashboards.deletepanel
+        with:
+          org_id: rest.org_id
+          dashboard_id: rest.dashboard_id
+          panel_id: rest.panel_id
+          folder: rest.folder
+          hash: rest.hash
+          tabId: rest.tabId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/folders/dashboards/{dashboard-id}
+      name: api-org-id-folders-dashboards-dashboard-id
+      description: REST surface for api-org_id-folders-dashboards-dashboard_id.
+      operations:
+      - method: PUT
+        name: movedashboard
+        description: Move dashboard to folder
+        call: openobserve-dashboards.movedashboard
+        with:
+          org_id: rest.org_id
+          dashboard_id: rest.dashboard_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-dashboards-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Dashboards. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-organization-dashboards
+      description: List organization dashboards
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-dashboards.listdashboards
+      with:
+        org_id: tools.org_id
+        folder: tools.folder
+        title: tools.title
+        pageSize: tools.pageSize
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-new-dashboard
+      description: Create new dashboard
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-dashboards.createdashboard
+      with:
+        org_id: tools.org_id
+        folder: tools.folder
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: move-multiple-dashboards
+      description: Move multiple dashboards
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-dashboards.movedashboards
+      with:
+        org_id: tools.org_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-dashboard-details
+      description: Get dashboard details
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-dashboards.getdashboard
+      with:
+        org_id: tools.org_id
+        dashboard_id: tools.dashboard_id
+        folder: tools.folder
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-existing-dashboard
+      description: Update existing dashboard
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-dashboards.updatedashboard
+      with:
+        org_id: tools.org_id
+        dashboard_id: tools.dashboard_id
+        folder: tools.folder
+        hash: tools.hash
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-dashboard
+      description: Delete dashboard
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-dashboards.deletedashboard
+      with:
+        org_id: tools.org_id
+        dashboard_id: tools.dashboard_id
+        folder: tools.folder
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-timed-annotations-dashboard
+      description: Get timed annotations for dashboard
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-dashboards.getannotations
+      with:
+        panels: tools.panels
+        start_time: tools.start_time
+        end_time: tools.end_time
+        org_id: tools.org_id
+        dashboard_id: tools.dashboard_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-timed-annotations-dashboard
+      description: Create timed annotations for dashboard
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-dashboards.createannotations
+      with:
+        org_id: tools.org_id
+        dashboard_id: tools.dashboard_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-timed-annotations-dashboard
+      description: Delete timed annotations from dashboard
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-dashboards.deleteannotations
+      with:
+        org_id: tools.org_id
+        dashboard_id: tools.dashboard_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: remove-timed-annotation-panel
+      description: Remove timed annotation from panel
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-dashboards.removetimedannotationfrompanel
+      with:
+        org_id: tools.org_id
+        dashboard_id: tools.dashboard_id
+        timed_annotation_id: tools.timed_annotation_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-timed-annotation
+      description: Update timed annotation
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-dashboards.updateannotations
+      with:
+        org_id: tools.org_id
+        dashboard_id: tools.dashboard_id
+        timed_annotation_id: tools.timed_annotation_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: add-panel-dashboard
+      description: Add a panel to a dashboard
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-dashboards.addpanel
+      with:
+        org_id: tools.org_id
+        dashboard_id: tools.dashboard_id
+        folder: tools.folder
+        hash: tools.hash
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-single-panel-dashboard
+      description: Update a single panel in a dashboard
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-dashboards.updatepanel
+      with:
+        org_id: tools.org_id
+        dashboard_id: tools.dashboard_id
+        panel_id: tools.panel_id
+        folder: tools.folder
+        hash: tools.hash
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-single-panel-dashboard
+      description: Delete a single panel from a dashboard
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-dashboards.deletepanel
+      with:
+        org_id: tools.org_id
+        dashboard_id: tools.dashboard_id
+        panel_id: tools.panel_id
+        folder: tools.folder
+        hash: tools.hash
+        tabId: tools.tabId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: move-dashboard-folder
+      description: Move dashboard to folder
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-dashboards.movedashboard
+      with:
+        org_id: tools.org_id
+        dashboard_id: tools.dashboard_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

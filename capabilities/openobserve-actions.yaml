@@ -1,0 +1,320 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — Actions
+  description: 'openobserve — Actions. 6 operations. Lead operation: List automated actions. Self-contained Naftiko capability
+    covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - Actions
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-actions
+    baseUri: ''
+    description: openobserve — Actions business capability. Self-contained, no shared references.
+    resources:
+    - name: api-org_id-actions
+      path: /api/{org_id}/actions
+      operations:
+      - name: listactions
+        method: GET
+        description: List automated actions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+    - name: api-org_id-actions-download-ksuid
+      path: /api/{org_id}/actions/download/{ksuid}
+      operations:
+      - name: getactionzip
+        method: GET
+        description: Download action package
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: ksuid
+          in: path
+          type: string
+          description: Action ID
+          required: true
+    - name: api-org_id-actions-upload
+      path: /api/{org_id}/actions/upload
+      operations:
+      - name: uploadzippedaction
+        method: POST
+        description: Upload automated action package
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+    - name: api-org_id-actions-action_id
+      path: /api/{org_id}/actions/{action_id}
+      operations:
+      - name: getaction
+        method: GET
+        description: Get automated action details
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: action_id
+          in: path
+          type: string
+          description: Action ID
+          required: true
+      - name: updateaction
+        method: PUT
+        description: Update automated action
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: action_id
+          in: path
+          type: string
+          description: Action ID
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-org_id-actions-ksuid
+      path: /api/{org_id}/actions/{ksuid}
+      operations:
+      - name: deleteaction
+        method: DELETE
+        description: Delete automated action
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: ksuid
+          in: path
+          type: string
+          description: Action ID
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-actions-rest
+    port: 8080
+    description: REST adapter for openobserve — Actions. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api/{org-id}/actions
+      name: api-org-id-actions
+      description: REST surface for api-org_id-actions.
+      operations:
+      - method: GET
+        name: listactions
+        description: List automated actions
+        call: openobserve-actions.listactions
+        with:
+          org_id: rest.org_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/actions/download/{ksuid}
+      name: api-org-id-actions-download-ksuid
+      description: REST surface for api-org_id-actions-download-ksuid.
+      operations:
+      - method: GET
+        name: getactionzip
+        description: Download action package
+        call: openobserve-actions.getactionzip
+        with:
+          org_id: rest.org_id
+          ksuid: rest.ksuid
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/actions/upload
+      name: api-org-id-actions-upload
+      description: REST surface for api-org_id-actions-upload.
+      operations:
+      - method: POST
+        name: uploadzippedaction
+        description: Upload automated action package
+        call: openobserve-actions.uploadzippedaction
+        with:
+          org_id: rest.org_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/actions/{action-id}
+      name: api-org-id-actions-action-id
+      description: REST surface for api-org_id-actions-action_id.
+      operations:
+      - method: GET
+        name: getaction
+        description: Get automated action details
+        call: openobserve-actions.getaction
+        with:
+          org_id: rest.org_id
+          action_id: rest.action_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateaction
+        description: Update automated action
+        call: openobserve-actions.updateaction
+        with:
+          org_id: rest.org_id
+          action_id: rest.action_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/actions/{ksuid}
+      name: api-org-id-actions-ksuid
+      description: REST surface for api-org_id-actions-ksuid.
+      operations:
+      - method: DELETE
+        name: deleteaction
+        description: Delete automated action
+        call: openobserve-actions.deleteaction
+        with:
+          org_id: rest.org_id
+          ksuid: rest.ksuid
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-actions-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — Actions. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-automated-actions
+      description: List automated actions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-actions.listactions
+      with:
+        org_id: tools.org_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: download-action-package
+      description: Download action package
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-actions.getactionzip
+      with:
+        org_id: tools.org_id
+        ksuid: tools.ksuid
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: upload-automated-action-package
+      description: Upload automated action package
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-actions.uploadzippedaction
+      with:
+        org_id: tools.org_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-automated-action-details
+      description: Get automated action details
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-actions.getaction
+      with:
+        org_id: tools.org_id
+        action_id: tools.action_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-automated-action
+      description: Update automated action
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: openobserve-actions.updateaction
+      with:
+        org_id: tools.org_id
+        action_id: tools.action_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-automated-action
+      description: Delete automated action
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-actions.deleteaction
+      with:
+        org_id: tools.org_id
+        ksuid: tools.ksuid
+      outputParameters:
+      - type: object
+        mapping: $.

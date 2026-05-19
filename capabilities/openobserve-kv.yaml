@@ -1,0 +1,228 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: openobserve — KV
+  description: 'openobserve — KV. 4 operations. Lead operation: List keys from key-value store. Self-contained Naftiko capability
+    covering one Openobserve business surface.'
+  tags:
+  - Openobserve
+  - KV
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    OPENOBSERVE_API_KEY: OPENOBSERVE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: openobserve-kv
+    baseUri: ''
+    description: openobserve — KV business capability. Self-contained, no shared references.
+    resources:
+    - name: api-org_id-kv
+      path: /api/{org_id}/kv
+      operations:
+      - name: listkvkeys
+        method: GET
+        description: List keys from key-value store
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: prefix
+          in: query
+          type: string
+          description: Key prefix
+    - name: api-org_id-kv-key
+      path: /api/{org_id}/kv/{key}
+      operations:
+      - name: getkvvalue
+        method: GET
+        description: Get value from key-value store
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: key
+          in: path
+          type: string
+          description: Key name
+          required: true
+      - name: setkvvalue
+        method: POST
+        description: Store value in key-value store
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: key
+          in: path
+          type: string
+          description: Key name
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: removekvvalue
+        method: DELETE
+        description: Delete key from key-value store
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org_id
+          in: path
+          type: string
+          description: Organization name
+          required: true
+        - name: key
+          in: path
+          type: string
+          description: Key name
+          required: true
+    authentication:
+      type: apikey
+      key: Authorization
+      value: '{{env.OPENOBSERVE_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: openobserve-kv-rest
+    port: 8080
+    description: REST adapter for openobserve — KV. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/api/{org-id}/kv
+      name: api-org-id-kv
+      description: REST surface for api-org_id-kv.
+      operations:
+      - method: GET
+        name: listkvkeys
+        description: List keys from key-value store
+        call: openobserve-kv.listkvkeys
+        with:
+          org_id: rest.org_id
+          prefix: rest.prefix
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/{org-id}/kv/{key}
+      name: api-org-id-kv-key
+      description: REST surface for api-org_id-kv-key.
+      operations:
+      - method: GET
+        name: getkvvalue
+        description: Get value from key-value store
+        call: openobserve-kv.getkvvalue
+        with:
+          org_id: rest.org_id
+          key: rest.key
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: setkvvalue
+        description: Store value in key-value store
+        call: openobserve-kv.setkvvalue
+        with:
+          org_id: rest.org_id
+          key: rest.key
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: removekvvalue
+        description: Delete key from key-value store
+        call: openobserve-kv.removekvvalue
+        with:
+          org_id: rest.org_id
+          key: rest.key
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: openobserve-kv-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for openobserve — KV. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-keys-key-value-store
+      description: List keys from key-value store
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-kv.listkvkeys
+      with:
+        org_id: tools.org_id
+        prefix: tools.prefix
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-value-key-value-store
+      description: Get value from key-value store
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: openobserve-kv.getkvvalue
+      with:
+        org_id: tools.org_id
+        key: tools.key
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: store-value-key-value-store
+      description: Store value in key-value store
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: openobserve-kv.setkvvalue
+      with:
+        org_id: tools.org_id
+        key: tools.key
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-key-key-value-store
+      description: Delete key from key-value store
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: openobserve-kv.removekvvalue
+      with:
+        org_id: tools.org_id
+        key: tools.key
+      outputParameters:
+      - type: object
+        mapping: $.
