@@ -125,6 +125,8 @@ common:
   url: https://github.com/openobserve
 - type: Integrations
   url: https://openobserve.ai/partners/
+- type: LLMsTxt
+  url: https://openobserve.ai/llms.txt
 integrations:
 - name: OpenObserve
 - name: Mobile View Menu
