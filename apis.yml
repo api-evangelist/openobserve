@@ -61,7 +61,7 @@ common:
     url: https://github.com/openobserve
   - type: Integrations
     url: https://openobserve.ai/partners/
-  - type: LLMsTxt
+  - type: LlmsText
     url: https://openobserve.ai/llms.txt
 integrations:
   - name: OpenObserve
