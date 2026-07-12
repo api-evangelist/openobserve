@@ -1,0 +1,21 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/openobserve-openapi.json
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: Authorization
+  type: apiKey
+  in: header
+  parameter: Authorization
+  sources:
+  - openapi/openobserve-openapi.json
+- name: BasicAuth
+  type: http
+  scheme: basic
+  sources:
+  - openapi/openobserve-openapi.json

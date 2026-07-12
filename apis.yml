@@ -48,6 +48,12 @@ apis:
       - type: GitHubRepository
         url: https://github.com/openobserve/openobserve
 common:
+  - type: TrustCenter
+    url: security/openobserve-trust-center.yml
+  - type: DomainSecurity
+    url: security/openobserve-domain-security.yml
+  - type: Authentication
+    url: authentication/openobserve-authentication.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/openobserve
   - type: Website
@@ -63,6 +69,8 @@ common:
     url: https://openobserve.ai/partners/
   - type: LlmsText
     url: https://openobserve.ai/llms.txt
+  - url: https://openobserve.ai/blog/
+    type: Blog
 integrations:
   - name: OpenObserve
   - name: Mobile View Menu
