@@ -48,6 +48,8 @@ apis:
       - type: GitHubRepository
         url: https://github.com/openobserve/openobserve
 common:
+  - type: AgenticAccess
+    url: agentic-access/openobserve-agentic-access.yml
   - type: TrustCenter
     url: security/openobserve-trust-center.yml
   - type: DomainSecurity
