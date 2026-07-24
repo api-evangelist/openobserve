@@ -1,0 +1,191 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions KV API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: KV
+  description: Key Value retrieval & management operations
+paths:
+  /api/{org_id}/kv:
+    get:
+      tags:
+      - KV
+      summary: List keys from key-value store
+      description: Retrieves a list of all keys stored in the organization's key-value store. You can optionally filter keys by providing a prefix to only return keys that start with specific characters. This is useful for organizing related configuration settings or browsing available stored data.
+      operationId: ListKVKeys
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: prefix
+        in: query
+        description: Key prefix
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: List all keys
+        category: kv-store
+      x-o2-ratelimit:
+        module: Key Values
+        operation: list
+  /api/{org_id}/kv/{key}:
+    get:
+      tags:
+      - KV
+      summary: Get value from key-value store
+      description: Retrieves the stored value for a specific key from the organization's key-value store. Returns the raw text value if the key exists, or a 404 error if the key is not found. Useful for storing and retrieving configuration settings, application state, or other simple data.
+      operationId: GetKVValue
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        description: Key name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: NotFound
+          content:
+            text/plain:
+              schema:
+                type: string
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Key Values
+        operation: get
+      x-o2-mcp:
+        description: Get value by key
+        category: kv-store
+    post:
+      tags:
+      - KV
+      summary: Store value in key-value store
+      description: Stores a text value under the specified key in the organization's key-value store. Creates a new key if it doesn't exist, or updates the existing value. The key-value store is perfect for configuration settings, feature flags, application state, and other simple data that needs to persist across sessions.
+      operationId: SetKVValue
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        description: Key name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Value of the key
+        content:
+          text/plain:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: Failure
+          content:
+            text/plain:
+              schema:
+                type: string
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Key Values
+        operation: create
+      x-o2-mcp:
+        description: Set key-value pair
+        category: kv-store
+    delete:
+      tags:
+      - KV
+      summary: Delete key from key-value store
+      description: Permanently removes a key and its associated value from the organization's key-value store. Returns a success response if the key was deleted, or a 404 error if the key doesn't exist. This operation cannot be undone, so use carefully when cleaning up unused configuration or application data.
+      operationId: RemoveKVValue
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        description: Key name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: NotFound
+          content:
+            text/plain:
+              schema:
+                type: string
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Key Values
+        operation: delete
+      x-o2-mcp:
+        description: Delete key-value pair
+        category: kv-store
+        requires_confirmation: true
+components:
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

@@ -1,0 +1,485 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Traces API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Traces
+  description: Traces data ingestion operations
+paths:
+  /api/{org_id}/traces/service_graph/topology/current:
+    get:
+      tags:
+      - Traces
+      summary: Get current service graph topology
+      description: Returns service graph topology from stream storage (last 60 minutes). Stream-only - NO in-memory metrics.
+      operationId: GetCurrentServiceGraphTopology
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: query
+        description: Optional stream name to filter service graph topology
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: Forbidden - Enterprise feature
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Traces
+        operation: service_graph_topology
+  /api/{org_id}/v1/traces:
+    post:
+      tags:
+      - Traces
+      summary: Ingest trace data
+      description: Accepts and processes distributed tracing data from applications and services. Supports both Protocol Buffers and JSON formats for OTLP (OpenTelemetry Protocol) trace ingestion. Use this endpoint to send trace spans, timing information, and service dependency data for observability and performance monitoring.
+      operationId: PostTraces
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: ExportTraceServiceRequest
+        content:
+          application/x-protobuf:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+  /api/{org_id}/{stream_name}/traces/latest:
+    get:
+      tags:
+      - Traces
+      summary: Get recent trace data
+      description: Retrieves the most recent trace data from a specific stream within a time range. Returns trace summaries including trace IDs, span counts, service names, and timing information. You can filter results and control pagination to analyze distributed system performance and identify bottlenecks or errors in your applications.
+      operationId: GetLatestTraces
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: Stream name
+        required: true
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: 'filter, eg: a=b AND c=d'
+        required: false
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: from
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: size
+        in: query
+        description: size
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: start_time
+        in: query
+        description: start time
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: end_time
+        in: query
+        description: end time
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: timeout
+        in: query
+        description: timeout, seconds
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: sort_by
+        in: query
+        description: 'sort by field: start_time, duration (default: start_time)'
+        required: false
+        schema:
+          type: string
+      - name: sort_order
+        in: query
+        description: 'sort order: asc, desc (default: desc)'
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                took: 155
+                hits:
+                - trace_id: '12345678'
+                  spans:
+                  - 1
+                  - 2
+                  service_name:
+                  - job1: 1
+                    job2: 0
+                  first_event:
+                    start_time: 1234567890
+                    operation_name: operation_name
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+  /api/{org_id}/{stream_name}/traces/session:
+    get:
+      tags:
+      - Traces
+      summary: Get recent session data
+      description: Retrieves the most recent LLM session data from a specific trace stream within a time range. Sessions group multiple traces that share the same session ID. Returns session summaries including session IDs, trace counts, LLM usage statistics, cost, and timing information.
+      operationId: GetLatestSessions
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: Stream name
+        required: true
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: 'filter, eg: a=b AND c=d'
+        required: false
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: from
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: size
+        in: query
+        description: size
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: start_time
+        in: query
+        description: start time
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: end_time
+        in: query
+        description: end time
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: timeout
+        in: query
+        description: timeout, seconds
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                took: 155
+                total: 2
+                from: 0
+                size: 10
+                hits:
+                - session_id: session-abc-123
+                  start_time: 1234567890
+                  end_time: 1234567900
+                  duration: 10
+                  trace_count: 3
+                  llm_usage_tokens_input: 100
+                  llm_usage_tokens_output: 50
+                  llm_usage_tokens_total: 150
+                  llm_usage_cost_total: 0.005
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+  /api/{org_id}/{stream_name}/traces/user:
+    get:
+      tags:
+      - Traces
+      summary: Get recent user data
+      description: Retrieves the most recent LLM user data from a specific trace stream within a time range. Users group multiple traces that share the same user ID. Returns user summaries including user IDs, event counts, LLM usage statistics, cost, and timing information.
+      operationId: GetLatestUsers
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: Stream name
+        required: true
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: 'filter, eg: a=b AND c=d'
+        required: false
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: from
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: size
+        in: query
+        description: size
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: start_time
+        in: query
+        description: start time
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: end_time
+        in: query
+        description: end time
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: timeout
+        in: query
+        description: timeout, seconds
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                took: 155
+                total: 2
+                from: 0
+                size: 10
+                hits:
+                - user_id: user-12345
+                  first_event: 1234567890
+                  last_event: 1234567900
+                  total_events: 16
+                  llm_usage_tokens_total: 885
+                  llm_usage_cost_total: 105.3
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+  /api/{org_id}/{stream_name}/traces/{trace_id}/dag:
+    get:
+      tags:
+      - Traces
+      summary: Get trace DAG structure
+      description: Retrieves the DAG (Directed Acyclic Graph) structure of all spans for a specific trace. Returns nodes (spans) and edges (parent-child relationships) that can be visualized as a trace execution graph. Each node contains span details like service name, operation, and status information.
+      operationId: GetTraceDAG
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: Stream name
+        required: true
+        schema:
+          type: string
+      - name: trace_id
+        in: path
+        description: Trace ID
+        required: true
+        schema:
+          type: string
+      - name: start_time
+        in: query
+        description: start time in microseconds
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: end_time
+        in: query
+        description: end time in microseconds
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: timeout
+        in: query
+        description: timeout, seconds
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                trace_id: '12345678'
+                nodes:
+                - span_id: span1
+                  parent_span_id: null
+                  service_name: frontend
+                  operation_name: GET /api
+                  span_status: OK
+                edges:
+                - from: span1
+                  to: span2
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+components:
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

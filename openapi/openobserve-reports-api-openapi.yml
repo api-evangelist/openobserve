@@ -1,0 +1,1265 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Reports API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Reports
+paths:
+  /api/v2/{org_id}/reports:
+    get:
+      tags:
+      - Reports
+      summary: List dashboard reports (v2)
+      description: Lists reports for the organization, optionally filtered by folder.
+      operationId: ListReportsV2
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder
+        in: query
+        description: Folder ID filter
+        required: false
+        schema:
+          type: string
+      - name: dashboard_id
+        in: query
+        description: Dashboard ID filter
+        required: false
+        schema:
+          type: string
+      - name: cache
+        in: query
+        description: Filter destination-less (cache) reports
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - orgId
+                  - dashboards
+                  - destinations
+                  - owner
+                  - lastEditedBy
+                  properties:
+                    createdAt:
+                      type: string
+                      format: date-time
+                    dashboards:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ReportDashboard'
+                    description:
+                      type: string
+                    destinations:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ReportDestination'
+                    enabled:
+                      type: boolean
+                    frequency:
+                      $ref: '#/components/schemas/ReportFrequency'
+                      description: Frequency of report generation. E.g. - Weekly.
+                    imagePreview:
+                      type: boolean
+                      description: 'When `true` and the report type is PDF, a PNG screenshot is also captured and embedded
+
+                        inline in the email body alongside the PDF attachment.'
+                    lastEditedBy:
+                      type: string
+                    message:
+                      type: string
+                      description: Message to include in the email
+                    name:
+                      type: string
+                    orgId:
+                      type: string
+                    owner:
+                      type: string
+                    start:
+                      type: integer
+                      format: int64
+                      description: Start time of report generation in UNIX microseconds.
+                    timezone:
+                      type: string
+                    timezoneOffset:
+                      type: integer
+                      format: int32
+                      description: Fixed timezone offset in minutes
+                    title:
+                      type: string
+                    updatedAt:
+                      type: string
+                      format: date-time
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Reports
+        operation: list
+    post:
+      tags:
+      - Reports
+      summary: Create dashboard report (v2)
+      description: Creates a new automated dashboard report in the specified folder. Pass `?folder=<folder_id>` to place the report in a non-default folder.
+      operationId: CreateReportV2
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder
+        in: query
+        description: Folder ID (defaults to 'default')
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: Report details
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - orgId
+              - dashboards
+              - destinations
+              - owner
+              - lastEditedBy
+              properties:
+                createdAt:
+                  type: string
+                  format: date-time
+                dashboards:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReportDashboard'
+                description:
+                  type: string
+                destinations:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReportDestination'
+                enabled:
+                  type: boolean
+                frequency:
+                  $ref: '#/components/schemas/ReportFrequency'
+                  description: Frequency of report generation. E.g. - Weekly.
+                imagePreview:
+                  type: boolean
+                  description: 'When `true` and the report type is PDF, a PNG screenshot is also captured and embedded
+
+                    inline in the email body alongside the PDF attachment.'
+                lastEditedBy:
+                  type: string
+                message:
+                  type: string
+                  description: Message to include in the email
+                name:
+                  type: string
+                orgId:
+                  type: string
+                owner:
+                  type: string
+                start:
+                  type: integer
+                  format: int64
+                  description: Start time of report generation in UNIX microseconds.
+                timezone:
+                  type: string
+                timezoneOffset:
+                  type: integer
+                  format: int32
+                  description: Fixed timezone offset in minutes
+                title:
+                  type: string
+                updatedAt:
+                  type: string
+                  format: date-time
+        required: true
+      responses:
+        '200':
+          description: Report created
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Reports
+        operation: create
+  /api/v2/{org_id}/reports/bulk:
+    delete:
+      tags:
+      - Reports
+      summary: Delete multiple dashboard reports by ID (v2)
+      operationId: DeleteReportBulkV2
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Report IDs (KSUIDs)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkDeleteRequest'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkDeleteResponse'
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Reports
+        operation: delete
+      x-o2-mcp:
+        enabled: false
+  /api/v2/{org_id}/reports/move:
+    patch:
+      tags:
+      - Reports
+      summary: Move reports between folders (v2)
+      operationId: MoveReports
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Report IDs and destination folder
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - report_ids
+              - dst_folder_id
+              properties:
+                dst_folder_id:
+                  type: string
+                report_ids:
+                  type: array
+                  items:
+                    type: string
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Reports
+        operation: update
+  /api/v2/{org_id}/reports/{report_id}:
+    get:
+      tags:
+      - Reports
+      summary: Get dashboard report by ID (v2)
+      operationId: GetReportV2
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: report_id
+        in: path
+        description: Report ID (KSUID)
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - orgId
+                - dashboards
+                - destinations
+                - owner
+                - lastEditedBy
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  dashboards:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportDashboard'
+                  description:
+                    type: string
+                  destinations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportDestination'
+                  enabled:
+                    type: boolean
+                  frequency:
+                    $ref: '#/components/schemas/ReportFrequency'
+                    description: Frequency of report generation. E.g. - Weekly.
+                  imagePreview:
+                    type: boolean
+                    description: 'When `true` and the report type is PDF, a PNG screenshot is also captured and embedded
+
+                      inline in the email body alongside the PDF attachment.'
+                  lastEditedBy:
+                    type: string
+                  message:
+                    type: string
+                    description: Message to include in the email
+                  name:
+                    type: string
+                  orgId:
+                    type: string
+                  owner:
+                    type: string
+                  start:
+                    type: integer
+                    format: int64
+                    description: Start time of report generation in UNIX microseconds.
+                  timezone:
+                    type: string
+                  timezoneOffset:
+                    type: integer
+                    format: int32
+                    description: Fixed timezone offset in minutes
+                  title:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Reports
+        operation: get
+    put:
+      tags:
+      - Reports
+      summary: Update dashboard report by ID (v2)
+      description: Updates an existing report. Pass `?folder=<folder_id>` to move the report to a different folder at the same time.
+      operationId: UpdateReportV2
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: report_id
+        in: path
+        description: Report ID (KSUID)
+        required: true
+        schema:
+          type: string
+      - name: folder
+        in: query
+        description: Move to this folder ID
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: Report details
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - orgId
+              - dashboards
+              - destinations
+              - owner
+              - lastEditedBy
+              properties:
+                createdAt:
+                  type: string
+                  format: date-time
+                dashboards:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReportDashboard'
+                description:
+                  type: string
+                destinations:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReportDestination'
+                enabled:
+                  type: boolean
+                frequency:
+                  $ref: '#/components/schemas/ReportFrequency'
+                  description: Frequency of report generation. E.g. - Weekly.
+                imagePreview:
+                  type: boolean
+                  description: 'When `true` and the report type is PDF, a PNG screenshot is also captured and embedded
+
+                    inline in the email body alongside the PDF attachment.'
+                lastEditedBy:
+                  type: string
+                message:
+                  type: string
+                  description: Message to include in the email
+                name:
+                  type: string
+                orgId:
+                  type: string
+                owner:
+                  type: string
+                start:
+                  type: integer
+                  format: int64
+                  description: Start time of report generation in UNIX microseconds.
+                timezone:
+                  type: string
+                timezoneOffset:
+                  type: integer
+                  format: int32
+                  description: Fixed timezone offset in minutes
+                title:
+                  type: string
+                updatedAt:
+                  type: string
+                  format: date-time
+        required: true
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Reports
+        operation: update
+    delete:
+      tags:
+      - Reports
+      summary: Delete dashboard report by ID (v2)
+      operationId: DeleteReportV2
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: report_id
+        in: path
+        description: Report ID (KSUID)
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Reports
+        operation: delete
+  /api/v2/{org_id}/reports/{report_id}/enable:
+    patch:
+      tags:
+      - Reports
+      summary: Enable or disable a report by ID (v2)
+      operationId: EnableReportV2
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: report_id
+        in: path
+        description: Report ID (KSUID)
+        required: true
+        schema:
+          type: string
+      - name: value
+        in: query
+        description: true to enable, false to disable
+        required: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Reports
+        operation: update
+  /api/v2/{org_id}/reports/{report_id}/trigger:
+    put:
+      tags:
+      - Reports
+      summary: Manually trigger a report by ID (v2)
+      operationId: TriggerReportV2
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: report_id
+        in: path
+        description: Report ID (KSUID)
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+  /api/{org_id}/reports:
+    get:
+      tags:
+      - Reports
+      summary: List dashboard reports
+      description: Retrieves a list of all dashboard reports configured for the organization. Optionally filter by folder or dashboard to get specific report subsets. Returns report metadata including schedules, status, destinations, and execution history to help administrators manage automated reporting and monitor delivery performance.
+      operationId: ListReports
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - orgId
+                  - dashboards
+                  - destinations
+                  - owner
+                  - lastEditedBy
+                  properties:
+                    createdAt:
+                      type: string
+                      format: date-time
+                    dashboards:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ReportDashboard'
+                    description:
+                      type: string
+                    destinations:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ReportDestination'
+                    enabled:
+                      type: boolean
+                    frequency:
+                      $ref: '#/components/schemas/ReportFrequency'
+                      description: Frequency of report generation. E.g. - Weekly.
+                    imagePreview:
+                      type: boolean
+                      description: 'When `true` and the report type is PDF, a PNG screenshot is also captured and embedded
+
+                        inline in the email body alongside the PDF attachment.'
+                    lastEditedBy:
+                      type: string
+                    message:
+                      type: string
+                      description: Message to include in the email
+                    name:
+                      type: string
+                    orgId:
+                      type: string
+                    owner:
+                      type: string
+                    start:
+                      type: integer
+                      format: int64
+                      description: Start time of report generation in UNIX microseconds.
+                    timezone:
+                      type: string
+                    timezoneOffset:
+                      type: integer
+                      format: int32
+                      description: Fixed timezone offset in minutes
+                    title:
+                      type: string
+                    updatedAt:
+                      type: string
+                      format: date-time
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Reports
+        operation: list
+      x-o2-mcp:
+        description: List all reports
+        category: dashboards
+        summary_fields:
+        - name
+        - description
+        - enabled
+        - folder_name
+    post:
+      tags:
+      - Reports
+      summary: Create dashboard report
+      description: Creates a new automated dashboard report configuration. Reports can be scheduled to automatically generate and distribute dashboard snapshots via email or other notification channels. Includes support for custom time ranges, recipient lists, delivery schedules, and output formats to keep stakeholders informed of key metrics and trends.
+      operationId: CreateReport
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Report details
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - orgId
+              - dashboards
+              - destinations
+              - owner
+              - lastEditedBy
+              properties:
+                createdAt:
+                  type: string
+                  format: date-time
+                dashboards:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReportDashboard'
+                description:
+                  type: string
+                destinations:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReportDestination'
+                enabled:
+                  type: boolean
+                frequency:
+                  $ref: '#/components/schemas/ReportFrequency'
+                  description: Frequency of report generation. E.g. - Weekly.
+                imagePreview:
+                  type: boolean
+                  description: 'When `true` and the report type is PDF, a PNG screenshot is also captured and embedded
+
+                    inline in the email body alongside the PDF attachment.'
+                lastEditedBy:
+                  type: string
+                message:
+                  type: string
+                  description: Message to include in the email
+                name:
+                  type: string
+                orgId:
+                  type: string
+                owner:
+                  type: string
+                start:
+                  type: integer
+                  format: int64
+                  description: Start time of report generation in UNIX microseconds.
+                timezone:
+                  type: string
+                timezoneOffset:
+                  type: integer
+                  format: int32
+                  description: Fixed timezone offset in minutes
+                title:
+                  type: string
+                updatedAt:
+                  type: string
+                  format: date-time
+            example:
+              title: Network Traffic Overview
+              description: Traffic patterns and network performance of the infrastructure
+        required: true
+      responses:
+        '201':
+          description: Report created
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Create a scheduled report
+        category: dashboards
+      x-o2-ratelimit:
+        module: Reports
+        operation: create
+  /api/{org_id}/reports/{name}:
+    get:
+      tags:
+      - Reports
+      summary: Get dashboard report
+      description: Retrieves the complete configuration and details for a specific dashboard report. Returns report parameters including schedule settings, dashboard selection, recipient lists, delivery options, and execution status. Used for reviewing existing report configurations before making modifications or troubleshooting delivery issues.
+      operationId: GetReport
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: name
+        in: path
+        description: Report name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - orgId
+                - dashboards
+                - destinations
+                - owner
+                - lastEditedBy
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  dashboards:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportDashboard'
+                  description:
+                    type: string
+                  destinations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportDestination'
+                  enabled:
+                    type: boolean
+                  frequency:
+                    $ref: '#/components/schemas/ReportFrequency'
+                    description: Frequency of report generation. E.g. - Weekly.
+                  imagePreview:
+                    type: boolean
+                    description: 'When `true` and the report type is PDF, a PNG screenshot is also captured and embedded
+
+                      inline in the email body alongside the PDF attachment.'
+                  lastEditedBy:
+                    type: string
+                  message:
+                    type: string
+                    description: Message to include in the email
+                  name:
+                    type: string
+                  orgId:
+                    type: string
+                  owner:
+                    type: string
+                  start:
+                    type: integer
+                    format: int64
+                    description: Start time of report generation in UNIX microseconds.
+                  timezone:
+                    type: string
+                  timezoneOffset:
+                    type: integer
+                    format: int32
+                    description: Fixed timezone offset in minutes
+                  title:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+        '404':
+          description: Report not found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Get report details
+        category: dashboards
+      x-o2-ratelimit:
+        module: Reports
+        operation: get
+    put:
+      tags:
+      - Reports
+      summary: Update dashboard report
+      description: Updates an existing dashboard report configuration. Allows modification of report parameters including schedule, recipients, dashboard selection, time ranges, and delivery options. Changes take effect on the next scheduled execution, ensuring report distribution continues with updated settings and content selection.
+      operationId: UpdateReport
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: name
+        in: path
+        description: Report name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Report details
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - orgId
+              - dashboards
+              - destinations
+              - owner
+              - lastEditedBy
+              properties:
+                createdAt:
+                  type: string
+                  format: date-time
+                dashboards:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReportDashboard'
+                description:
+                  type: string
+                destinations:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReportDestination'
+                enabled:
+                  type: boolean
+                frequency:
+                  $ref: '#/components/schemas/ReportFrequency'
+                  description: Frequency of report generation. E.g. - Weekly.
+                imagePreview:
+                  type: boolean
+                  description: 'When `true` and the report type is PDF, a PNG screenshot is also captured and embedded
+
+                    inline in the email body alongside the PDF attachment.'
+                lastEditedBy:
+                  type: string
+                message:
+                  type: string
+                  description: Message to include in the email
+                name:
+                  type: string
+                orgId:
+                  type: string
+                owner:
+                  type: string
+                start:
+                  type: integer
+                  format: int64
+                  description: Start time of report generation in UNIX microseconds.
+                timezone:
+                  type: string
+                timezoneOffset:
+                  type: integer
+                  format: int32
+                  description: Fixed timezone offset in minutes
+                title:
+                  type: string
+                updatedAt:
+                  type: string
+                  format: date-time
+        required: true
+      responses:
+        '200':
+          description: Report updated
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: Report not found
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failed to update the report
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Reports
+        operation: update
+      x-o2-mcp:
+        description: Update a report
+        category: dashboards
+    delete:
+      tags:
+      - Reports
+      summary: Delete dashboard report
+      description: Removes a dashboard report configuration from the organization. This action cancels any scheduled report deliveries and permanently removes the report configuration. Recipients will no longer receive automated report deliveries, and the report configuration cannot be recovered once deleted.
+      operationId: DeleteReport
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: name
+        in: path
+        description: Report name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Delete a report
+        category: dashboards
+        requires_confirmation: true
+      x-o2-ratelimit:
+        module: Reports
+        operation: delete
+  /api/{org_id}/reports/{name}/trigger:
+    put:
+      tags:
+      - Reports
+      summary: Manually trigger dashboard report
+      description: Manually triggers immediate execution of a dashboard report outside of its regular schedule. Generates the report with current data and delivers it to configured destinations. Useful for ad-hoc reporting needs, testing report configurations, or providing immediate updates to stakeholders between scheduled deliveries.
+      operationId: TriggerReport
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: name
+        in: path
+        description: Report name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+components:
+  schemas:
+    ReportDashboardVariable:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        key:
+          type: string
+        value:
+          type: string
+    ReportFrequency:
+      type: object
+      properties:
+        align_time:
+          type: boolean
+        cron:
+          type: string
+          description: Cron expression
+        interval:
+          type: integer
+          format: int64
+          description: Frequency interval in the `frequency_type` unit
+        type:
+          $ref: '#/components/schemas/ReportFrequencyType'
+    ReportDestination:
+      oneOf:
+      - type: object
+        required:
+        - email
+        properties:
+          email:
+            type: string
+    ReportDashboard:
+      type: object
+      required:
+      - dashboard
+      - folder
+      - tabs
+      properties:
+        attachment_dimensions:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/ReportAttachmentDimensions'
+            description: 'Optional override for the browser viewport dimensions used when capturing the report.
+
+              When `None` the report server''s configured defaults are used.'
+        dashboard:
+          type: string
+        email_attachment_type:
+          $ref: '#/components/schemas/ReportEmailAttachmentType'
+          description: How the attachment is sent in the email — as a downloadable file or embedded inline.
+        folder:
+          type: string
+        report_type:
+          $ref: '#/components/schemas/ReportMediaType'
+          description: The type of report attachment — PDF or PNG.
+        tabs:
+          type: array
+          items:
+            type: string
+        timerange:
+          $ref: '#/components/schemas/ReportTimerange'
+          description: The timerange of dashboard data.
+        variables:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportDashboardVariable'
+    ReportTimerange:
+      type: object
+      required:
+      - type
+      - period
+      - from
+      - to
+      properties:
+        from:
+          type: integer
+          format: int64
+        period:
+          type: string
+        to:
+          type: integer
+          format: int64
+        type:
+          $ref: '#/components/schemas/ReportTimerangeType'
+    ReportFrequencyType:
+      type: string
+      enum:
+      - once
+      - hours
+      - days
+      - weeks
+      - months
+      - cron
+    BulkDeleteResponse:
+      type: object
+      required:
+      - successful
+      - unsuccessful
+      properties:
+        err:
+          type:
+          - string
+          - 'null'
+        successful:
+          type: array
+          items:
+            type: string
+        unsuccessful:
+          type: array
+          items:
+            type: string
+    ReportMediaType:
+      type: string
+      enum:
+      - pdf
+      - png
+    BulkDeleteRequest:
+      type: object
+      required:
+      - ids
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+    ReportEmailAttachmentType:
+      type: string
+      enum:
+      - standard
+      - inline
+    ReportAttachmentDimensions:
+      type: object
+      required:
+      - width
+      - height
+      properties:
+        height:
+          type: integer
+          format: int32
+          minimum: 0
+        width:
+          type: integer
+          format: int32
+          minimum: 0
+    ReportTimerangeType:
+      type: string
+      enum:
+      - relative
+      - absolute
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

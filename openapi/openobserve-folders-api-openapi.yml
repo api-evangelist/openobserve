@@ -1,0 +1,648 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Folders API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Folders
+paths:
+  /api/v2/{org_id}/folders/{folder_type}:
+    get:
+      tags:
+      - Folders
+      summary: List organization folders
+      description: Retrieves a list of all folders in the organization for the specified folder type. Users will only see folders they have access to when role-based access control is enabled.
+      operationId: ListFolders
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder_type
+        in: path
+        description: Type of data the folder can contain
+        required: true
+        schema:
+          $ref: '#/components/schemas/FolderType'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                description: HTTP response body for `ListFolder` endpoint.
+                required:
+                - list
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Folder'
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Folders
+        operation: list
+      x-o2-mcp:
+        description: List all folders
+        category: folders
+        summary_fields:
+        - folderId
+        - name
+        - description
+    post:
+      tags:
+      - Folders
+      summary: Create new folder
+      description: Creates a new folder for organizing dashboards, alerts, or reports. Folders help users organize their content into logical groups and manage access permissions when using role-based access control.
+      operationId: CreateFolder
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder_type
+        in: path
+        description: Type of data the folder can contain
+        required: true
+        schema:
+          $ref: '#/components/schemas/FolderType'
+      requestBody:
+        description: Folder details
+        content:
+          application/json:
+            schema:
+              type: object
+              description: HTTP request body for `CreateFolder` endpoint.
+              required:
+              - name
+              - description
+              properties:
+                description:
+                  type: string
+                name:
+                  type: string
+            example:
+              name: Infrastructure
+              description: Traffic patterns and network performance of the infrastructure
+        required: true
+      responses:
+        '200':
+          description: Folder created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Folder'
+                description: HTTP response body for `CreateFolder` endpoint.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Folders
+        operation: create
+      x-o2-mcp:
+        description: Create a new folder
+        category: folders
+  /api/v2/{org_id}/folders/{folder_type}/name/{folder_name}:
+    get:
+      tags:
+      - Folders
+      summary: Get folder by name
+      description: Retrieves detailed information about a specific folder by its name rather than ID. Useful when you know the folder name but not its unique identifier. Returns folder information for the specified folder type and name.
+      operationId: GetFolderByName
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder_type
+        in: path
+        description: Type of data the folder can contain
+        required: true
+        schema:
+          $ref: '#/components/schemas/FolderType'
+      - name: folder_name
+        in: path
+        description: Folder Name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Folder'
+                description: HTTP response body for `GetFolder` endpoint.
+        '404':
+          description: Folder not found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Get folder by name
+        category: folders
+      x-o2-ratelimit:
+        module: Folders
+        operation: get
+  /api/v2/{org_id}/folders/{folder_type}/{folder_id}:
+    get:
+      tags:
+      - Folders
+      summary: Get folder details
+      description: Retrieves detailed information about a specific folder including its name, description, creation details, and metadata. Returns folder information for the specified folder type and ID.
+      operationId: GetFolder
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder_type
+        in: path
+        description: Type of data the folder can contain
+        required: true
+        schema:
+          $ref: '#/components/schemas/FolderType'
+      - name: folder_id
+        in: path
+        description: Folder ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Folder'
+                description: HTTP response body for `GetFolder` endpoint.
+        '404':
+          description: Folder not found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Get folder details by ID
+        category: folders
+      x-o2-ratelimit:
+        module: Folders
+        operation: get
+    put:
+      tags:
+      - Folders
+      summary: Update folder details
+      description: Updates an existing folder's name, description, or other properties. Note that the default folder cannot be updated and folders containing content may have restrictions on certain changes.
+      operationId: UpdateFolder
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder_type
+        in: path
+        description: Type of data the folder can contain
+        required: true
+        schema:
+          $ref: '#/components/schemas/FolderType'
+      - name: folder_id
+        in: path
+        description: Folder name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Folder details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  default: ''
+                folder_id:
+                  type: string
+                  default: ''
+                name:
+                  type: string
+                  default: ''
+            example:
+              title: Infra
+              description: Traffic patterns and network performance of the infrastructure
+        required: true
+      responses:
+        '200':
+          description: Folder updated
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Folders
+        operation: update
+      x-o2-mcp:
+        description: Update folder properties
+        category: folders
+    delete:
+      tags:
+      - Folders
+      summary: Delete folder
+      description: Permanently deletes a folder and removes it from the organization. The folder must be empty (no dashboards, alerts, or reports) before it can be deleted. The default folder cannot be deleted.
+      operationId: DeleteFolder
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder_type
+        in: path
+        description: Type of data the folder can contain
+        required: true
+        schema:
+          $ref: '#/components/schemas/FolderType'
+      - name: folder_id
+        in: path
+        description: Folder ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: NotFound
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Folders
+        operation: delete
+      x-o2-mcp:
+        description: Delete a folder by ID
+        category: folders
+        requires_confirmation: true
+  /api/{org_id}/folders:
+    get:
+      tags:
+      - Folders
+      summary: List all folders (deprecated)
+      description: Retrieves all dashboard folders for the organization - this endpoint is deprecated
+      operationId: ListFoldersDeprecated
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                description: HTTP response body for `ListFolder` endpoint.
+                required:
+                - list
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Folder'
+      deprecated: true
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Folders
+        operation: list
+      x-o2-mcp:
+        enabled: false
+    post:
+      tags:
+      - Folders
+      summary: Create a new folder (deprecated)
+      description: Creates a new dashboard folder - this endpoint is deprecated
+      operationId: CreateFolderDeprecated
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Folder details
+        content:
+          application/json:
+            schema:
+              type: object
+              description: HTTP request body for `CreateFolder` endpoint.
+              required:
+              - name
+              - description
+              properties:
+                description:
+                  type: string
+                name:
+                  type: string
+            example:
+              name: Infrastructure
+              description: Traffic patterns and network performance of the infrastructure
+        required: true
+      responses:
+        '200':
+          description: Folder created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Folder'
+                description: HTTP response body for `CreateFolder` endpoint.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                default: null
+      deprecated: true
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Folders
+        operation: create
+      x-o2-mcp:
+        enabled: false
+  /api/{org_id}/folders/name/{folder_name}:
+    get:
+      tags:
+      - Folders
+      summary: Get folder by name (deprecated)
+      description: Retrieves a folder using its name instead of ID - this endpoint is deprecated
+      operationId: GetFolderByNameDeprecated
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder_name
+        in: path
+        description: Folder Name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Folder'
+                description: HTTP response body for `GetFolder` endpoint.
+        '404':
+          description: Folder not found
+          content:
+            application/json:
+              schema:
+                default: null
+      deprecated: true
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: Folders
+        operation: get
+  /api/{org_id}/folders/{folder_id}:
+    get:
+      tags:
+      - Folders
+      summary: Get folder by ID (deprecated)
+      description: Retrieves a specific folder by its identifier - this endpoint is deprecated
+      operationId: GetFolderDeprecated
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder_id
+        in: path
+        description: Folder ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Folder'
+                description: HTTP response body for `GetFolder` endpoint.
+        '404':
+          description: Folder not found
+          content:
+            application/json:
+              schema:
+                default: null
+      deprecated: true
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: Folders
+        operation: get
+    put:
+      tags:
+      - Folders
+      summary: Update an existing folder (deprecated)
+      description: Updates folder details like name and description - this endpoint is deprecated
+      operationId: UpdateFolderDeprecated
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder_id
+        in: path
+        description: Folder name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Folder details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  default: ''
+                folder_id:
+                  type: string
+                  default: ''
+                name:
+                  type: string
+                  default: ''
+            example:
+              title: Infra
+              description: Traffic patterns and network performance of the infrastructure
+        required: true
+      responses:
+        '200':
+          description: Folder updated
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                default: null
+      deprecated: true
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Folders
+        operation: update
+      x-o2-mcp:
+        enabled: false
+    delete:
+      tags:
+      - Folders
+      summary: Delete a folder (deprecated)
+      description: Removes a folder and all its contents - this endpoint is deprecated
+      operationId: DeleteFolderDeprecated
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder_id
+        in: path
+        description: Folder ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                default: null
+      deprecated: true
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: Folders
+        operation: delete
+components:
+  schemas:
+    Folder:
+      type: object
+      description: Common folder fields used in HTTP request and response bodies.
+      required:
+      - name
+      - description
+      properties:
+        description:
+          type: string
+        folderId:
+          type: string
+        name:
+          type: string
+    FolderType:
+      type: string
+      description: Indicates the type of data that the folder can contain.
+      enum:
+      - dashboards
+      - alerts
+      - reports
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

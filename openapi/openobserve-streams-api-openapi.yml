@@ -1,0 +1,990 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Streams API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Streams
+  description: Stream retrieval & management operations
+paths:
+  /api/{org_id}/streams:
+    get:
+      tags:
+      - Streams
+      summary: List organization streams
+      description: Retrieves a paginated list of streams within the organization, with optional filtering by type and keyword. Supports sorting by various metrics
+      operationId: StreamList
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        required: false
+        schema:
+          type: string
+      - name: keyword
+        in: query
+        description: Keyword
+        required: false
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Offset
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+      - name: limit
+        in: query
+        description: Limit
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+      - name: sort
+        in: query
+        description: Sort
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - list
+                - total
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Stream'
+                  total:
+                    type: integer
+                    minimum: 0
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Streams
+        operation: list
+      x-o2-mcp:
+        description: List all streams in the organization, you can filter by type and keyword.
+        category: streams
+        summary_fields:
+        - name
+        - stream_type
+        - stats.storage_size
+        pinned: true
+  /api/{org_id}/streams/{stream_name}:
+    post:
+      tags:
+      - Streams
+      summary: Create new stream
+      description: Creates a new stream with specified settings and schema definition. The stream will be used to store and organize data of the specified type
+      operationId: StreamCreate
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: Stream name
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: Stream create
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - fields
+              - settings
+              properties:
+                fields:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/StreamField'
+                settings:
+                  $ref: '#/components/schemas/StreamSettings'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Streams
+        operation: create
+      x-o2-mcp:
+        description: Create a new stream
+        category: streams
+    delete:
+      tags:
+      - Streams
+      summary: Delete stream
+      description: Permanently deletes a stream and all its associated data. Use delete_all parameter to remove related resources like alerts and dashboards
+      operationId: StreamDelete
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: Stream name
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        required: false
+        schema:
+          type: string
+      - name: delete_all
+        in: query
+        description: Delete all related feature resources
+        required: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Delete a stream
+        category: streams
+        requires_confirmation: true
+      x-o2-ratelimit:
+        module: Streams
+        operation: delete
+  /api/{org_id}/streams/{stream_name}/delete_fields:
+    put:
+      tags:
+      - Streams
+      summary: Delete stream fields
+      description: Removes specified fields from the stream schema. This operation will affect how future data is indexed and queried for this stream
+      operationId: StreamDeleteFields
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: Stream name
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: Stream delete fields
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - fields
+              properties:
+                fields:
+                  type: array
+                  items:
+                    type: string
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: Streams
+        operation: delete
+  /api/{org_id}/streams/{stream_name}/schema:
+    get:
+      tags:
+      - Streams
+      summary: Get stream schema
+      description: Retrieves the schema definition for a specific stream, including field types and metadata. Supports filtering by keyword and pagination
+      operationId: StreamSchema
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: Stream name
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        required: false
+        schema:
+          type: string
+      - name: keyword
+        in: query
+        description: 'Keyword filter for field names (default: empty)'
+        required: false
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: 'Pagination offset (default: 0)'
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+      - name: limit
+        in: query
+        description: 'Pagination limit (default: 0 = all)'
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Get stream schema
+        category: streams
+        pinned: true
+      x-o2-ratelimit:
+        module: Streams
+        operation: get
+  /api/{org_id}/streams/{stream_name}/settings:
+    put:
+      tags:
+      - Streams
+      summary: Update stream settings
+      description: Updates configuration settings for an existing stream, including retention policies, partitioning, and other stream-specific options
+      operationId: UpdateStreamSettings
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: Stream name
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: Stream settings
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                approx_partition:
+                  type:
+                  - boolean
+                  - 'null'
+                bloom_filter_fields:
+                  $ref: '#/components/schemas/UpdateSettingsWrapper_String'
+                cross_links:
+                  $ref: '#/components/schemas/UpdateSettingsWrapper_CrossLink'
+                data_retention:
+                  type:
+                  - integer
+                  - 'null'
+                  format: int64
+                defined_schema_fields:
+                  $ref: '#/components/schemas/UpdateSettingsWrapper_String'
+                distinct_value_fields:
+                  $ref: '#/components/schemas/UpdateSettingsWrapper_String'
+                enable_distinct_fields:
+                  type:
+                  - boolean
+                  - 'null'
+                enable_log_patterns_extraction:
+                  type:
+                  - boolean
+                  - 'null'
+                extended_retention_days:
+                  $ref: '#/components/schemas/UpdateSettingsWrapper_TimeRange'
+                flatten_level:
+                  type:
+                  - integer
+                  - 'null'
+                  format: int64
+                full_text_search_keys:
+                  $ref: '#/components/schemas/UpdateSettingsWrapper_String'
+                index_all_values:
+                  type:
+                  - boolean
+                  - 'null'
+                index_fields:
+                  $ref: '#/components/schemas/UpdateSettingsWrapper_String'
+                index_original_data:
+                  type:
+                  - boolean
+                  - 'null'
+                max_query_range:
+                  type:
+                  - integer
+                  - 'null'
+                  format: int64
+                partition_keys:
+                  $ref: '#/components/schemas/UpdateSettingsWrapper_StreamPartition'
+                pattern_associations:
+                  $ref: '#/components/schemas/UpdateSettingsWrapper_PatternAssociation'
+                storage_type:
+                  oneOf:
+                  - type: 'null'
+                  - $ref: '#/components/schemas/StorageType'
+                store_original_data:
+                  type:
+                  - boolean
+                  - 'null'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Update stream settings
+        category: streams
+        requires_confirmation: true
+      x-o2-ratelimit:
+        module: Streams
+        operation: update
+components:
+  schemas:
+    StreamStats:
+      type: object
+      required:
+      - created_at
+      - doc_time_min
+      - doc_time_max
+      - doc_num
+      - file_num
+      - storage_size
+      - compressed_size
+      - index_size
+      properties:
+        compressed_size:
+          type: number
+          format: double
+        created_at:
+          type: integer
+          format: int64
+        doc_num:
+          type: integer
+          format: int64
+        doc_time_max:
+          type: integer
+          format: int64
+        doc_time_min:
+          type: integer
+          format: int64
+        file_num:
+          type: integer
+          format: int64
+        index_size:
+          type: number
+          format: double
+        storage_size:
+          type: number
+          format: double
+    UpdateSettingsWrapper_TimeRange:
+      type: object
+      properties:
+        add:
+          type: array
+          items:
+            type: object
+            required:
+            - start
+            - end
+            properties:
+              end:
+                type: integer
+                format: int64
+                description: End timestamp in microseconds
+              start:
+                type: integer
+                format: int64
+                description: Start timestamp in microseconds
+        remove:
+          type: array
+          items:
+            type: object
+            required:
+            - start
+            - end
+            properties:
+              end:
+                type: integer
+                format: int64
+                description: End timestamp in microseconds
+              start:
+                type: integer
+                format: int64
+                description: Start timestamp in microseconds
+    PatternAssociation:
+      type: object
+      required:
+      - field
+      - pattern_name
+      - description
+      - pattern
+      - pattern_id
+      - policy
+      - apply_at
+      properties:
+        apply_at:
+          type: string
+        description:
+          type: string
+        field:
+          type: string
+        pattern:
+          type: string
+        pattern_id:
+          type: string
+        pattern_name:
+          type: string
+        policy:
+          type: string
+    DistinctField:
+      type: object
+      description: 'WARNING: this implements Eq trait based only on the name,
+
+        so the timestamp will not be considered when comparing two entries'
+      required:
+      - name
+      - added_ts
+      properties:
+        added_ts:
+          type: integer
+          format: int64
+        name:
+          type: string
+    StreamPartition:
+      type: object
+      required:
+      - field
+      properties:
+        disabled:
+          type: boolean
+        field:
+          type: string
+        types:
+          $ref: '#/components/schemas/StreamPartitionType'
+    CrossLinkField:
+      type: object
+      required:
+      - name
+      properties:
+        alias:
+          type:
+          - string
+          - 'null'
+          description: 'Populated by result_schema: the alias used in the query for this field.'
+        name:
+          type: string
+    StreamPartitionType:
+      oneOf:
+      - type: string
+        enum:
+        - value
+      - type: object
+        required:
+        - hash
+        properties:
+          hash:
+            type: integer
+            format: int64
+            minimum: 0
+      - type: string
+        enum:
+        - prefix
+    CrossLink:
+      type: object
+      description: A cross-link entry for drill-down/navigation from log/trace records
+      required:
+      - name
+      - url
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CrossLinkField'
+          description: 'Show link only when at least one field matches the record.
+
+            If empty, the link is always shown.'
+        name:
+          type: string
+          description: Display name for the link
+        url:
+          type: string
+          description: URL template with {field_name} placeholders
+    UpdateSettingsWrapper_StreamPartition:
+      type: object
+      properties:
+        add:
+          type: array
+          items:
+            type: object
+            required:
+            - field
+            properties:
+              disabled:
+                type: boolean
+              field:
+                type: string
+              types:
+                $ref: '#/components/schemas/StreamPartitionType'
+        remove:
+          type: array
+          items:
+            type: object
+            required:
+            - field
+            properties:
+              disabled:
+                type: boolean
+              field:
+                type: string
+              types:
+                $ref: '#/components/schemas/StreamPartitionType'
+    Metadata:
+      type: object
+      required:
+      - metric_type
+      - metric_family_name
+      - help
+      - unit
+      properties:
+        help:
+          type: string
+        metric_family_name:
+          type: string
+        metric_type:
+          $ref: '#/components/schemas/MetricType'
+        unit:
+          type: string
+    StorageType:
+      type: string
+      enum:
+      - normal
+      - compliance
+    TimeRange:
+      type: object
+      required:
+      - start
+      - end
+      properties:
+        end:
+          type: integer
+          format: int64
+          description: End timestamp in microseconds
+        start:
+          type: integer
+          format: int64
+          description: Start timestamp in microseconds
+    UpdateSettingsWrapper_CrossLink:
+      type: object
+      properties:
+        add:
+          type: array
+          items:
+            type: object
+            description: A cross-link entry for drill-down/navigation from log/trace records
+            required:
+            - name
+            - url
+            properties:
+              fields:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrossLinkField'
+                description: 'Show link only when at least one field matches the record.
+
+                  If empty, the link is always shown.'
+              name:
+                type: string
+                description: Display name for the link
+              url:
+                type: string
+                description: URL template with {field_name} placeholders
+        remove:
+          type: array
+          items:
+            type: object
+            description: A cross-link entry for drill-down/navigation from log/trace records
+            required:
+            - name
+            - url
+            properties:
+              fields:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrossLinkField'
+                description: 'Show link only when at least one field matches the record.
+
+                  If empty, the link is always shown.'
+              name:
+                type: string
+                description: Display name for the link
+              url:
+                type: string
+                description: URL template with {field_name} placeholders
+    MetricType:
+      type: string
+      enum:
+      - Unknown
+      - Counter
+      - Gauge
+      - Histogram
+      - GaugeHistogram
+      - ExponentialHistogram
+      - Summary
+      - Info
+      - StateSet
+      - Empty
+    Stream:
+      type: object
+      required:
+      - name
+      - storage_type
+      - stream_type
+      - stats
+      - schema
+      - settings
+      - total_fields
+      properties:
+        is_derived:
+          type:
+          - boolean
+          - 'null'
+        metrics_meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Metadata'
+        name:
+          type: string
+        pattern_associations:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatternAssociation'
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamField'
+        settings:
+          $ref: '#/components/schemas/StreamSettings'
+        stats:
+          $ref: '#/components/schemas/StreamStats'
+        storage_type:
+          type: string
+        stream_type:
+          $ref: '#/components/schemas/StreamType'
+        total_fields:
+          type: integer
+          minimum: 0
+        uds_schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamField'
+    UpdateSettingsWrapper_String:
+      type: object
+      properties:
+        add:
+          type: array
+          items:
+            type: string
+        remove:
+          type: array
+          items:
+            type: string
+    UpdateSettingsWrapper_PatternAssociation:
+      type: object
+      properties:
+        add:
+          type: array
+          items:
+            type: object
+            required:
+            - field
+            - pattern_name
+            - description
+            - pattern
+            - pattern_id
+            - policy
+            - apply_at
+            properties:
+              apply_at:
+                type: string
+              description:
+                type: string
+              field:
+                type: string
+              pattern:
+                type: string
+              pattern_id:
+                type: string
+              pattern_name:
+                type: string
+              policy:
+                type: string
+        remove:
+          type: array
+          items:
+            type: object
+            required:
+            - field
+            - pattern_name
+            - description
+            - pattern
+            - pattern_id
+            - policy
+            - apply_at
+            properties:
+              apply_at:
+                type: string
+              description:
+                type: string
+              field:
+                type: string
+              pattern:
+                type: string
+              pattern_id:
+                type: string
+              pattern_name:
+                type: string
+              policy:
+                type: string
+    StreamType:
+      type: string
+      enum:
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
+    StreamSettings:
+      type: object
+      properties:
+        approx_partition:
+          type: boolean
+        bloom_filter_fields:
+          type: array
+          items:
+            type: string
+        cross_links:
+          type: array
+          items:
+            $ref: '#/components/schemas/CrossLink'
+        data_retention:
+          type: integer
+          format: int64
+        defined_schema_fields:
+          type: array
+          items:
+            type: string
+        distinct_value_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/DistinctField'
+        enable_distinct_fields:
+          type: boolean
+        enable_log_patterns_extraction:
+          type: boolean
+        extended_retention_days:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeRange'
+        flatten_level:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        full_text_search_keys:
+          type: array
+          items:
+            type: string
+        index_all_values:
+          type: boolean
+        index_fields:
+          type: array
+          items:
+            type: string
+        index_original_data:
+          type: boolean
+        index_updated_at:
+          type: integer
+          format: int64
+        is_llm_stream:
+          type: boolean
+        max_query_range:
+          type: integer
+          format: int64
+        partition_keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamPartition'
+        storage_type:
+          $ref: '#/components/schemas/StorageType'
+        store_original_data:
+          type: boolean
+    StreamField:
+      type: object
+      required:
+      - name
+      - type
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

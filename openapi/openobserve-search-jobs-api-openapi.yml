@@ -1,0 +1,546 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Search Jobs API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Search Jobs
+paths:
+  /api/{org_id}/search_jobs:
+    get:
+      tags:
+      - Search Jobs
+      summary: List search jobs
+      description: Retrieves a list of all search jobs for the organization, including their current status, execution details, and metadata. This includes both active and completed jobs, allowing you to monitor the progress of running searches and access historical job information for analysis and debugging purposes.
+      operationId: ListSearchJobs
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of search jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+              example:
+              - id: abc123
+                trace_id: xyz789
+                org_id: default
+                user_id: user1
+                stream_type: logs
+                stream_names: '["stream1"]'
+                payload: '...'
+                start_time: 1675182660872049
+                end_time: 1675185660872049
+                created_at: 1675182660872049
+                updated_at: 1675182660872049
+                status: 1
+                cluster: cluster1
+                result_path: /path/to/result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Search Jobs
+        operation: list
+      x-o2-mcp:
+        description: List all search jobs
+        category: search
+    post:
+      tags:
+      - Search Jobs
+      summary: Submit search job
+      description: Submits a new asynchronous search job for execution. Search jobs are useful for long-running queries that might exceed normal timeout limits or for scheduling queries to run in the background. The job is queued for execution and returns a job ID that can be used to monitor progress and retrieve results later.
+      operationId: SubmitSearchJob
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Search query
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - query
+              properties:
+                clear_cache:
+                  type: boolean
+                clusters:
+                  type: array
+                  items:
+                    type: string
+                encoding:
+                  $ref: '#/components/schemas/RequestEncoding'
+                local_mode:
+                  type:
+                  - boolean
+                  - 'null'
+                query:
+                  $ref: '#/components/schemas/SearchQuery'
+                regions:
+                  type: array
+                  items:
+                    type: string
+                search_event_context:
+                  oneOf:
+                  - type: 'null'
+                  - $ref: '#/components/schemas/SearchEventContext'
+                search_type:
+                  oneOf:
+                  - type: 'null'
+                  - $ref: '#/components/schemas/SearchEventType'
+                timeout:
+                  type: integer
+                  format: int64
+                use_cache:
+                  type: boolean
+            example:
+              query:
+                sql: 'select * from k8s '
+                start_time: 1675182660872049
+                end_time: 1675185660872049
+                limit: 100
+                offset: 0
+        required: true
+      responses:
+        '200':
+          description: Search Job submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Search Jobs
+        operation: create
+      x-o2-mcp:
+        description: Submit async search job
+        category: search
+  /api/{org_id}/search_jobs/{job_id}:
+    get:
+      tags:
+      - Search Jobs
+      summary: Get search job status
+      description: Retrieves the current status and metadata for a specific search job. This includes execution state, timing information, error messages if any, and other job details. Use this to monitor job progress and determine when results are ready for retrieval or if the job encountered any issues during execution.
+      operationId: GetSearchJobStatus
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: job_id
+        in: path
+        description: Search job ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Search job status
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: abc123
+                trace_id: xyz789
+                org_id: default
+                user_id: user1
+                stream_type: logs
+                stream_names: '["stream1"]'
+                payload: '...'
+                start_time: 1675182660872049
+                end_time: 1675185660872049
+                created_at: 1675182660872049
+                updated_at: 1675182660872049
+                status: 1
+                cluster: cluster1
+                result_path: /path/to/result
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Get search job status
+        category: search
+      x-o2-ratelimit:
+        module: Search Jobs
+        operation: get
+    delete:
+      tags:
+      - Search Jobs
+      summary: Delete search job
+      description: Permanently deletes a search job and its associated results from the system. This action first cancels the job if it's still running, then removes all job data including metadata and stored results. Use this to clean up completed jobs and free up storage space. This operation cannot be undone.
+      operationId: DeleteSearchJob
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: job_id
+        in: path
+        description: Search job ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Search job deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: '[Job_Id: abc123] Running Search Job deleted successfully.'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Search Jobs
+        operation: delete
+      x-o2-mcp:
+        description: Delete a search job
+        category: search
+        requires_confirmation: true
+  /api/{org_id}/search_jobs/{job_id}/cancel:
+    post:
+      tags:
+      - Search Jobs
+      summary: Cancel search job
+      description: Cancels a running or pending search job, stopping its execution and freeing up resources. This is useful for stopping long-running queries that are no longer needed or consuming too many resources. Once cancelled, the job cannot be resumed and no results will be available.
+      operationId: CancelSearchJob
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: job_id
+        in: path
+        description: Search job ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Search job cancelled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: '[Job_Id: abc123] Running Search Job cancelled successfully.'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Search Jobs
+        operation: update
+      x-o2-mcp:
+        description: Cancel a running search job
+        category: search
+  /api/{org_id}/search_jobs/{job_id}/result:
+    get:
+      tags:
+      - Search Jobs
+      summary: Get search job results
+      description: Retrieves the results from a completed search job with optional pagination. The job must have finished successfully before results can be accessed. Results include the matching records, total count, execution timing, and metadata. Use pagination parameters to retrieve large result sets in manageable chunks.
+      operationId: GetSearchJobResult
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: job_id
+        in: path
+        description: Search job ID
+        required: true
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: Pagination start offset
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: size
+        in: query
+        description: Number of results to return
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Search job results
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                took: 155
+                hits: []
+                total: 27179431
+                from: 0
+                size: 100
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Search Jobs
+        operation: get
+      x-o2-mcp:
+        description: Get search job results
+        category: search
+  /api/{org_id}/search_jobs/{job_id}/retry:
+    post:
+      tags:
+      - Search Jobs
+      summary: Retry search job
+      description: Retries a previously failed or cancelled search job by resubmitting it for execution. This is useful for handling transient failures or resource constraints that may have caused the original job to fail. Only cancelled or finished (failed) jobs can be retried. The job will be re-queued with the same original parameters and query.
+      operationId: RetrySearchJob
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: job_id
+        in: path
+        description: Search job ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Search job retry initiated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: '[Job_Id: abc123] Search Job retry successfully.'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: Forbidden - Job cannot be retried
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Retry a failed search job
+        category: search
+      x-o2-ratelimit:
+        module: Search Jobs
+        operation: update
+components:
+  schemas:
+    SearchEventType:
+      type: string
+      enum:
+      - ui
+      - dashboards
+      - reports
+      - alerts
+      - values
+      - other
+      - rum
+      - derivedstream
+      - searchjob
+      - download
+      - insights
+    SearchEventContext:
+      type: object
+      properties:
+        alert_key:
+          type:
+          - string
+          - 'null'
+        alert_name:
+          type:
+          - string
+          - 'null'
+        dashboard_id:
+          type:
+          - string
+          - 'null'
+        dashboard_name:
+          type:
+          - string
+          - 'null'
+        derived_stream_key:
+          type:
+          - string
+          - 'null'
+        folder_id:
+          type:
+          - string
+          - 'null'
+        folder_name:
+          type:
+          - string
+          - 'null'
+        report_id:
+          type:
+          - string
+          - 'null'
+    RequestEncoding:
+      type: string
+      enum:
+      - base64
+      - Empty
+    SearchQuery:
+      type: object
+      required:
+      - sql
+      - start_time
+      - end_time
+      properties:
+        action_id:
+          type:
+          - string
+          - 'null'
+        end_time:
+          type: integer
+          format: int64
+        from:
+          type: integer
+          format: int64
+        histogram_interval:
+          type: integer
+          format: int64
+        query_fn:
+          type:
+          - string
+          - 'null'
+        query_type:
+          type: string
+        quick_mode:
+          type: boolean
+        sampling_config:
+          type:
+          - object
+          - 'null'
+        sampling_ratio:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: 'Simplified sampling API: just specify ratio (0.0-1.0), backend uses optimal defaults
+
+            Takes precedence over sampling_config if both are provided'
+        size:
+          type: integer
+          format: int64
+        skip_wal:
+          type: boolean
+        sql:
+          type: string
+        start_time:
+          type: integer
+          format: int64
+        streaming_id:
+          type:
+          - string
+          - 'null'
+        streaming_output:
+          type: boolean
+        track_total_hits:
+          type: boolean
+        uses_zo_fn:
+          type: boolean
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

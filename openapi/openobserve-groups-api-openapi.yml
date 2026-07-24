@@ -1,0 +1,267 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Groups API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Groups
+paths:
+  /api/{org_id}/groups:
+    get:
+      tags:
+      - Groups
+      summary: List organization groups
+      description: Retrieves a list of all user groups in the organization. Users will only see groups they have permissions to view when role-based access control is active. Useful for managing group-based permissions and understanding organizational structure. Requires enterprise features to be enabled.
+      operationId: ListGroups
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+    post:
+      tags:
+      - Groups
+      summary: Create user group
+      description: Creates a new user group with specified users and roles. Groups allow efficient management of permissions by assigning roles to groups instead of individual users. Requires enterprise features to be enabled.
+      operationId: CreateGroup
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: UserGroup
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                roles:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                  uniqueItems: true
+                users:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                  uniqueItems: true
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+  /api/{org_id}/groups/{group_name}:
+    get:
+      tags:
+      - Groups
+      summary: Get group details
+      description: Retrieves detailed information about a specific user group including its members, assigned roles, and configuration. Useful for understanding group composition and permissions. Requires enterprise features to be enabled.
+      operationId: GetGroup
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: group_name
+        in: path
+        description: Group name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - name
+                properties:
+                  name:
+                    type: string
+                  roles:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                    uniqueItems: true
+                  users:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                    uniqueItems: true
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+    put:
+      tags:
+      - Groups
+      summary: Update user group
+      description: Updates an existing user group by adding or removing users and roles. Allows dynamic management of group membership and permissions to maintain proper access control. Requires enterprise features to be enabled.
+      operationId: UpdateGroup
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: group_name
+        in: path
+        description: Group name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: UserGroupRequest
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                add_roles:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                  uniqueItems: true
+                add_users:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                  uniqueItems: true
+                remove_roles:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                  uniqueItems: true
+                remove_users:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                  uniqueItems: true
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+    delete:
+      tags:
+      - Groups
+      summary: Delete user group
+      description: Permanently removes a user group from the organization. Users in the group will lose group-based permissions but retain any directly assigned roles. This action cannot be undone. Requires enterprise features to be enabled.
+      operationId: DeleteGroup
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: group_name
+        in: path
+        description: Group name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+components:
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

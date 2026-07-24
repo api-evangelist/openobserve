@@ -1,0 +1,989 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Incidents API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Incidents
+  description: Alert incident correlation & management operations
+paths:
+  /api/v2/{org_id}/alerts/incidents:
+    get:
+      tags:
+      - Incidents
+      summary: List alert incidents
+      description: Retrieves a list of correlated alert incidents with optional status filtering and pagination.
+      operationId: ListIncidents
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Filter by status (open, acknowledged, resolved)
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: limit
+        in: query
+        description: Maximum number of results
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: offset
+        in: query
+        description: Offset for pagination
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListIncidentsResponse'
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Alerts
+        operation: list
+      x-o2-mcp:
+        description: List all incidents
+        category: alerts
+  /api/v2/{org_id}/alerts/incidents/stats:
+    get:
+      tags:
+      - Incidents
+      summary: Get incident statistics
+      description: Retrieves statistics about incidents including counts by status and severity.
+      operationId: GetIncidentStats
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentStats'
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Alerts
+        operation: get
+      x-o2-mcp:
+        description: Get incident statistics
+        category: alerts
+  /api/v2/{org_id}/alerts/incidents/{incident_id}:
+    get:
+      tags:
+      - Incidents
+      summary: Get incident details
+      description: Retrieves detailed information about a specific incident including all correlated alerts.
+      operationId: GetIncident
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: incident_id
+        in: path
+        description: Incident ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentWithAlerts'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Alerts
+        operation: get
+      x-o2-mcp:
+        description: Get an incident's details
+        category: alerts
+        pinned: true
+  /api/v2/{org_id}/alerts/incidents/{incident_id}/rca:
+    post:
+      tags:
+      - Incidents
+      summary: Trigger RCA analysis for an incident
+      description: Triggers root cause analysis for an incident. Use stream=true query parameter for streaming response, otherwise returns complete result as JSON.
+      operationId: TriggerIncidentRca
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: incident_id
+        in: path
+        description: Incident ID
+        required: true
+        schema:
+          type: string
+      - name: stream
+        in: query
+        description: 'Use streaming response (default: false)'
+        required: false
+        schema:
+          type: boolean
+      - name: reanalysis
+        in: query
+        description: 'Treat this as a user-initiated reanalysis — bypasses cooldown (default: false)'
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: RCA analysis completed or SSE stream
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RcaResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                default: null
+        '503':
+          description: RCA agent unavailable
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Alerts
+        operation: update
+      x-o2-mcp:
+        description: Manually trigger incident RCA
+        category: alerts
+  /api/v2/{org_id}/alerts/incidents/{incident_id}/update:
+    patch:
+      tags:
+      - Incidents
+      summary: Update incident fields
+      description: Updates incident title, severity, or status. This endpoint is only available with enterprise features enabled.
+      operationId: UpdateIncident
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: incident_id
+        in: path
+        description: Incident ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Field to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePayload'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Incident'
+        '403':
+          description: Enterprise feature
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Update an incident's title or severity. Status changes (resolve, acknowledge, reopen) are NOT supported via this tool — they must be performed by a human in the UI.
+        category: alerts
+      x-o2-ratelimit:
+        module: Alerts
+        operation: update
+components:
+  schemas:
+    IncidentStatus:
+      type: string
+      description: 'Incident status lifecycle: Open → Acknowledged → Resolved'
+      enum:
+      - open
+      - acknowledged
+      - resolved
+    GroupingConfig:
+      type: object
+      description: Configuration for alert grouping
+      properties:
+        enabled:
+          type: boolean
+          description: Enable alert grouping
+        group_wait_seconds:
+          type: integer
+          format: int64
+          description: Initial wait time before sending first notification (seconds)
+        max_group_size:
+          type: integer
+          description: Maximum number of alerts in a single group
+          minimum: 0
+        send_strategy:
+          $ref: '#/components/schemas/SendStrategy'
+          description: How to send grouped notifications
+    QueryCondition:
+      type: object
+      properties:
+        aggregation:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Aggregation'
+        conditions:
+          type:
+          - object
+          - 'null'
+        multi_time_range:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CompareHistoricData'
+        promql:
+          type:
+          - string
+          - 'null'
+        promql_condition:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Condition'
+        search_event_type:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/SearchEventType'
+        sql:
+          type:
+          - string
+          - 'null'
+        type:
+          $ref: '#/components/schemas/QueryType'
+        vrl_function:
+          type:
+          - string
+          - 'null'
+    IncidentTopology:
+      type: object
+      description: Alert flow graph showing how alerts cascaded across services over time
+      required:
+      - nodes
+      - edges
+      - related_incident_ids
+      properties:
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertEdge'
+          description: Edges showing temporal and service dependency relationships
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertNode'
+          description: Alert nodes - each unique (service, alert) pair
+        related_incident_ids:
+          type: array
+          items:
+            type: string
+          description: Related incident IDs (for cross-incident correlation)
+        suggested_root_cause:
+          type:
+          - string
+          - 'null'
+          description: AI-generated root cause analysis (markdown)
+    EdgeType:
+      type: string
+      description: Type of relationship between alert nodes
+      enum:
+      - temporal
+      - service_dependency
+    Alert:
+      type: object
+      properties:
+        context_attributes:
+          type:
+          - object
+          - 'null'
+          default: null
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        creates_incident:
+          type: boolean
+          description: 'When true, this alert creates/joins incidents instead of sending direct notifications.
+
+            Notification is sent only when a new incident is created or a new alert type joins
+
+            an existing incident. Repeated firings are suppressed.
+
+            When false (default), the alert sends notifications directly and does not correlate
+
+            to any incident.'
+          default: false
+        deduplication:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/DeduplicationConfig'
+          default: null
+        description:
+          type: string
+          default: ''
+        destinations:
+          type: array
+          items:
+            type: string
+          default: []
+        enabled:
+          type: boolean
+          default: false
+        id:
+          type:
+          - string
+          - 'null'
+          default: null
+        is_real_time:
+          type: boolean
+          default: false
+        last_edited_by:
+          type:
+          - string
+          - 'null'
+          default: null
+        last_satisfied_at:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: Will be removed in the future.
+          default: null
+        last_triggered_at:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: Will be removed in the future.
+          default: null
+        name:
+          type: string
+          default: ''
+        org_id:
+          type: string
+          default: ''
+        owner:
+          type:
+          - string
+          - 'null'
+          default: null
+        query_condition:
+          oneOf:
+          - $ref: '#/components/schemas/QueryCondition'
+          default:
+            type: custom
+            conditions: null
+            sql: null
+            promql: null
+            promql_condition: null
+            aggregation: null
+            vrl_function: null
+            search_event_type: null
+            multi_time_range: null
+        row_template:
+          type: string
+          default: ''
+        row_template_type:
+          oneOf:
+          - $ref: '#/components/schemas/RowTemplateType'
+          default: String
+        stream_name:
+          type: string
+          default: ''
+        stream_type:
+          oneOf:
+          - $ref: '#/components/schemas/StreamType'
+          default: logs
+        template:
+          type:
+          - string
+          - 'null'
+          description: 'Optional template name. When specified, this template is used for all
+
+            destinations instead of destination-level templates. This allows using
+
+            different templates for different alerts while reusing the same destinations.'
+          default: null
+        trigger_condition:
+          oneOf:
+          - $ref: '#/components/schemas/TriggerCondition'
+          default:
+            period: 0
+            operator: '='
+            threshold: 0
+            frequency: 0
+            cron: ''
+            frequency_type: minutes
+            silence: 0
+            tolerance_in_secs: null
+            align_time: false
+        tz_offset:
+          type: integer
+          format: int32
+          description: 'Timezone offset in minutes.
+
+            The negative secs means the Western Hemisphere'
+          default: 0
+        updated_at:
+          type: string
+          format: date-time
+          default: null
+    SearchEventType:
+      type: string
+      enum:
+      - ui
+      - dashboards
+      - reports
+      - alerts
+      - values
+      - other
+      - rum
+      - derivedstream
+      - searchjob
+      - download
+      - insights
+    KeyType:
+      type: string
+      description: 'Classification of correlation key strength for hierarchical upgrade logic
+
+
+        Hierarchy: AlertId (weakest) → Secondary → Primary (strongest)
+
+        Upgrades only move UP the hierarchy, never down.'
+      enum:
+      - alert_id
+      - secondary
+      - primary
+    CorrelationReason:
+      type: string
+      description: How an alert was correlated to an incident
+      enum:
+      - service_discovery
+      - primary_match
+      - secondary_match
+      - alert_id
+    DeduplicationConfig:
+      type: object
+      description: 'Per-alert deduplication configuration (from main branch)
+
+
+        This is stored on each Alert and specifies which fields to use for fingerprinting.
+
+        This matches the structure from the main branch exactly.
+
+        Configuration for alert deduplication'
+      properties:
+        enabled:
+          type: boolean
+          description: Enable/disable deduplication
+          default: false
+        fingerprint_fields:
+          type: array
+          items:
+            type: string
+          description: 'Fields from query results to use for fingerprinting
+
+            If empty, auto-detect based on query type:
+
+            - Custom: Fields from query conditions
+
+            - SQL: GROUP BY columns
+
+            - PromQL: All label dimensions'
+          default: []
+        grouping:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/GroupingConfig'
+            description: Optional alert grouping configuration
+          default: null
+        time_window_minutes:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'Time window in minutes for deduplication
+
+            If None, defaults to 2x alert frequency'
+          default: null
+    RcaResponse:
+      type: object
+      description: Response for RCA analysis
+      required:
+      - rca_content
+      properties:
+        rca_content:
+          type: string
+    IncidentAlert:
+      type: object
+      description: Alert info within an incident (junction table representation)
+      required:
+      - incident_id
+      - alert_id
+      - alert_name
+      - alert_fired_at
+      - correlation_reason
+      - created_at
+      properties:
+        alert_fired_at:
+          type: integer
+          format: int64
+        alert_id:
+          type: string
+        alert_name:
+          type: string
+        correlation_reason:
+          $ref: '#/components/schemas/CorrelationReason'
+        created_at:
+          type: integer
+          format: int64
+        incident_id:
+          type: string
+    Aggregation:
+      type: object
+      required:
+      - function
+      - having
+      properties:
+        function:
+          $ref: '#/components/schemas/AggFunction'
+        group_by:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        having:
+          $ref: '#/components/schemas/Condition'
+    Condition:
+      type: object
+      required:
+      - column
+      - operator
+      - value
+      properties:
+        column:
+          type: string
+        ignore_case:
+          type: boolean
+        operator:
+          $ref: '#/components/schemas/Operator'
+        value:
+          type: object
+    UpdatePayload:
+      oneOf:
+      - type: object
+        description: Update incident title
+        required:
+        - title
+        properties:
+          title:
+            type: string
+      - type: object
+        description: Update incident severity
+        required:
+        - severity
+        properties:
+          severity:
+            $ref: '#/components/schemas/IncidentSeverity'
+      - type: object
+        description: Update incident status
+        required:
+        - status
+        properties:
+          status:
+            $ref: '#/components/schemas/IncidentStatus'
+      description: 'Update payload enum for incident field updates
+
+        Ensures only one field can be updated per request'
+    IncidentStats:
+      type: object
+      description: Statistics for incidents dashboard
+      required:
+      - total_incidents
+      - open_incidents
+      - acknowledged_incidents
+      - resolved_incidents
+      - by_severity
+      - by_service
+      - alerts_per_incident_avg
+      properties:
+        acknowledged_incidents:
+          type: integer
+          format: int64
+        alerts_per_incident_avg:
+          type: number
+          format: double
+          description: Average alerts per incident
+        by_service:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+          propertyNames:
+            type: string
+        by_severity:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+          propertyNames:
+            type: string
+        mttr_minutes:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: Mean time to resolve in minutes
+        open_incidents:
+          type: integer
+          format: int64
+        resolved_incidents:
+          type: integer
+          format: int64
+        total_incidents:
+          type: integer
+          format: int64
+    CompareHistoricData:
+      type: object
+      required:
+      - offSet
+      properties:
+        offSet:
+          type: string
+    Incident:
+      type: object
+      description: Main incident entity - a group of correlated alerts
+      required:
+      - id
+      - org_id
+      - status
+      - severity
+      - first_alert_at
+      - last_alert_at
+      - alert_count
+      - created_at
+      - updated_at
+      properties:
+        alert_count:
+          type: integer
+          format: int32
+        assigned_to:
+          type:
+          - string
+          - 'null'
+        created_at:
+          type: integer
+          format: int64
+        first_alert_at:
+          type: integer
+          format: int64
+          description: Timestamps in microseconds
+        group_values: {}
+        id:
+          type: string
+          description: KSUID (27 chars)
+        key_type:
+          $ref: '#/components/schemas/KeyType'
+        last_alert_at:
+          type: integer
+          format: int64
+        org_id:
+          type: string
+        resolved_at:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        severity:
+          $ref: '#/components/schemas/IncidentSeverity'
+        status:
+          $ref: '#/components/schemas/IncidentStatus'
+        title:
+          type:
+          - string
+          - 'null'
+        topology_context:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/IncidentTopology'
+        updated_at:
+          type: integer
+          format: int64
+    SendStrategy:
+      type: string
+      description: Strategy for sending grouped alert notifications
+      enum:
+      - first_with_count
+      - summary
+      - all
+    FrequencyType:
+      type: string
+      enum:
+      - cron
+      - minutes
+    Operator:
+      type: string
+      enum:
+      - '='
+      - '!='
+      - '>'
+      - '>='
+      - <
+      - <=
+      - contains
+      - not_contains
+    RowTemplateType:
+      type: string
+      enum:
+      - String
+      - Json
+    AlertEdge:
+      type: object
+      description: Edge in the alert flow graph
+      required:
+      - from_node_index
+      - to_node_index
+      - edge_type
+      properties:
+        edge_type:
+          $ref: '#/components/schemas/EdgeType'
+          description: Type of relationship
+        from_node_index:
+          type: integer
+          description: Source node index
+          minimum: 0
+        to_node_index:
+          type: integer
+          description: Target node index
+          minimum: 0
+    IncidentSeverity:
+      type: string
+      description: Incident severity levels (P1 = highest priority)
+      enum:
+      - P1
+      - P2
+      - P3
+      - P4
+    AggFunction:
+      type: string
+      enum:
+      - avg
+      - min
+      - max
+      - sum
+      - count
+      - median
+      - p50
+      - p75
+      - p90
+      - p95
+      - p99
+    TriggerCondition:
+      type: object
+      properties:
+        align_time:
+          type: boolean
+          default: false
+        cron:
+          type: string
+          default: ''
+        frequency:
+          type: integer
+          format: int64
+          description: (seconds)
+          default: 0
+        frequency_type:
+          oneOf:
+          - $ref: '#/components/schemas/FrequencyType'
+          default: minutes
+        operator:
+          oneOf:
+          - $ref: '#/components/schemas/Operator'
+          default: '='
+        period:
+          type: integer
+          format: int64
+          description: (minutes)
+          default: 0
+        silence:
+          type: integer
+          format: int64
+          description: (minutes)
+          default: 0
+        threshold:
+          type: integer
+          format: int64
+          default: 0
+        timezone:
+          type:
+          - string
+          - 'null'
+          default: null
+        tolerance_in_secs:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: (seconds)
+          default: null
+    IncidentWithAlerts:
+      allOf:
+      - $ref: '#/components/schemas/Incident'
+      - type: object
+        required:
+        - triggers
+        - alerts
+        properties:
+          alerts:
+            type: array
+            items:
+              $ref: '#/components/schemas/Alert'
+            description: Unique alerts with full details
+          triggers:
+            type: array
+            items:
+              $ref: '#/components/schemas/IncidentAlert'
+            description: Alert triggers (each alert firing is a separate trigger)
+      description: Incident with its alerts (for detail view)
+    ListIncidentsResponse:
+      type: object
+      description: Response for list incidents
+      required:
+      - incidents
+      - total
+      properties:
+        incidents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Incident'
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+    QueryType:
+      type: string
+      enum:
+      - custom
+      - sql
+      - promql
+    StreamType:
+      type: string
+      enum:
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
+    AlertNode:
+      type: object
+      description: Node in the alert flow graph
+      required:
+      - alert_id
+      - alert_name
+      - service_name
+      - alert_count
+      - first_fired_at
+      - last_fired_at
+      properties:
+        alert_count:
+          type: integer
+          format: int32
+          description: Number of times this alert fired
+          minimum: 0
+        alert_id:
+          type: string
+          description: Unique alert identifier (from alert definition)
+        alert_name:
+          type: string
+          description: Human-readable alert name for display
+        first_fired_at:
+          type: integer
+          format: int64
+          description: Timestamp of first occurrence (microseconds)
+        last_fired_at:
+          type: integer
+          format: int64
+          description: Timestamp of last occurrence (microseconds)
+        service_name:
+          type: string
+          description: Service name (may be "unknown")
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

@@ -1,0 +1,306 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Actions
+paths:
+  /api/{org_id}/actions:
+    get:
+      tags:
+      - Actions
+      summary: List automated actions
+      description: Retrieves a list of all automated actions configured for the organization. Returns action metadata including names, status, execution schedules, and basic configuration details. Helps administrators manage automation workflows, monitor action health, and understand the complete automation landscape across the organization.
+      operationId: ListActions
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Actions
+        operation: list
+      x-o2-mcp:
+        enabled: false
+  /api/{org_id}/actions/download/{ksuid}:
+    get:
+      tags:
+      - Actions
+      summary: Download action package
+      description: Downloads the complete action package as a ZIP file containing all source code, configuration files, dependencies, and metadata for a specific automated action. Useful for backup, version control, sharing actions across environments, or performing offline analysis of action implementations.
+      operationId: GetActionZip
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: ksuid
+        in: path
+        description: Action ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/zip:
+              schema:
+                type: string
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: Actions
+        operation: get
+  /api/{org_id}/actions/upload:
+    post:
+      tags:
+      - Actions
+      summary: Upload automated action package
+      description: Uploads a ZIP file containing an automated action package with source code, configuration, and dependencies. The package is extracted, validated, and deployed to the action execution environment. Supports both new action creation and updates to existing actions. Includes validation of environment variables, execution parameters, and package integrity.
+      operationId: UploadZippedAction
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Action processed successfully
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Error processing action
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Actions
+        operation: create
+      x-o2-mcp:
+        enabled: false
+  /api/{org_id}/actions/{action_id}:
+    get:
+      tags:
+      - Actions
+      summary: Get automated action details
+      description: Retrieves complete configuration and runtime details for a specific automated action. Returns execution parameters, environment variables, scheduling configuration, execution history, and performance metrics. Used for monitoring action behavior, troubleshooting issues, and reviewing automation settings.
+      operationId: GetAction
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: action_id
+        in: path
+        description: Action ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Actions
+        operation: get
+      x-o2-mcp:
+        enabled: false
+    put:
+      tags:
+      - Actions
+      summary: Update automated action
+      description: Updates the configuration and parameters of an existing automated action. Allows modification of execution settings, environment variables, scheduling parameters, and other action properties. Changes take effect on the next execution cycle, ensuring continuous operation with updated configuration.
+      operationId: UpdateAction
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: action_id
+        in: path
+        description: Action ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Template data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  default: ''
+                id:
+                  type:
+                  - string
+                  - 'null'
+                  default: null
+                is_default:
+                  type: boolean
+                  default: false
+                name:
+                  type: string
+                  default: ''
+                org_id:
+                  type: string
+                  default: ''
+                type:
+                  oneOf:
+                  - $ref: '#/components/schemas/TemplateType'
+                  default: http
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Actions
+        operation: update
+      x-o2-mcp:
+        enabled: false
+  /api/{org_id}/actions/{ksuid}:
+    delete:
+      tags:
+      - Actions
+      summary: Delete automated action
+      description: Permanently removes an automated action from the organization. The action must not be in use by active workflows or schedules before deletion. Once deleted, any scheduled executions or trigger-based invocations will stop, and the action configuration cannot be recovered.
+      operationId: DeleteAction
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: ksuid
+        in: path
+        description: Action ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Actions
+        operation: delete
+      x-o2-mcp:
+        enabled: false
+components:
+  schemas:
+    TemplateType:
+      oneOf:
+      - type: string
+        enum:
+        - http
+      - type: object
+        required:
+        - email
+        properties:
+          email:
+            type: object
+            required:
+            - title
+            properties:
+              title:
+                type: string
+      - type: string
+        enum:
+        - sns
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

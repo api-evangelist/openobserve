@@ -1,0 +1,291 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Users API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Users
+  description: Users retrieval & management operations
+paths:
+  /api/{org_id}/users:
+    get:
+      tags:
+      - Users
+      summary: List organization users
+      description: Retrieves a list of all users within the specified organization, including their roles, status, and basic profile information. Optionally filter to list users across all organizations if the requesting user has sufficient permissions. Returns user metadata such as email addresses, assigned roles, last login times, and account status.
+      operationId: UserList
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Users
+        operation: list
+      x-o2-mcp:
+        description: List all users
+        category: users
+        summary_fields:
+        - email
+        - role
+        - first_name
+        - last_name
+    post:
+      tags:
+      - Users
+      summary: Create new user
+      description: Creates a new user account within the organization with specified role and authentication credentials. The password must be at least 8 characters long and the email address must be valid. Users are automatically assigned to the organization with the specified role and can begin accessing resources immediately upon creation.
+      operationId: UserSave
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: User data
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UserRoleRequest'
+              - type: object
+                required:
+                - email
+                - password
+                properties:
+                  email:
+                    type: string
+                  first_name:
+                    type: string
+                  is_external:
+                    type: boolean
+                    description: Is the user created via ldap flow.
+                  last_name:
+                    type: string
+                  password:
+                    type: string
+                  token:
+                    type:
+                    - string
+                    - 'null'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Create a new user
+        category: users
+      x-o2-ratelimit:
+        module: Users
+        operation: create
+  /api/{org_id}/users/{email_id}:
+    put:
+      tags:
+      - Users
+      summary: Update user account
+      description: Updates user account information including role assignments, password changes, or other profile details. Users can modify their own account settings, while administrators have broader permissions to update any user account. Password changes require the new password to be at least 8 characters long for security compliance.
+      operationId: UserUpdate
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: email_id
+        in: path
+        description: User's email id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: User data
+        content:
+          application/json:
+            schema:
+              allOf:
+              - oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/UserRoleRequest'
+              - type: object
+                properties:
+                  change_password:
+                    type: boolean
+                  first_name:
+                    type:
+                    - string
+                    - 'null'
+                  last_name:
+                    type:
+                    - string
+                    - 'null'
+                  new_password:
+                    type:
+                    - string
+                    - 'null'
+                  old_password:
+                    type:
+                    - string
+                    - 'null'
+                  token:
+                    type:
+                    - string
+                    - 'null'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Update user details
+        category: users
+      x-o2-ratelimit:
+        module: Users
+        operation: update
+    post:
+      tags:
+      - Users
+      summary: Add user to organization
+      description: Adds an existing user account to the organization with the specified role assignment. The user must already exist in the system with valid authentication credentials. This operation grants the user access to organization resources and data according to their assigned role permissions.
+      operationId: AddUserToOrg
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: email_id
+        in: path
+        description: User's email id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: User role
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - role
+              properties:
+                custom_role:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                role:
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Add user to organization
+        category: users
+      x-o2-ratelimit:
+        module: Users
+        operation: create
+    delete:
+      tags:
+      - Users
+      summary: Remove user from organization
+      description: Removes a user from the organization, immediately revoking their access to all organization resources, data, and services. The user account itself remains active and can be added back to organizations later. This action is permanent and cannot be undone without re-adding the user explicitly.
+      operationId: RemoveUserFromOrg
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: email_id
+        in: path
+        description: User name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Users
+        operation: delete
+      x-o2-mcp:
+        description: Remove user from organization
+        category: users
+        requires_confirmation: true
+components:
+  schemas:
+    UserRoleRequest:
+      type: object
+      required:
+      - role
+      properties:
+        custom_role:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        role:
+          type: string
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

@@ -1,0 +1,550 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Functions API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Functions
+  description: Functions retrieval & management operations
+paths:
+  /api/{org_id}/enrichment_tables/{table_name}:
+    post:
+      tags:
+      - Functions
+      summary: Create or update enrichment table
+      description: Creates a new enrichment table or updates existing table data for log enrichment
+      operationId: CreateUpdateEnrichmentTable
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: table_name
+        in: path
+        description: Table name
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Saved enrichment table
+          content:
+            application/json:
+              schema:
+                default: null
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Create/update enrichment table
+        category: enrichment
+      x-o2-ratelimit:
+        module: Enrichment Table
+        operation: create
+  /api/{org_id}/enrichment_tables/{table_name}/url:
+    post:
+      tags:
+      - Functions
+      summary: Create enrichment table from URL
+      description: Creates a new enrichment table by fetching CSV data from a public URL. The process runs asynchronously in the background.
+      operationId: CreateEnrichmentTableFromUrl
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: table_name
+        in: path
+        description: Table name
+        required: true
+        schema:
+          type: string
+      - name: append
+        in: query
+        description: 'Whether to append data to existing table (default: false)'
+        required: false
+        schema:
+          type: boolean
+      requestBody:
+        description: URL for the CSV file
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrichmentTableUrlRequest'
+        required: true
+      responses:
+        '202':
+          description: Job created successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Enrichment Table
+        operation: create
+      x-o2-mcp:
+        description: Create table from URL
+        category: enrichment
+  /api/{org_id}/functions:
+    get:
+      tags:
+      - Functions
+      summary: List organization functions
+      description: Retrieves all custom transformation functions available in the organization, including their VRL code, configuration parameters, and current usage status. Shows function metadata such as creation date, last modified time, and pipeline dependencies to help administrators manage data transformation logic across the organization.
+      operationId: listFunctions
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - list
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transform'
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Functions
+        operation: list
+      x-o2-mcp:
+        description: List all functions
+        category: functions
+        summary_fields:
+        - name
+        - transType
+        - streams
+    post:
+      tags:
+      - Functions
+      summary: Create new function
+      description: Creates a new custom transformation function using VRL (Vector Remap Language) code. Functions can be used in data ingestion pipelines to transform, enrich, or filter incoming log, metric, and trace data. Support complex data transformations, field extraction, format conversion, and conditional processing to standardize data before storage and indexing.
+      operationId: createFunction
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Function data
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - function
+              properties:
+                function:
+                  type: string
+                name:
+                  type: string
+                numArgs:
+                  type: integer
+                  format: int32
+                  minimum: 0
+                params:
+                  type: string
+                streams:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    $ref: '#/components/schemas/StreamOrder'
+                transType:
+                  type:
+                  - integer
+                  - 'null'
+                  format: int32
+                  minimum: 0
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Create a VRL (Vector Remap Language) function
+        category: functions
+      x-o2-ratelimit:
+        module: Functions
+        operation: create
+  /api/{org_id}/functions/test:
+    post:
+      tags:
+      - Functions
+      summary: Validate VRL function syntax
+      description: Validates VRL (Vector Remap Language) transformation function syntax by testing it against sample events. Returns validation results with any syntax errors or successful transformation output. Use this to verify VRL code is correct before creating or updating a function. Accepts function code, sample events to test against, and optional trans_type (0 for VRL, 1 for JS).
+      operationId: testFunction
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Test run function
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - function
+              - events
+              properties:
+                events:
+                  type: array
+                  items: {}
+                function:
+                  type: string
+                trans_type:
+                  type:
+                  - integer
+                  - 'null'
+                  format: int32
+                  minimum: 0
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        category: functions
+  /api/{org_id}/functions/{name}:
+    get:
+      tags:
+      - Functions
+      summary: Get function pipeline dependencies
+      description: Lists all data processing pipelines that currently use the specified transformation function. Returns pipeline names, types, and usage details to help administrators understand the impact scope before making changes to the function. Essential for change management and ensuring data processing continuity during function updates.
+      operationId: functionPipelineDependency
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: name
+        in: path
+        description: Function name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - list
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transform'
+        '404':
+          description: Function not found
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Check function dependencies
+        category: functions
+      x-o2-ratelimit:
+        module: Functions
+        operation: get
+    put:
+      tags:
+      - Functions
+      summary: Update function
+      description: Updates an existing transformation function with new VRL code, parameters, or configuration settings. Changes take effect immediately and apply to all data processing pipelines currently using this function. Test function changes thoroughly before deployment to avoid data transformation errors in production pipelines.
+      operationId: updateFunction
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: name
+        in: path
+        description: Function name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Function data
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - function
+              properties:
+                function:
+                  type: string
+                name:
+                  type: string
+                numArgs:
+                  type: integer
+                  format: int32
+                  minimum: 0
+                params:
+                  type: string
+                streams:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    $ref: '#/components/schemas/StreamOrder'
+                transType:
+                  type:
+                  - integer
+                  - 'null'
+                  format: int32
+                  minimum: 0
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Update a VRL function
+        category: functions
+      x-o2-ratelimit:
+        module: Functions
+        operation: update
+    delete:
+      tags:
+      - Functions
+      summary: Delete function
+      description: Permanently deletes a custom transformation function from the organization. The function must not be in use by active pipelines unless the force parameter is specified. Once deleted, any pipelines previously using this function will need to be updated with alternative transformation logic to continue functioning properly.
+      operationId: deleteFunction
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: name
+        in: path
+        description: Function name
+        required: true
+        schema:
+          type: string
+      - name: force
+        in: query
+        description: Force delete function regardless pipeline dependencies
+        required: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Functions
+        operation: delete
+      x-o2-mcp:
+        description: Delete a function
+        category: functions
+        requires_confirmation: true
+components:
+  schemas:
+    StreamOrder:
+      type: object
+      properties:
+        applyBeforeFlattening:
+          type: boolean
+        isRemoved:
+          type: boolean
+        order:
+          type: integer
+          format: int32
+          minimum: 0
+        stream:
+          type: string
+        streamType:
+          $ref: '#/components/schemas/StreamType'
+    Transform:
+      type: object
+      required:
+      - function
+      properties:
+        function:
+          type: string
+        name:
+          type: string
+        numArgs:
+          type: integer
+          format: int32
+          minimum: 0
+        params:
+          type: string
+        streams:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/StreamOrder'
+        transType:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          minimum: 0
+    EnrichmentTableUrlRequest:
+      type: object
+      description: 'Request body for creating an enrichment table from a public URL.
+
+
+        The URL must point to a publicly accessible CSV file. Authentication-required
+
+        URLs (e.g., S3 presigned URLs with complex headers) are not currently supported.
+
+
+        The `append` behavior is controlled via query parameter, matching the file upload endpoint.'
+      required:
+      - url
+      properties:
+        replace_failed:
+          type: boolean
+          description: 'Replace only the failed job''s URL (optional, default: false)
+
+
+            When true, only updates the failed job with the new URL while keeping
+
+            all successful jobs unchanged. Useful for fixing typos or broken URLs
+
+            without re-downloading working data sources.'
+        url:
+          type: string
+          description: 'Public URL to the CSV file.
+
+
+            Requirements:
+
+            - Must start with http:// or https://
+
+            - Must be publicly accessible (no authentication)
+
+            - Should return CSV content-type (not enforced but recommended)
+
+            - File can be any size - streaming handles large files efficiently'
+    StreamType:
+      type: string
+      enum:
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

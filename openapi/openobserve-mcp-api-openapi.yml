@@ -1,0 +1,98 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions MCP API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: MCP
+paths:
+  /.well-known/oauth-authorization-server:
+    post:
+      tags:
+      - MCP
+      summary: 'Handler for OAuth 2.0 Authorization Server Metadata (Enterprise)
+
+        RFC 8414: https://datatracker.ietf.org/doc/html/rfc8414
+
+        This endpoint provides discovery information for OAuth clients
+
+        Must be publicly accessible (no auth) per OAuth spec'
+      operationId: OAuthServerMetadata
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+      x-o2-mcp:
+        enabled: false
+  /api/{org_id}/mcp:
+    post:
+      tags:
+      - MCP
+      summary: Handler for MCP POST requests (single request/response)
+      description: 'Per MCP 2025-11-25 (Streamable HTTP transport):
+
+        - Requests with `id` → 200 with JSON or SSE response
+
+        - Notifications (no `id`) → 202 Accepted, no body
+
+        - Validates `MCP-Protocol-Version` header on non-initialize requests'
+      operationId: MCPRequest
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: MCP request payload
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - jsonrpc
+              - method
+              properties:
+                id: {}
+                jsonrpc:
+                  type: string
+                method:
+                  type: string
+                params: {}
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+        '202':
+          description: Accepted (notification, no response body)
+        '400':
+          description: Bad Request (unsupported protocol version)
+        '500':
+          description: Internal Server Error
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: mcp
+        operation: post
+      x-o2-mcp:
+        enabled: false
+components:
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

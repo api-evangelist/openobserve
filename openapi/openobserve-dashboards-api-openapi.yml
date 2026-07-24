@@ -1,0 +1,2525 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Dashboards API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Dashboards
+  description: Dashboard operations
+paths:
+  /api/{org_id}/dashboards:
+    get:
+      tags:
+      - Dashboards
+      summary: List organization dashboards
+      description: Retrieves a list of dashboards within the organization, with optional filtering by folder and pagination support
+      operationId: ListDashboards
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder
+        in: query
+        description: 'Optional folder ID filter parameter
+
+
+          If neither `folder` nor any other filter parameter are set then this
+
+          will search for all dashboards in the "default" folder.
+
+
+          If `folder` is not set and another filter parameter, such as `title`, is
+
+          set then this will search for dashboards in all folders.'
+        required: false
+        schema:
+          type: string
+        style: form
+      - name: title
+        in: query
+        description: 'The optional case-insensitive title substring with which to filter
+
+          dashboards.'
+        required: false
+        schema:
+          type: string
+        style: form
+      - name: pageSize
+        in: query
+        description: 'The optional number of dashboards to retrieve. If not set then all
+
+          dashboards that match the query parameters will be returned.
+
+
+          Currently this parameter is only untilized by the API when the `title`
+
+          parameter is also set.'
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                description: HTTP response body for `ListDashboards` endpoint.
+                required:
+                - dashboards
+                properties:
+                  dashboards:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ListDashboardsResponseBodyItem'
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: list
+      x-o2-mcp:
+        description: List all dashboards in organization
+        category: dashboards
+        summary_fields:
+        - dashboard_id
+        - title
+        - description
+        - owner
+        - folder_name
+    post:
+      tags:
+      - Dashboards
+      summary: Create new dashboard
+      description: Creates a new dashboard with specified title, description, and visualization panels. The dashboard will be saved in the specified folder
+      operationId: CreateDashboard
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: folder
+        in: query
+        description: Folder ID where the dashboard will be created. Used for RBAC checks in enterprise version. Defaults to 'default' if not specified
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: Dashboard details
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              description: HTTP request body for the `CreateDashboard`/`UpdateDashboard` endpoints.
+            example:
+              title: Network Traffic Overview
+              description: Traffic patterns and network performance of the infrastructure
+        required: true
+      responses:
+        '201':
+          description: Dashboard created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+                description: HTTP response body for `CreateDashboard`/`UpdateDashboard` endpoints.
+        '404':
+          description: Folder not found
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: 'Create a dashboard with visualization panels. LAYOUT: 192-column grid with {x, y, w, h, i} where x=column(0-191), y=row, w=width, h=height, i=panel_id. Common widths: full=192, half=96, third=64. PANEL QUERIES: Each panel query needs ''fields'' with x/y/z arrays populated EVEN when customQuery=true. AXIS RULES: x=dimension/time field, y=metric field(s), z=only for heatmaps(color intensity)/stacked-charts(breakdown field)/geo-maps(value). For most charts (line/area/bar/pie), leave z=[]. Use SELECT aliases as column values. Example: ''SELECT histogram(_timestamp) as ts, COUNT(*) as cnt'' needs x=[{label:''ts'',alias:''ts'',column:''ts'',aggregationFunction:null}], y=[{label:''cnt'',alias:''cnt'',column:''cnt'',aggregationFunction:null}], z=[]. FILTER: The ''filter'' field in ''fields'' MUST be an object (NOT an array). Use: {type:''list'',values:[],logicalOperator:''AND'',filterType:''list''} for no filters.'
+        category: dashboards
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: create
+  /api/{org_id}/dashboards/move:
+    patch:
+      tags:
+      - Dashboards
+      summary: Move multiple dashboards
+      description: Moves multiple dashboards to a specified destination folder in a single batch operation. Useful for organizing dashboards efficiently
+      operationId: MoveDashboards
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Identifies dashboards and the destination folder
+        content:
+          application/json:
+            schema:
+              type: object
+              description: HTTP request body for `MoveDashboards` endpoint.
+              required:
+              - dashboard_ids
+              - dst_folder_id
+              properties:
+                dashboard_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: IDs of the dashboards to move.
+                dst_folder_id:
+                  type: string
+                  description: Indicates the folder to which dashboard should be moved.
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: update
+      x-o2-mcp:
+        description: Move multiple dashboards to folder
+        category: dashboards
+  /api/{org_id}/dashboards/{dashboard_id}:
+    get:
+      tags:
+      - Dashboards
+      summary: Get dashboard details
+      description: Retrieves complete details of a specific dashboard including its panels, queries, and visualization configurations
+      operationId: GetDashboard
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: dashboard_id
+        in: path
+        description: Dashboard ID
+        required: true
+        schema:
+          type: string
+      - name: folder
+        in: query
+        description: Folder ID where the dashboard is located. Used for RBAC permission checks in enterprise version
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+                description: HTTP response body for `CreateDashboard`/`UpdateDashboard` endpoints.
+        '403':
+          description: Unauthorized Access
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: Dashboard not found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Get dashboard details by ID
+        category: dashboards
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: get
+    put:
+      tags:
+      - Dashboards
+      summary: Update existing dashboard
+      description: Updates an existing dashboard with new content, panels, or settings. Supports concurrent edit conflict detection using hash values
+      operationId: UpdateDashboard
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: dashboard_id
+        in: path
+        description: Dashboard ID
+        required: true
+        schema:
+          type: string
+      - name: folder
+        in: query
+        description: Folder ID where the dashboard is located
+        required: true
+        schema:
+          type: string
+      - name: hash
+        in: query
+        description: Hash value for conflict detection. Required when updating an existing dashboard to prevent concurrent edit conflicts
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: Dashboard details
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              - $ref: '#/components/schemas/Dashboard'
+              description: HTTP request body for the `CreateDashboard`/`UpdateDashboard` endpoints.
+        required: true
+      responses:
+        '200':
+          description: Dashboard updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+                description: HTTP response body for `CreateDashboard`/`UpdateDashboard` endpoints.
+        '404':
+          description: Dashboard not found
+          content:
+            application/json:
+              schema:
+                default: null
+        '409':
+          description: 'Conflict: Failed to save due to concurrent changes'
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failed to update the dashboard
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Update an existing dashboard
+        category: dashboards
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: update
+    delete:
+      tags:
+      - Dashboards
+      summary: Delete dashboard
+      description: Permanently deletes a dashboard and all its associated panels and configurations. This action cannot be undone
+      operationId: DeleteDashboard
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: dashboard_id
+        in: path
+        description: Dashboard ID
+        required: true
+        schema:
+          type: string
+      - name: folder
+        in: query
+        description: Folder ID where the dashboard is located. Used for RBAC permission checks in enterprise version
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: Unauthorized Access
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Delete a dashboard by ID
+        category: dashboards
+        requires_confirmation: true
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: delete
+  /api/{org_id}/dashboards/{dashboard_id}/annotations:
+    get:
+      tags:
+      - Dashboards
+      summary: Get timed annotations for dashboard
+      description: Retrieves timed annotations for dashboard panels within a specified time range
+      operationId: GetAnnotations
+      parameters:
+      - name: panels
+        in: query
+        description: Commas separated list of panels
+        required: false
+        schema:
+          type: string
+        style: form
+      - name: start_time
+        in: query
+        description: Time in microseconds
+        required: true
+        schema:
+          type: integer
+          format: int64
+        style: form
+      - name: end_time
+        in: query
+        description: Time in microseconds
+        required: true
+        schema:
+          type: integer
+          format: int64
+        style: form
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Timed annotations retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimedAnnotation'
+        '400':
+          description: Invalid query parameters
+          content:
+            application/json: {}
+        '500':
+          description: Failed to get timed annotations
+          content:
+            application/json: {}
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: list
+      x-o2-mcp:
+        description: Get annotations
+        category: dashboards
+    post:
+      tags:
+      - Dashboards
+      summary: Create timed annotations for dashboard
+      description: Creates new timed annotations for specific panels within a dashboard
+      operationId: CreateAnnotations
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Timed annotation request payload
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - timed_annotations
+              properties:
+                timed_annotations:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TimedAnnotation'
+        required: true
+      responses:
+        '200':
+          description: Timed annotations created successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimedAnnotation'
+        '500':
+          description: Failed to create timed annotations
+          content:
+            application/json: {}
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Create time annotations
+        category: dashboards
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: create
+    delete:
+      tags:
+      - Dashboards
+      summary: Delete timed annotations from dashboard
+      description: Removes timed annotations from dashboard panels based on specified criteria
+      operationId: DeleteAnnotations
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Timed annotation delete request payload
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - annotation_ids
+              properties:
+                annotation_ids:
+                  type: array
+                  items:
+                    type: string
+        required: true
+      responses:
+        '200':
+          description: Timed annotations deleted successfully
+        '500':
+          description: Failed to delete timed annotations
+          content:
+            application/json: {}
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Delete annotations
+        category: dashboards
+        requires_confirmation: true
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: delete
+  /api/{org_id}/dashboards/{dashboard_id}/annotations/panels/{timed_annotation_id}:
+    delete:
+      tags:
+      - Dashboards
+      summary: Remove timed annotation from panel
+      description: Removes a specific timed annotation from a dashboard panel
+      operationId: RemoveTimedAnnotationFromPanel
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: timed_annotation_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: IDs of dashboard panels from which to remove the timed annotation
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        '200':
+          description: Removed timed annotation from dashboard panels successfully
+        '500':
+          description: Failed to remove timed annotation from panels
+          content:
+            application/json: {}
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: delete
+      x-o2-mcp:
+        description: Remove annotation from panel
+        category: dashboards
+        requires_confirmation: true
+  /api/{org_id}/dashboards/{dashboard_id}/annotations/{timed_annotation_id}:
+    put:
+      tags:
+      - Dashboards
+      summary: Update timed annotation
+      description: Updates an existing timed annotation with new content or metadata
+      operationId: UpdateAnnotations
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: timed_annotation_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Timed annotation update request payload
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                annotation_id:
+                  type:
+                  - string
+                  - 'null'
+                  default: null
+                end_time:
+                  type:
+                  - integer
+                  - 'null'
+                  format: int64
+                  default: null
+                panels:
+                  type: array
+                  items:
+                    type: string
+                  default: []
+                start_time:
+                  type: integer
+                  format: int64
+                  default: 0
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  default: []
+                text:
+                  type:
+                  - string
+                  - 'null'
+                  default: null
+                title:
+                  type: string
+                  default: ''
+        required: true
+      responses:
+        '200':
+          description: Timed annotations updated successfully
+        '500':
+          description: Failed to update timed annotations
+          content:
+            application/json: {}
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: update
+      x-o2-mcp:
+        description: Update annotations
+        category: dashboards
+  /api/{org_id}/dashboards/{dashboard_id}/panels:
+    post:
+      tags:
+      - Dashboards
+      summary: Add a panel to a dashboard
+      description: Add a panel to an existing dashboard. Layout auto-computed if not specified. Returns new hash for chaining.
+      operationId: AddPanel
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: dashboard_id
+        in: path
+        description: Dashboard ID
+        required: true
+        schema:
+          type: string
+      - name: folder
+        in: query
+        description: Folder ID where the dashboard is located
+        required: false
+        schema:
+          type: string
+      - name: hash
+        in: query
+        description: Hash value for conflict detection
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Panel to add
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Request body for AddPanel and UpdatePanel endpoints.
+              required:
+              - panel
+              properties:
+                panel:
+                  $ref: '#/components/schemas/Panel'
+                tabId:
+                  type:
+                  - string
+                  - 'null'
+        required: true
+      responses:
+        '200':
+          description: Panel added
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Response body for AddPanel and UpdatePanel endpoints.
+                required:
+                - panel
+                - hash
+                - tabId
+                properties:
+                  hash:
+                    type: string
+                  panel:
+                    $ref: '#/components/schemas/Panel'
+                  tabId:
+                    type: string
+        '400':
+          description: Unsupported dashboard version
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: Dashboard or tab not found
+          content:
+            application/json:
+              schema:
+                default: null
+        '409':
+          description: Panel ID already exists or hash conflict
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: update
+      x-o2-mcp:
+        description: Add a panel to an existing dashboard. Layout auto-computed. Returns new hash for chaining.
+        category: dashboards
+  /api/{org_id}/dashboards/{dashboard_id}/panels/{panel_id}:
+    put:
+      tags:
+      - Dashboards
+      summary: Update a single panel in a dashboard
+      description: Update a single panel in a dashboard by panel ID. Preserves layout if not explicitly set.
+      operationId: UpdatePanel
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: dashboard_id
+        in: path
+        description: Dashboard ID
+        required: true
+        schema:
+          type: string
+      - name: panel_id
+        in: path
+        description: Panel ID
+        required: true
+        schema:
+          type: string
+      - name: folder
+        in: query
+        description: Folder ID where the dashboard is located
+        required: false
+        schema:
+          type: string
+      - name: hash
+        in: query
+        description: Hash value for conflict detection
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Panel data to update
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Request body for AddPanel and UpdatePanel endpoints.
+              required:
+              - panel
+              properties:
+                panel:
+                  $ref: '#/components/schemas/Panel'
+                tabId:
+                  type:
+                  - string
+                  - 'null'
+        required: true
+      responses:
+        '200':
+          description: Panel updated
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Response body for AddPanel and UpdatePanel endpoints.
+                required:
+                - panel
+                - hash
+                - tabId
+                properties:
+                  hash:
+                    type: string
+                  panel:
+                    $ref: '#/components/schemas/Panel'
+                  tabId:
+                    type: string
+        '400':
+          description: Unsupported dashboard version
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: Dashboard, tab, or panel not found
+          content:
+            application/json:
+              schema:
+                default: null
+        '409':
+          description: Hash conflict
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: update
+      x-o2-mcp:
+        description: Update a single panel in a dashboard by panel ID. Preserves layout if not explicitly set.
+        category: dashboards
+    delete:
+      tags:
+      - Dashboards
+      summary: Delete a single panel from a dashboard
+      description: Delete a single panel from a dashboard by panel ID.
+      operationId: DeletePanel
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: dashboard_id
+        in: path
+        description: Dashboard ID
+        required: true
+        schema:
+          type: string
+      - name: panel_id
+        in: path
+        description: Panel ID
+        required: true
+        schema:
+          type: string
+      - name: folder
+        in: query
+        description: Folder ID where the dashboard is located
+        required: false
+        schema:
+          type: string
+      - name: hash
+        in: query
+        description: Hash value for conflict detection
+        required: true
+        schema:
+          type: string
+      - name: tabId
+        in: query
+        description: Tab ID to search for the panel
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Panel deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Response body for DeletePanel endpoint.
+                required:
+                - hash
+                - panelId
+                properties:
+                  hash:
+                    type: string
+                  panelId:
+                    type: string
+        '400':
+          description: Unsupported dashboard version
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: Dashboard, tab, or panel not found
+          content:
+            application/json:
+              schema:
+                default: null
+        '409':
+          description: Hash conflict
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Delete a single panel from a dashboard by panel ID.
+        category: dashboards
+        requires_confirmation: true
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: update
+  /api/{org_id}/folders/dashboards/{dashboard_id}:
+    put:
+      tags:
+      - Dashboards
+      summary: Move dashboard to folder
+      description: Moves a dashboard from one folder to another within the organization. The dashboard content remains unchanged
+      operationId: MoveDashboard
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: dashboard_id
+        in: path
+        description: Dashboard ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: MoveDashboard details
+        content:
+          application/json:
+            schema:
+              type: object
+              description: HTTP request body for `MoveDashboard` endpoint.
+              required:
+              - from
+              - to
+              properties:
+                from:
+                  type: string
+                to:
+                  type: string
+            example:
+              from: Source folder id
+              to: Destination folder id
+        required: true
+      responses:
+        '200':
+          description: Dashboard Moved
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Dashboard not found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Move dashboard to another folder
+        category: dashboards
+      x-o2-ratelimit:
+        module: Dashboards
+        operation: update
+components:
+  schemas:
+    DrillDownVariables:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type:
+          - string
+          - 'null'
+          default: null
+    ColorBySeries:
+      type: object
+      properties:
+        color:
+          type:
+          - string
+          - 'null'
+          default: null
+        type:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type:
+          - string
+          - 'null'
+          default: null
+    PanelFields:
+      type: object
+      required:
+      - stream
+      - stream_type
+      - x
+      - y
+      - filter
+      properties:
+        breakdown:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AxisItem'
+        filter:
+          $ref: '#/components/schemas/PanelFilter'
+        latitude:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        longitude:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        name:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        promql_labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/PromQLLabelFilter'
+        promql_operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/PromQLOperation'
+        source:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        stream:
+          type: string
+        stream_type:
+          $ref: '#/components/schemas/StreamType'
+        target:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        value:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        value_for_maps:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        weight:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        x:
+          type: array
+          items:
+            $ref: '#/components/schemas/AxisItem'
+        y:
+          type: array
+          items:
+            $ref: '#/components/schemas/AxisItem'
+        z:
+          type: array
+          items:
+            $ref: '#/components/schemas/AxisItem'
+    Panel:
+      type: object
+      required:
+      - id
+      - type
+      - title
+      - description
+      - config
+      - queries
+      properties:
+        config:
+          $ref: '#/components/schemas/PanelConfig'
+        customChartContent:
+          type:
+          - string
+          - 'null'
+        description:
+          type: string
+        htmlContent:
+          type:
+          - string
+          - 'null'
+        id:
+          type: string
+        layout:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Layout'
+        markdownContent:
+          type:
+          - string
+          - 'null'
+        queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Query'
+        queryType:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+    TimedAnnotation:
+      type: object
+      properties:
+        annotation_id:
+          type:
+          - string
+          - 'null'
+          default: null
+        end_time:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          default: null
+        panels:
+          type: array
+          items:
+            type: string
+          default: []
+        start_time:
+          type: integer
+          format: int64
+          default: 0
+        tags:
+          type: array
+          items:
+            type: string
+          default: []
+        text:
+          type:
+          - string
+          - 'null'
+          default: null
+        title:
+          type: string
+          default: ''
+    PromQLOperation:
+      type: object
+      properties:
+        id:
+          type: string
+          default: ''
+        params:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PromQLOperationParam'
+          default: null
+    ListDashboardsResponseBodyItem:
+      type: object
+      description: An item in the list returned by the `ListDashboards` endpoint.
+      required:
+      - version
+      - hash
+      - folder_id
+      - folder_name
+      - dashboard_id
+      - title
+      - description
+      - role
+      - owner
+      - created
+      - updatedAt
+      properties:
+        created:
+          type: string
+          format: date-time
+        dashboard_id:
+          type: string
+        description:
+          type: string
+        folder_id:
+          type: string
+        folder_name:
+          type: string
+        hash:
+          type: string
+        owner:
+          type: string
+        role:
+          type: string
+        title:
+          type: string
+        updatedAt:
+          type: integer
+          format: int64
+        v1:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v2:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v3:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v4:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v5:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v6:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v7:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v8:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        version:
+          type: integer
+          format: int32
+    AxisType:
+      type: string
+      enum:
+      - build
+      - raw
+      - custom
+    Variables:
+      type: object
+      properties:
+        list:
+          type: array
+          items:
+            $ref: '#/components/schemas/VariableList'
+          default: []
+        showDynamicFilters:
+          type:
+          - boolean
+          - 'null'
+          default: null
+    AxisArg:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisArgValueWrapper'
+    LegendHeight:
+      type: object
+      properties:
+        unit:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type:
+          - number
+          - 'null'
+          format: double
+          default: null
+    Join:
+      type: object
+      required:
+      - stream
+      - streamAlias
+      - joinType
+      - conditions
+      properties:
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/JoinCondition'
+        joinType:
+          type: string
+        stream:
+          type: string
+        streamAlias:
+          type: string
+    MarkLine:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          default: null
+        type:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type:
+          - string
+          - 'null'
+          default: null
+    Trellis:
+      type: object
+      properties:
+        group_by_y_axis:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        layout:
+          type:
+          - string
+          - 'null'
+          default: null
+        num_of_columns:
+          type: integer
+          format: int64
+          default: 0
+    PromQLLabelFilter:
+      type: object
+      properties:
+        label:
+          type: string
+          default: ''
+        op:
+          type: string
+          default: ''
+        value:
+          type: string
+          default: ''
+    AxisArgValueWrapper:
+      oneOf:
+      - $ref: '#/components/schemas/AxisArgValue'
+      - type: string
+      - type: number
+        format: double
+    JoinCondition:
+      type: object
+      required:
+      - leftField
+      - rightField
+      - operation
+      properties:
+        leftField:
+          $ref: '#/components/schemas/SelectedField'
+        operation:
+          type: string
+        rightField:
+          $ref: '#/components/schemas/SelectedField'
+    BaseMap:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          default: null
+    FilterCondition:
+      type: object
+      required:
+      - type
+      - values
+      - logicalOperator
+      - filterType
+      properties:
+        column:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/StreamFieldObj'
+        filterType:
+          type: string
+        logicalOperator:
+          type: string
+        operator:
+          type:
+          - string
+          - 'null'
+        type:
+          type: string
+        value:
+          type:
+          - string
+          - 'null'
+        values:
+          type: array
+          items:
+            type: string
+    StreamFieldObj:
+      type: object
+      properties:
+        field:
+          type:
+          - string
+          - 'null'
+        streamAlias:
+          type:
+          - string
+          - 'null'
+    Field:
+      type: object
+      properties:
+        matchBy:
+          type: string
+          default: ''
+        value:
+          type: string
+          default: ''
+    DateTimeOptions:
+      type: object
+      properties:
+        endTime:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          default: null
+        relativeTimePeriod:
+          type:
+          - string
+          - 'null'
+          default: null
+        startTime:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          default: null
+        type:
+          type: string
+          default: ''
+    DrillDown:
+      type: object
+      properties:
+        data:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/DrillDownData'
+          default: null
+        findBy:
+          type:
+          - string
+          - 'null'
+          default: null
+        name:
+          type:
+          - string
+          - 'null'
+          default: null
+        targetBlank:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        type:
+          type:
+          - string
+          - 'null'
+          default: null
+    DrillDownData:
+      type: object
+      properties:
+        dashboard:
+          type:
+          - string
+          - 'null'
+          default: null
+        folder:
+          type:
+          - string
+          - 'null'
+          default: null
+        logsMode:
+          type:
+          - string
+          - 'null'
+          default: null
+        logsQuery:
+          type:
+          - string
+          - 'null'
+          default: null
+        passAllVariables:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        tab:
+          type:
+          - string
+          - 'null'
+          default: null
+        url:
+          type:
+          - string
+          - 'null'
+          default: null
+        variables:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DrillDownVariables'
+          default: null
+    Query:
+      type: object
+      required:
+      - customQuery
+      - fields
+      - config
+      properties:
+        config:
+          $ref: '#/components/schemas/QueryConfig'
+        customQuery:
+          type: boolean
+        fields:
+          $ref: '#/components/schemas/PanelFields'
+        joins:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Join'
+        query:
+          type:
+          - string
+          - 'null'
+        vrlFunctionQuery:
+          type:
+          - string
+          - 'null'
+    AxisItem:
+      type: object
+      required:
+      - label
+      - alias
+      properties:
+        alias:
+          type: string
+        args:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AxisArg'
+        color:
+          type:
+          - string
+          - 'null'
+        column:
+          type:
+          - string
+          - 'null'
+        functionName:
+          type:
+          - string
+          - 'null'
+        havingConditions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/HavingConditions'
+        isDerived:
+          type:
+          - boolean
+          - 'null'
+        label:
+          type: string
+        rawQuery:
+          type:
+          - string
+          - 'null'
+        showFieldAsJson:
+          type:
+          - boolean
+          - 'null'
+        sortBy:
+          type:
+          - string
+          - 'null'
+        treatAsNonTimestamp:
+          type:
+          - boolean
+          - 'null'
+        type:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisType'
+    LabelPosition:
+      type: string
+      enum:
+      - top
+      - left
+      - right
+      - bottom
+      - inside
+      - insideLeft
+      - insideRight
+      - insideTop
+      - insideBottom
+      - insideTopLeft
+      - insideBottomLeft
+      - insideTopRight
+      - insideBottomRight
+      - outside
+    HavingConditions:
+      type: object
+      properties:
+        operator:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - number
+          - 'null'
+          format: double
+    PromQLOperationParam:
+      oneOf:
+      - type: array
+        items:
+          type: string
+      - type: string
+      - type: number
+        format: double
+      - type: boolean
+    Background:
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+        value:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/BackgroundValue'
+    Dashboard:
+      type: object
+      required:
+      - title
+      - description
+      properties:
+        created:
+          type: string
+          format: date-time
+          default: '1970-01-01T00:00:00Z'
+        dashboardId:
+          type: string
+          default: ''
+        defaultDatetimeDuration:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/DateTimeOptions'
+          default: null
+        description:
+          type: string
+          default: ''
+        owner:
+          type: string
+          default: ''
+        role:
+          type: string
+          default: ''
+        tabs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tab'
+          default: []
+        title:
+          type: string
+          default: ''
+        variables:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Variables'
+          default: null
+        version:
+          type: integer
+          format: int32
+          default: 0
+    QueryConfig:
+      type: object
+      required:
+      - promql_legend
+      properties:
+        layer_type:
+          type:
+          - string
+          - 'null'
+        limit:
+          type:
+          - number
+          - 'null'
+          format: double
+        max:
+          type:
+          - number
+          - 'null'
+          format: double
+        min:
+          type:
+          - number
+          - 'null'
+          format: double
+        promql_legend:
+          type: string
+        step_value:
+          type:
+          - string
+          - 'null'
+        time_shift:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/TimeShift'
+        weight_fixed:
+          type:
+          - number
+          - 'null'
+          format: double
+    SizeByValue:
+      type: object
+      properties:
+        max:
+          type: number
+          format: double
+          default: 0.0
+        min:
+          type: number
+          format: double
+          default: 0.0
+    Layout:
+      type: object
+      properties:
+        h:
+          type: integer
+          format: int64
+          default: 0
+        i:
+          type: integer
+          format: int64
+          default: 0
+        w:
+          type: integer
+          format: int64
+          default: 0
+        x:
+          type: integer
+          format: int64
+          default: 0
+        y:
+          type: integer
+          format: int64
+          default: 0
+    LabelOption:
+      type: object
+      properties:
+        position:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/LabelPosition'
+          default: null
+        rotate:
+          type:
+          - number
+          - 'null'
+          format: double
+          default: null
+    SelectedField:
+      type: object
+      required:
+      - field
+      properties:
+        field:
+          type: string
+        streamAlias:
+          type:
+          - string
+          - 'null'
+    MapSymbolStyle:
+      type: object
+      properties:
+        size:
+          type: string
+          default: ''
+        size_by_value:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/SizeByValue'
+          default: null
+        size_fixed:
+          type: number
+          format: double
+          default: 0.0
+    Tab:
+      type: object
+      required:
+      - tabId
+      - name
+      properties:
+        name:
+          type: string
+        panels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Panel'
+        tabId:
+          type: string
+    Filters:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          default: null
+        operator:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type: string
+          default: ''
+    MapType:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          default: null
+    PanelConfig:
+      type: object
+      required:
+      - show_legends
+      properties:
+        aggregation:
+          type:
+          - string
+          - 'null'
+        axis_border_show:
+          type:
+          - boolean
+          - 'null'
+        axis_label_rotate:
+          type:
+          - number
+          - 'null'
+          format: double
+        axis_label_truncate_width:
+          type:
+          - number
+          - 'null'
+          format: double
+        axis_width:
+          type:
+          - number
+          - 'null'
+          format: double
+        background:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Background'
+        base_map:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/BaseMap'
+        chart_align:
+          type:
+          - string
+          - 'null'
+        color:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/ColorCfg'
+        column_order:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        connect_nulls:
+          type:
+          - boolean
+          - 'null'
+        decimals:
+          type:
+          - number
+          - 'null'
+          format: double
+        drilldown:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DrillDown'
+        hidden_columns:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        label_option:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/LabelOption'
+        lat_label:
+          type:
+          - string
+          - 'null'
+        legend_height:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/LegendHeight'
+        legend_width:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/LegendWidth'
+        legends_position:
+          type:
+          - string
+          - 'null'
+        legends_type:
+          type:
+          - string
+          - 'null'
+        line_interpolation:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/LineInterpolation'
+        line_thickness:
+          type:
+          - number
+          - 'null'
+          format: double
+        lon_label:
+          type:
+          - string
+          - 'null'
+        map_symbol_style:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/MapSymbolStyle'
+        map_type:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/MapType'
+        map_view:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/MapView'
+        mappings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Mapping'
+        mark_line:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MarkLine'
+        name_label:
+          type:
+          - string
+          - 'null'
+        no_value_replacement:
+          type:
+          - string
+          - 'null'
+        override_config:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/OverrideConfig'
+        panel_time_enabled:
+          type:
+          - boolean
+          - 'null'
+        panel_time_range:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/DateTimeOptions'
+        promql_table_mode:
+          type:
+          - string
+          - 'null'
+        show_gridlines:
+          type:
+          - boolean
+          - 'null'
+        show_legends:
+          type: boolean
+        show_symbol:
+          type:
+          - boolean
+          - 'null'
+        step_value:
+          type:
+          - string
+          - 'null'
+        sticky_columns:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        sticky_first_column:
+          type:
+          - boolean
+          - 'null'
+        table_aggregations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        table_dynamic_columns:
+          type:
+          - boolean
+          - 'null'
+        table_pagination:
+          type:
+          - boolean
+          - 'null'
+        table_pagination_rows_per_page:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        table_pivot_show_col_totals:
+          type:
+          - boolean
+          - 'null'
+        table_pivot_show_row_totals:
+          type:
+          - boolean
+          - 'null'
+        table_pivot_sticky_col_totals:
+          type:
+          - boolean
+          - 'null'
+        table_pivot_sticky_row_totals:
+          type:
+          - boolean
+          - 'null'
+        table_transpose:
+          type:
+          - boolean
+          - 'null'
+        top_results:
+          type:
+          - number
+          - 'null'
+          format: double
+        top_results_others:
+          type:
+          - boolean
+          - 'null'
+        trellis:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Trellis'
+        unit:
+          type:
+          - string
+          - 'null'
+        unit_custom:
+          type:
+          - string
+          - 'null'
+        visible_columns:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        weight_label:
+          type:
+          - string
+          - 'null'
+        wrap_table_cells:
+          type:
+          - boolean
+          - 'null'
+        y_axis_max:
+          type:
+          - number
+          - 'null'
+          format: double
+        y_axis_min:
+          type:
+          - number
+          - 'null'
+          format: double
+    MapView:
+      type: object
+      properties:
+        lat:
+          type: number
+          format: double
+          default: 0.0
+        lng:
+          type: number
+          format: double
+          default: 0.0
+        zoom:
+          type: number
+          format: double
+          default: 0.0
+    TimeShift:
+      type: object
+      properties:
+        offSet:
+          type:
+          - string
+          - 'null'
+          default: null
+    OverrideConfig:
+      type: object
+      properties:
+        config:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Config'
+          default: null
+        field:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Field'
+          default: null
+    ColorCfg:
+      type: object
+      properties:
+        colorBySeries:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ColorBySeries'
+          default: null
+        fixedColor:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: null
+        mode:
+          type:
+          - string
+          - 'null'
+          default: null
+        seriesBy:
+          type:
+          - string
+          - 'null'
+          default: null
+    Config:
+      oneOf:
+      - type: object
+        required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - unit
+          value: {}
+      - type: object
+        required:
+        - type
+        properties:
+          autoColor:
+            type: boolean
+          type:
+            type: string
+            enum:
+            - unique_value_color
+    GroupType:
+      type: object
+      required:
+      - filterType
+      - logicalOperator
+      - conditions
+      properties:
+        conditions:
+          type: array
+          items:
+            type: object
+        filterType:
+          type: string
+        logicalOperator:
+          type: string
+    Mapping:
+      type: object
+      properties:
+        color:
+          type:
+          - string
+          - 'null'
+          default: null
+        from:
+          type:
+          - string
+          - 'null'
+          default: null
+        match:
+          type:
+          - string
+          - 'null'
+          default: null
+        pattern:
+          type:
+          - string
+          - 'null'
+          default: null
+        text:
+          type:
+          - string
+          - 'null'
+          default: null
+        to:
+          type:
+          - string
+          - 'null'
+          default: null
+        type:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type:
+          - string
+          - 'null'
+          default: null
+    LegendWidth:
+      type: object
+      properties:
+        unit:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type:
+          - number
+          - 'null'
+          format: double
+          default: null
+    StreamType:
+      type: string
+      enum:
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
+    CustomFieldsOption:
+      type: object
+      properties:
+        label:
+          type: string
+          default: ''
+        selected:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        value:
+          type: string
+          default: ''
+    QueryData:
+      type: object
+      properties:
+        field:
+          type: string
+          default: ''
+        filter:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Filters'
+          default: null
+        max_record_size:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          default: null
+        stream:
+          type: string
+          default: ''
+        stream_type:
+          oneOf:
+          - $ref: '#/components/schemas/StreamType'
+          default: logs
+    AxisArgValue:
+      type: object
+      properties:
+        field:
+          type:
+          - string
+          - 'null'
+        streamAlias:
+          type:
+          - string
+          - 'null'
+    PanelFilter:
+      oneOf:
+      - $ref: '#/components/schemas/FilterCondition'
+      - $ref: '#/components/schemas/GroupType'
+    BackgroundValue:
+      type: object
+      required:
+      - color
+      properties:
+        color:
+          type: string
+    LineInterpolation:
+      type: string
+      enum:
+      - smooth
+      - linear
+      - step-start
+      - step-end
+      - step-middle
+    VariableList:
+      type: object
+      properties:
+        customMultiSelectValue:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: null
+        escapeSingleQuotes:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        hideOnDashboard:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        label:
+          type: string
+          default: ''
+        multiSelect:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        name:
+          type: string
+          default: ''
+        options:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CustomFieldsOption'
+          default: null
+        panels:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: null
+        query_data:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/QueryData'
+          default: null
+        scope:
+          type:
+          - string
+          - 'null'
+          default: null
+        selectAllValueForMultiSelect:
+          type:
+          - string
+          - 'null'
+          default: null
+        tabs:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: null
+        type:
+          type: string
+          default: ''
+        value:
+          type:
+          - string
+          - 'null'
+          default: null
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

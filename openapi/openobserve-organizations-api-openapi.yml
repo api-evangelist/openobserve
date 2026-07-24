@@ -1,0 +1,1127 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Organizations API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Organizations
+  description: Organizations retrieval & management operations
+paths:
+  /api/organizations:
+    get:
+      tags:
+      - Organizations
+      summary: Get user's organizations
+      description: Retrieves a list of all organizations that the authenticated user has access to, including organization details, permissions, and subscription information. Root users can see all organizations in the system.
+      operationId: GetUserOrganizations
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OrgDetails'
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Organizations
+        operation: list
+      x-o2-mcp:
+        description: Get user organizations
+        category: users
+    post:
+      tags:
+      - Organizations
+      summary: Create new organization
+      description: Creates a new organization with the specified configuration and settings. The authenticated user will be automatically added as an owner of the newly created organization and can then invite other users and configure the organization. If the creator is a service account, the response will include the service account's token for the newly created organization, enabling automated workflows to immediately access the new organization without additional token retrieval steps.
+      operationId: CreateOrganization
+      requestBody:
+        description: Organization data
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                identifier:
+                  type: string
+                name:
+                  type: string
+                  description: Only alphanumeric characters (A-Z, a-z, 0-9), spaces, and underscores are allowed
+                org_type:
+                  type: string
+                service_account:
+                  type:
+                  - string
+                  - 'null'
+                  description: 'Optional service account email to add to the organization
+
+                    When specified, only this service account will be added (not the API caller)'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Organization'
+                - type: object
+                  properties:
+                    service_account:
+                      oneOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/ServiceAccountTokenInfo'
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Organizations
+        operation: create
+      x-o2-mcp:
+        description: Create an organization
+        category: organizations
+  /api/{org_id}/organizations/assume_service_account:
+    post:
+      tags:
+      - Organizations
+      summary: Assume a service account in a target organization
+      description: "This endpoint allows meta service accounts to obtain temporary session tokens\nfor accessing a target organization as a specific service account. The session\nautomatically expires after the specified duration.\n\n# Security\n- Only meta service accounts can call this endpoint\n- The service account must exist in both _meta and target organization\n- The service account must have the appropriate role in the target organization\n- Maximum session duration is capped at 24 hours\n\n# Example\n```bash\ncurl -X POST http://localhost:5080/api/_meta/assume_service_account \\\n  -H \"Authorization: Bearer <meta_sa_token>\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"org_id\": \"customer1\",\n    \"service_account\": \"tenant_admin_sa\",\n    \"duration_seconds\": 3600\n  }'\n```"
+      operationId: AssumeServiceAccount
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name (must be _meta)
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Assume service account request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssumeServiceAccountRequest'
+        required: true
+      responses:
+        '200':
+          description: Session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssumeServiceAccountResponse'
+        '400':
+          description: Invalid request
+        '403':
+          description: Not authorized or service account not assigned
+        '500':
+          description: Internal server error
+        '501':
+          description: Not available in non-enterprise builds
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Organizations
+        operation: assume
+      x-o2-mcp:
+        description: Assume service account identity
+        category: users
+  /api/{org_id}/passcode:
+    get:
+      tags:
+      - Organizations
+      summary: Get user's ingestion token
+      description: Retrieves the current ingestion token (passcode) for the authenticated user within the specified organization. This token is used to authenticate data ingestion requests and can be used with various ingestion endpoints.
+      operationId: GetOrganizationUserIngestToken
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/IngestionPasscode'
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: Ingestion Token
+        operation: get
+    put:
+      tags:
+      - Organizations
+      summary: Update user's ingestion token
+      description: Generates a new ingestion token (passcode) for the authenticated user within the specified organization. The old token will be invalidated and all ingestion processes using the old token will need to be updated with the new token.
+      operationId: UpdateOrganizationUserIngestToken
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/IngestionPasscode'
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: Ingestion Token
+        operation: update
+  /api/{org_id}/rename:
+    put:
+      tags:
+      - Organizations
+      summary: Rename organization
+      description: Changes the display name of an organization. The organization identifier remains unchanged, but the human-readable name is updated. This helps with organization management and branding without affecting API integrations or data access.
+      operationId: RenameOrganization
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Organization new name
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - new_name
+              properties:
+                new_name:
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - name
+                properties:
+                  identifier:
+                    type: string
+                  name:
+                    type: string
+                    description: Only alphanumeric characters (A-Z, a-z, 0-9), spaces, and underscores are allowed
+                  org_type:
+                    type: string
+                  service_account:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Optional service account email to add to the organization
+
+                      When specified, only this service account will be added (not the API caller)'
+      security:
+      - Authorization: []
+  /api/{org_id}/rumtoken:
+    get:
+      tags:
+      - Organizations
+      summary: Get user's RUM ingestion token
+      description: Retrieves the current Real User Monitoring (RUM) ingestion token for the authenticated user within the specified organization. This token is specifically used for ingesting RUM data from web applications and mobile apps.
+      operationId: GetOrganizationUserRumIngestToken
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/RumIngestionToken'
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Rumtokens
+        operation: get
+      x-o2-mcp:
+        enabled: false
+    put:
+      tags:
+      - Organizations
+      summary: Update user's RUM ingestion token
+      description: Generates a new Real User Monitoring (RUM) ingestion token for the authenticated user within the specified organization. The old RUM token will be invalidated and all RUM data collection processes using the old token will need to be updated.
+      operationId: UpdateOrganizationUserRumIngestToken
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/RumIngestionToken'
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: Rumtokens
+        operation: update
+    post:
+      tags:
+      - Organizations
+      summary: Create user's RUM ingestion token
+      description: Creates a new Real User Monitoring (RUM) ingestion token for the authenticated user within the specified organization. This endpoint is used when no RUM token exists yet and you need to generate the initial token for RUM data collection.
+      operationId: CreateOrganizationUserRumIngestToken
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/RumIngestionToken'
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: Rumtokens
+        operation: create
+  /api/{org_id}/settings:
+    get:
+      tags:
+      - Organizations
+      summary: Get organization settings
+      description: Retrieves the current configuration settings for an organization, including scrape intervals, field mappings, ingestion preferences, and streaming options. Returns default settings if none have been configured previously for the organization.
+      operationId: OrganizationSettingGet
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Settings
+        operation: get
+      x-o2-mcp:
+        description: Get organization settings
+        category: users
+    post:
+      tags:
+      - Organizations
+      summary: Update organization settings
+      description: Creates or updates organization-specific settings such as scrape interval, trace field names, ingestion toggles, and streaming configurations. Allows administrators to customize organizational behavior and operational parameters to match specific requirements and use cases.
+      operationId: OrganizationSettingCreate
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Organization settings
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                claim_parser_function:
+                  type:
+                  - string
+                  - 'null'
+                cross_links:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    $ref: '#/components/schemas/CrossLink'
+                dark_mode_theme_color:
+                  type:
+                  - string
+                  - 'null'
+                enable_streaming_search:
+                  type:
+                  - boolean
+                  - 'null'
+                light_mode_theme_color:
+                  type:
+                  - string
+                  - 'null'
+                max_series_per_query:
+                  type:
+                  - integer
+                  - 'null'
+                  minimum: 0
+                min_auto_refresh_interval:
+                  type:
+                  - integer
+                  - 'null'
+                  format: int32
+                  minimum: 0
+                scrape_interval:
+                  type:
+                  - integer
+                  - 'null'
+                  format: int32
+                  description: 'Ideally this should be the same as prometheus-scrape-interval (in
+
+                    seconds).'
+                  minimum: 0
+                span_id_field_name:
+                  type:
+                  - string
+                  - 'null'
+                streaming_aggregation_enabled:
+                  type:
+                  - boolean
+                  - 'null'
+                toggle_ingestion_logs:
+                  type:
+                  - boolean
+                  - 'null'
+                trace_id_field_name:
+                  type:
+                  - string
+                  - 'null'
+                usage_stream_enabled:
+                  type:
+                  - boolean
+                  - 'null'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Settings
+        operation: create
+      x-o2-mcp:
+        description: Create/update org settings
+        category: users
+  /api/{org_id}/settings/v2:
+    get:
+      tags:
+      - Organizations
+      summary: List all resolved system settings
+      description: Lists all settings with multi-level resolution applied. Merges system, org, and user levels, returning the most specific value for each key.
+      operationId: SystemSettingListResolved
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: user_id
+        in: query
+        description: User ID for user-level resolution
+        required: false
+        schema:
+          type: string
+      - name: category
+        in: query
+        description: Filter by setting category
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Settings
+        operation: list
+      x-o2-mcp:
+        description: List resolved system settings
+        category: system
+    post:
+      tags:
+      - Organizations
+      summary: Set organization-level setting
+      description: Creates or updates an organization-level setting. This setting applies to all users in the organization unless overridden at the user level.
+      operationId: SystemSettingSetOrg
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Setting to create/update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SystemSettingPayload'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemSetting'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Settings
+        operation: create
+      x-o2-mcp:
+        description: Set org-level system setting
+        category: system
+  /api/{org_id}/settings/v2/user/{user_id}:
+    post:
+      tags:
+      - Organizations
+      summary: Set user-level setting
+      description: Creates or updates a user-level setting. This setting applies only to the specific user and overrides org-level and system-level settings.
+      operationId: SystemSettingSetUser
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: user_id
+        in: path
+        description: User ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Setting to create/update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SystemSettingPayload'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemSetting'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Settings
+        operation: create
+      x-o2-mcp:
+        description: Set user-level system setting
+        category: system
+  /api/{org_id}/settings/v2/user/{user_id}/{key}:
+    delete:
+      tags:
+      - Organizations
+      summary: Delete user-level setting
+      description: Deletes a user-level setting. After deletion, queries for this key will fall back to org-level or system-level settings.
+      operationId: SystemSettingDeleteUser
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: user_id
+        in: path
+        description: User ID
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        description: Setting key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Settings
+        operation: delete
+      x-o2-mcp:
+        description: Delete user system setting
+        category: system
+        requires_confirmation: true
+  /api/{org_id}/settings/v2/{key}:
+    get:
+      tags:
+      - Organizations
+      summary: Get resolved system setting
+      description: Retrieves a setting value with multi-level resolution. Checks user-level first, then org-level, then system-level defaults. Returns the most specific setting found, or null if no setting exists at any level.
+      operationId: SystemSettingGetResolved
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        description: Setting key
+        required: true
+        schema:
+          type: string
+      - name: user_id
+        in: query
+        description: User ID for user-level resolution
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/SystemSetting'
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Settings
+        operation: get
+      x-o2-mcp:
+        description: Get resolved system setting
+        category: system
+    delete:
+      tags:
+      - Organizations
+      summary: Delete organization-level setting
+      description: Deletes an organization-level setting. After deletion, queries for this key will fall back to system-level defaults.
+      operationId: SystemSettingDeleteOrg
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        description: Setting key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Delete org system setting
+        category: system
+        requires_confirmation: true
+      x-o2-ratelimit:
+        module: Settings
+        operation: delete
+  /api/{org_id}/summary:
+    get:
+      tags:
+      - Organizations
+      summary: Get organization summary
+      description: Retrieves comprehensive summary statistics and information about an organization including data ingestion metrics, storage usage, stream counts, and other key performance indicators useful for monitoring organization health and usage.
+      operationId: GetOrganizationSummary
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Get organization summary
+        category: organizations
+      x-o2-ratelimit:
+        module: Summary
+        operation: get
+components:
+  schemas:
+    ServiceAccountTokenInfo:
+      type: object
+      required:
+      - email
+      - role
+      - message
+      properties:
+        email:
+          type: string
+        message:
+          type: string
+          description: Instructions for obtaining a temporary session token
+        role:
+          type: string
+    RumIngestionToken:
+      type: object
+      required:
+      - user
+      properties:
+        rum_token:
+          type:
+          - string
+          - 'null'
+        user:
+          type: string
+    AssumeServiceAccountResponse:
+      type: object
+      description: 'Response from assume service account operation
+
+
+        Contains the session credentials needed to access the target organization.'
+      required:
+      - session_id
+      - org_id
+      - role_name
+      - expires_at
+      - expires_in
+      properties:
+        expires_at:
+          type: string
+          description: Expiration timestamp (ISO 8601)
+        expires_in:
+          type: integer
+          format: int64
+          description: Duration in seconds until expiration
+          minimum: 0
+        org_id:
+          type: string
+          description: Target organization ID
+        role_name:
+          type: string
+          description: Assumed service account role
+        session_id:
+          type: string
+          description: Session ID to use for authentication
+    CrossLinkField:
+      type: object
+      required:
+      - name
+      properties:
+        alias:
+          type:
+          - string
+          - 'null'
+          description: 'Populated by result_schema: the alias used in the query for this field.'
+        name:
+          type: string
+    SettingScope:
+      type: string
+      description: Setting scope levels
+      enum:
+      - system
+      - org
+      - user
+    IngestionPasscode:
+      type: object
+      required:
+      - passcode
+      - user
+      properties:
+        passcode:
+          type: string
+        user:
+          type: string
+    AssumeServiceAccountRequest:
+      type: object
+      description: 'Request to assume a service account in a target organization
+
+
+        This allows meta service accounts to obtain temporary session tokens
+
+        for accessing a target organization as a specific service account.'
+      required:
+      - org_id
+      properties:
+        duration_seconds:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: 'Optional duration in seconds (default: 3600, max: 86400)'
+          minimum: 0
+        org_id:
+          type: string
+          description: Target organization ID
+        service_account:
+          type:
+          - string
+          - 'null'
+          description: Service account email to assume (optional, defaults to caller's user_id)
+    OrgDetails:
+      type: object
+      required:
+      - id
+      - identifier
+      - name
+      - user_email
+      - ingest_threshold
+      - search_threshold
+      - type
+      - UserObj
+      properties:
+        UserObj:
+          $ref: '#/components/schemas/OrgUser'
+        id:
+          type: integer
+          format: int64
+        identifier:
+          type: string
+        ingest_threshold:
+          type: integer
+          format: int64
+        name:
+          type: string
+        plan:
+          type: integer
+          format: int32
+        search_threshold:
+          type: integer
+          format: int64
+        type:
+          type: string
+        user_email:
+          type: string
+    SystemSetting:
+      type: object
+      description: A system setting record
+      required:
+      - scope
+      - setting_key
+      - setting_value
+      properties:
+        created_at:
+          type: integer
+          format: int64
+          description: Created timestamp (microseconds)
+        created_by:
+          type:
+          - string
+          - 'null'
+          description: User who created this setting
+        description:
+          type:
+          - string
+          - 'null'
+          description: Optional description
+        id:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: Unique identifier
+        org_id:
+          type:
+          - string
+          - 'null'
+          description: Organization ID (required for org/user scope)
+        scope:
+          $ref: '#/components/schemas/SettingScope'
+          description: Setting scope (system, org, user)
+        setting_category:
+          type:
+          - string
+          - 'null'
+          description: Optional category for grouping
+        setting_key:
+          type: string
+          description: Setting key identifier
+        setting_value:
+          description: The setting value (JSON)
+        updated_at:
+          type: integer
+          format: int64
+          description: Updated timestamp (microseconds)
+        updated_by:
+          type:
+          - string
+          - 'null'
+          description: User who last updated this setting
+        user_id:
+          type:
+          - string
+          - 'null'
+          description: User ID (required for user scope)
+    OrgUser:
+      type: object
+      required:
+      - first_name
+      - last_name
+      - email
+      properties:
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    CrossLink:
+      type: object
+      description: A cross-link entry for drill-down/navigation from log/trace records
+      required:
+      - name
+      - url
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CrossLinkField'
+          description: 'Show link only when at least one field matches the record.
+
+            If empty, the link is always shown.'
+        name:
+          type: string
+          description: Display name for the link
+        url:
+          type: string
+          description: URL template with {field_name} placeholders
+    Organization:
+      type: object
+      required:
+      - name
+      properties:
+        identifier:
+          type: string
+        name:
+          type: string
+          description: Only alphanumeric characters (A-Z, a-z, 0-9), spaces, and underscores are allowed
+        org_type:
+          type: string
+        service_account:
+          type:
+          - string
+          - 'null'
+          description: 'Optional service account email to add to the organization
+
+            When specified, only this service account will be added (not the API caller)'
+    SystemSettingPayload:
+      type: object
+      description: Request to create or update a setting
+      required:
+      - setting_key
+      - setting_value
+      properties:
+        description:
+          type:
+          - string
+          - 'null'
+          description: Optional description
+        setting_category:
+          type:
+          - string
+          - 'null'
+          description: Optional category
+        setting_key:
+          type: string
+          description: Setting key
+        setting_value:
+          description: Setting value (JSON)
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

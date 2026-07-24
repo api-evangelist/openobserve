@@ -1,0 +1,200 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Ratelimit API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Ratelimit
+  description: Ratelimit operations
+paths:
+  /api/{org_id}/ratelimit/module_list:
+    get:
+      tags:
+      - Ratelimit
+      summary: List module rate limit rules
+      description: Retrieves rate limiting rules applied at the organization module level, including thresholds and configurations for different API groups
+      operationId: listModuleRatelimitRule
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization Name
+        required: true
+        schema:
+          type: string
+      - name: org_id
+        in: query
+        description: Organization Name
+        required: true
+        schema:
+          type: string
+      - name: interval
+        in: query
+        description: 'Time interval: second/minute/hour (default: second)'
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: Ratelimit
+        operation: list
+  /api/{org_id}/ratelimit/role_list:
+    get:
+      tags:
+      - Ratelimit
+      summary: List role-based rate limit rules
+      description: Retrieves rate limiting rules applied to specific user roles within the organization, showing how different roles have different API usage limits
+      operationId: listRoleRatelimitRule
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization Name
+        required: true
+        schema:
+          type: string
+      - name: org_id
+        in: query
+        description: Organization Name
+        required: true
+        schema:
+          type: string
+      - name: user_role
+        in: query
+        description: User Role Name
+        required: true
+        schema:
+          type: string
+      - name: interval
+        in: query
+        description: 'Time interval: second/minute/hour (default: second)'
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Ratelimit
+        operation: list
+      x-o2-mcp:
+        enabled: false
+  /api/{org_id}/ratelimit/update:
+    put:
+      tags:
+      - Ratelimit
+      summary: Update rate limit rules
+      description: Updates rate limiting rules for modules or user roles. Allows setting custom thresholds for different API operations and groups
+      operationId: UpdateRatelimitRule
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: org_id
+        in: query
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: update_type
+        in: query
+        description: Update Type
+        required: true
+        schema:
+          type: string
+      - name: user_role
+        in: query
+        description: UserRole name
+        required: false
+        schema:
+          type: string
+      - name: interval
+        in: query
+        description: 'Time interval: second/minute/hour (default: second)'
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: json array
+        content:
+          application/json:
+            schema:
+              type: string
+            example:
+              Key Values:
+                list: 0
+                create: 0
+                delete: 0
+                get: 0
+              Service Accounts:
+                update: 0
+                list: 0
+                create: 0
+                delete: 0
+                get: 0
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Ratelimit
+        operation: update
+      x-o2-mcp:
+        enabled: false
+components:
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

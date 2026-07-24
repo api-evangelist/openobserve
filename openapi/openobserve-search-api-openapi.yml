@@ -1,0 +1,923 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Search API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Search
+  description: Search/Query operations
+paths:
+  /api/{org_id}/_search:
+    post:
+      tags:
+      - Search
+      summary: Search data with SQL
+      description: Executes SQL queries against log streams with support for complex search patterns, time range filtering, aggregations, and histogram generation. Supports advanced features like multi-stream searches, caching, and UI optimizations for dashboard visualizations.
+      operationId: SearchSQL
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: 'Stream type. one of: logs, metrics, traces. Defaults to logs.'
+        required: false
+        schema:
+          type: string
+      - name: is_ui_histogram
+        in: query
+        description: 'Whether to return histogram data for UI (default: false)'
+        required: false
+        schema:
+          type: boolean
+      - name: is_multi_stream_search
+        in: query
+        description: 'Indicate is search is for multi stream (default: false)'
+        required: false
+        schema:
+          type: boolean
+      - name: validate
+        in: query
+        description: 'Validate query fields against stream schema and User-Defined Schema (UDS). When enabled, returns error if queried fields are not in schema or not allowed by UDS (default: false)'
+        required: false
+        schema:
+          type: boolean
+      requestBody:
+        description: Search query
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - query
+              properties:
+                clear_cache:
+                  type: boolean
+                clusters:
+                  type: array
+                  items:
+                    type: string
+                encoding:
+                  $ref: '#/components/schemas/RequestEncoding'
+                local_mode:
+                  type:
+                  - boolean
+                  - 'null'
+                query:
+                  $ref: '#/components/schemas/SearchQuery'
+                regions:
+                  type: array
+                  items:
+                    type: string
+                search_event_context:
+                  oneOf:
+                  - type: 'null'
+                  - $ref: '#/components/schemas/SearchEventContext'
+                search_type:
+                  oneOf:
+                  - type: 'null'
+                  - $ref: '#/components/schemas/SearchEventType'
+                timeout:
+                  type: integer
+                  format: int64
+                use_cache:
+                  type: boolean
+            example:
+              query:
+                sql: select * from k8s
+                start_time: 1675182660872049
+                end_time: 1675185660872049
+                from: 0
+                size: 10
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                took: 155
+                hits:
+                - _p: F
+                  _timestamp: 1674213225158000
+                  kubernetes:
+                    container_hash: dkr.ecr.us-west-2.amazonaws.com/openobserve@sha256:3dbbb0dc1eab2d5a3b3e4a75fd87d194e8095c92d7b2b62e7cdbd07020f54589
+                    container_image: dkr.ecr.us-west-2.amazonaws.com/openobserve:v0.0.3
+                    container_name: openobserve
+                    docker_id: eb0983bdb9ff9360d227e6a0b268fe3b24a0868c2c2d725a1516c11e88bf5789
+                    host: ip.us-east-2.compute.internal
+                    namespace_name: openobserve
+                    pod_id: 35a0421f-9203-4d73-9663-9ff0ce26d409
+                    pod_name: openobserve-ingester-0
+                  log: '[2023-01-20T11:13:45Z INFO  actix_web::middleware::logger] 10.2.80.192 "POST /api/demo/_bulk HTTP/1.1" 200 68'
+                  stream: stderr
+                total: 27179431
+                from: 0
+                size: 1
+                scan_size: 28943
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: 'Search data with SQL, you can use `match_all(''foo'')` to search with full text search, also you can use `str_match(field, ''bar'')` to search in a specific field; start_time, end_time can''t be zero, need to be a valid micro timestamp. Note: in summary mode, response is capped at 100 hits, request detail=''full'' if you need more.'
+        category: search
+        pinned: true
+      x-o2-ratelimit:
+        module: Search
+        operation: get
+  /api/{org_id}/_search_history:
+    post:
+      tags:
+      - Search
+      summary: Search query history
+      description: Retrieves historical search queries and their execution details
+      operationId: SearchHistory
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Search history request parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Request parameters for querying search history
+              required:
+              - start_time
+              - end_time
+              properties:
+                end_time:
+                  type: integer
+                  format: int64
+                  description: end time in micro seconds
+                org_id:
+                  type:
+                  - string
+                  - 'null'
+                  description: Organization ID to filter search history by
+                size:
+                  type: integer
+                  format: int64
+                  description: Maximum number of search history records to return
+                start_time:
+                  type: integer
+                  format: int64
+                  description: start time in micro seconds
+                stream_name:
+                  type:
+                  - string
+                  - 'null'
+                  description: Name of the specific stream to filter by
+                stream_type:
+                  type:
+                  - string
+                  - 'null'
+                  description: Type of stream to filter by (e.g., logs, metrics, traces)
+                trace_id:
+                  type:
+                  - string
+                  - 'null'
+                  description: Trace ID to filter search history by
+                user_email:
+                  type:
+                  - string
+                  - 'null'
+                  description: Email of the user to filter search history by
+            example:
+              stream_name: default
+              stream_type: logs
+              min_ts: 1632960000
+              max_ts: 1633046400
+              trace_id: 7f7898fd19424c47ba830a6fa9b25e1f
+              size: 100
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                took: 40
+                took_detail:
+                  total: 40
+                  idx_took: 0
+                  wait_in_queue: 0
+                hits:
+                - cached_ratio: 0
+                  end_time: 15
+                  org_id: default
+                  scan_records: 1
+                  scan_size: 7.0
+                  sql: SELECT COUNT(*) from "default"
+                  start_time: 0
+                  stream_name: default
+                  stream_type: logs
+                  took: 0.056222333
+                  trace_id: 7f7898fd19424c47ba830a6fa9b25e1f
+                  function: .
+                total: 3
+                from: 0
+                size: 20
+                cached_ratio: 0
+                scan_size: 0
+                idx_scan_size: 0
+                scan_records: 3
+                trace_id: 2lsPBWjwZxUJ5ugvZ4jApESZEpk
+                is_partial: false
+                result_cache_ratio: 0
+        '400':
+          description: Bad Request - Invalid parameters or body
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Search
+        operation: get
+      x-o2-mcp:
+        description: Get search history
+        category: search
+  /api/{org_id}/_search_partition:
+    post:
+      tags:
+      - Search
+      summary: Search partition data
+      description: Executes search queries on partitioned log data with specified parameters
+      operationId: SearchPartition
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: 'Stream type. Must be one of: logs, metrics, traces. Defaults to logs if not specified.'
+        required: false
+        schema:
+          type: string
+      - name: enable_align_histogram
+        in: query
+        description: Enable align histogram
+        required: true
+        schema:
+          type: boolean
+      requestBody:
+        description: Search query
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - sql
+              - start_time
+              - end_time
+              properties:
+                clusters:
+                  type: array
+                  items:
+                    type: string
+                encoding:
+                  $ref: '#/components/schemas/RequestEncoding'
+                end_time:
+                  type: integer
+                  format: int64
+                histogram_interval:
+                  type: integer
+                  format: int64
+                query_fn:
+                  type:
+                  - string
+                  - 'null'
+                regions:
+                  type: array
+                  items:
+                    type: string
+                sampling_ratio:
+                  type:
+                  - number
+                  - 'null'
+                  format: double
+                sql:
+                  type: string
+                start_time:
+                  type: integer
+                  format: int64
+                streaming_output:
+                  type: boolean
+            example:
+              sql: 'select * from k8s '
+              start_time: 1675182660872049
+              end_time: 1675185660872049
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                took: 155
+                file_num: 10
+                original_size: 10240
+                compressed_size: 1024
+                partitions:
+                - - 1674213225158000
+                  - 1674213225158000
+                - - 1674213225158000
+                  - 1674213225158000
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Search
+        operation: get
+      x-o2-mcp:
+        description: Get search partitions then you can call _search api by partitions to give the result looks faster
+        category: search
+  /api/{org_id}/_search_stream:
+    post:
+      tags:
+      - Search
+      summary: Stream search results
+      description: Executes a search query and streams the results back in real-time using HTTP/2 server-sent events. This is ideal for large result sets or long-running queries where you want to receive data as it becomes available rather than waiting for the complete response. Results are streamed as JSON objects separated by newlines.
+      operationId: SearchStreamHttp2
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: is_ui_histogram
+        in: query
+        description: Whether to return histogram data for UI
+        required: true
+        schema:
+          type: boolean
+      - name: is_multi_stream_search
+        in: query
+        description: Indicate is search is for multi stream
+        required: true
+        schema:
+          type: boolean
+      requestBody:
+        description: Search query
+        content:
+          application/json:
+            schema:
+              type: string
+            example:
+              sql: select * from logs LIMIT 10
+              start_time: 1675182660872049
+              end_time: 1675185660872049
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            text/event-stream: {}
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Search
+        operation: get
+      x-o2-mcp:
+        enabled: false
+  /api/{org_id}/_values_stream:
+    post:
+      tags:
+      - Search
+      summary: Get field values with HTTP/2 streaming
+      description: Retrieves field values from logs using HTTP/2 streaming for real-time results
+      operationId: ValuesStreamHttp2
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Values query
+        content:
+          application/json:
+            schema:
+              type: string
+            example:
+              sql: select * from logs LIMIT 10
+              start_time: 1675182660872049
+              end_time: 1675185660872049
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            text/event-stream: {}
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Search
+        operation: get
+      x-o2-mcp:
+        enabled: false
+  /api/{org_id}/{stream_name}/_around:
+    get:
+      tags:
+      - Search
+      summary: Search around specific log entry
+      description: Searches for log entries around a specific key (timestamp or record identifier) within a stream. Returns logs before and after the specified key, useful for investigating context around specific events or errors.
+      operationId: SearchAround
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: stream_name name
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: 'Stream type. Must be one of: logs, metrics, traces. Defaults to logs if not specified.'
+        required: false
+        schema:
+          type: string
+      - name: key
+        in: query
+        description: around key
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: size
+        in: query
+        description: around size
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: regions
+        in: query
+        description: regions, split by comma
+        required: false
+        schema:
+          type: string
+      - name: timeout
+        in: query
+        description: timeout, seconds
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                took: 155
+                hits:
+                - _p: F
+                  _timestamp: 1674213225158000
+                  kubernetes:
+                    container_hash: dkr.ecr.us-west-2.amazonaws.com/openobserve@sha256:3dbbb0dc1eab2d5a3b3e4a75fd87d194e8095c92d7b2b62e7cdbd07020f54589
+                    container_image: dkr.ecr.us-west-2.amazonaws.com/openobserve:v0.0.3
+                    container_name: openobserve
+                    docker_id: eb0983bdb9ff9360d227e6a0b268fe3b24a0868c2c2d725a1516c11e88bf5789
+                    host: ip.us-east-2.compute.internal
+                    namespace_name: openobserve
+                    pod_id: 35a0421f-9203-4d73-9663-9ff0ce26d409
+                    pod_name: openobserve-ingester-0
+                  log: '[2023-01-20T11:13:45Z INFO  actix_web::middleware::logger] 10.2.80.192 "POST /api/demo/_bulk HTTP/1.1" 200 68'
+                  stream: stderr
+                total: 10
+                from: 0
+                size: 10
+                scan_size: 28943
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Search
+        operation: get
+      x-o2-mcp:
+        description: 'Search logs around a timestamp. Note: in summary mode, hits are capped at 100 and only hits/total/took/columns/scan_size/function_error are returned.'
+        category: search
+    post:
+      tags:
+      - Search
+      summary: Search around specific log record
+      description: Advanced version of around search that accepts a full log record in the request body instead of just a key. Searches for log entries around the specified record, providing better context matching based on the complete record data.
+      operationId: SearchAroundV2
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: stream_name name
+        required: true
+        schema:
+          type: string
+      - name: size
+        in: query
+        description: around size
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: regions
+        in: query
+        description: regions, split by comma
+        required: false
+        schema:
+          type: string
+      - name: timeout
+        in: query
+        description: timeout, seconds
+        required: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: around record data
+        content:
+          application/json:
+            schema:
+              type: string
+            example:
+              _timestamp: 1675182660872049
+              container_image: dkr.ecr.us-west-2.amazonaws.com/openobserve:v0.0.3
+              container_name: openobserve
+              docker_id: eb0983bdb9ff9360d227e6a0b268fe3b24a0868c2c2d725a1516c11e88bf5789
+              host: ip.us-east-2.compute.internal
+              namespace_name: openobserve
+              pod_id: 35a0421f-9203-4d73-9663-9ff0ce26d409
+              pod_name: openobserve-ingester-0
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                took: 155
+                hits:
+                - _p: F
+                  _timestamp: 1674213225158000
+                  kubernetes:
+                    container_hash: dkr.ecr.us-west-2.amazonaws.com/openobserve@sha256:3dbbb0dc1eab2d5a3b3e4a75fd87d194e8095c92d7b2b62e7cdbd07020f54589
+                    container_image: dkr.ecr.us-west-2.amazonaws.com/openobserve:v0.0.3
+                    container_name: openobserve
+                    docker_id: eb0983bdb9ff9360d227e6a0b268fe3b24a0868c2c2d725a1516c11e88bf5789
+                    host: ip.us-east-2.compute.internal
+                    namespace_name: openobserve
+                    pod_id: 35a0421f-9203-4d73-9663-9ff0ce26d409
+                    pod_name: openobserve-ingester-0
+                  log: '[2023-01-20T11:13:45Z INFO  actix_web::middleware::logger] 10.2.80.192 "POST /api/demo/_bulk HTTP/1.1" 200 68'
+                  stream: stderr
+                total: 10
+                from: 0
+                size: 10
+                scan_size: 28943
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: Search
+        operation: get
+  /api/{org_id}/{stream_name}/_values:
+    get:
+      tags:
+      - Search
+      summary: Get distinct field values
+      description: Retrieves the top N distinct values for specified fields within a stream and time range. Supports filtering, keyword search, and frequency counting. Essential for building dynamic filters, dropdowns, and understanding data cardinality in dashboards and analytics.
+      operationId: SearchValues
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: stream_name name
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: 'Stream type. Must be one of: logs, metrics, traces. Defaults to logs if not specified.'
+        required: false
+        schema:
+          type: string
+      - name: fields
+        in: query
+        description: fields, split by comma
+        required: true
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: 'filter, eg: a=b'
+        required: false
+        schema:
+          type: string
+      - name: keyword
+        in: query
+        description: 'keyword, eg: abc'
+        required: false
+        schema:
+          type: string
+      - name: size
+        in: query
+        description: size
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: from
+        in: query
+        description: from
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: start_time
+        in: query
+        description: start time
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: end_time
+        in: query
+        description: end time
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: regions
+        in: query
+        description: regions, split by comma
+        required: false
+        schema:
+          type: string
+      - name: timeout
+        in: query
+        description: timeout, seconds
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: no_count
+        in: query
+        description: no need count, true of false
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                took: 155
+                values:
+                - field: field1
+                  values:
+                  - value1
+                  - value2
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Get distinct values for a field
+        category: search
+      x-o2-ratelimit:
+        module: Search
+        operation: get
+components:
+  schemas:
+    SearchEventType:
+      type: string
+      enum:
+      - ui
+      - dashboards
+      - reports
+      - alerts
+      - values
+      - other
+      - rum
+      - derivedstream
+      - searchjob
+      - download
+      - insights
+    SearchEventContext:
+      type: object
+      properties:
+        alert_key:
+          type:
+          - string
+          - 'null'
+        alert_name:
+          type:
+          - string
+          - 'null'
+        dashboard_id:
+          type:
+          - string
+          - 'null'
+        dashboard_name:
+          type:
+          - string
+          - 'null'
+        derived_stream_key:
+          type:
+          - string
+          - 'null'
+        folder_id:
+          type:
+          - string
+          - 'null'
+        folder_name:
+          type:
+          - string
+          - 'null'
+        report_id:
+          type:
+          - string
+          - 'null'
+    RequestEncoding:
+      type: string
+      enum:
+      - base64
+      - Empty
+    SearchQuery:
+      type: object
+      required:
+      - sql
+      - start_time
+      - end_time
+      properties:
+        action_id:
+          type:
+          - string
+          - 'null'
+        end_time:
+          type: integer
+          format: int64
+        from:
+          type: integer
+          format: int64
+        histogram_interval:
+          type: integer
+          format: int64
+        query_fn:
+          type:
+          - string
+          - 'null'
+        query_type:
+          type: string
+        quick_mode:
+          type: boolean
+        sampling_config:
+          type:
+          - object
+          - 'null'
+        sampling_ratio:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: 'Simplified sampling API: just specify ratio (0.0-1.0), backend uses optimal defaults
+
+            Takes precedence over sampling_config if both are provided'
+        size:
+          type: integer
+          format: int64
+        skip_wal:
+          type: boolean
+        sql:
+          type: string
+        start_time:
+          type: integer
+          format: int64
+        streaming_id:
+          type:
+          - string
+          - 'null'
+        streaming_output:
+          type: boolean
+        track_total_hits:
+          type: boolean
+        uses_zo_fn:
+          type: boolean
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

@@ -1,0 +1,528 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Service Streams API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Service Streams
+  description: Multi-signal correlation across logs, traces, and metrics (enterprise)
+paths:
+  /{org_id}/service_streams:
+    get:
+      tags:
+      - Service Streams
+      operationId: ListServiceStreams
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of discovered services
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Enterprise feature
+        '500':
+          description: Internal server error
+      security:
+      - Authorization: []
+  /{org_id}/service_streams/_analytics:
+    get:
+      tags:
+      - Service Streams
+      summary: GET /api/{org_id}/service_streams/_analytics
+      description: 'Get comprehensive dimension analytics including cardinality classification
+
+
+        Returns:
+
+        - Cardinality of each dimension
+
+        - Cardinality class (VeryLow/Low/Medium/High/VeryHigh)
+
+        - Recommended priority dimensions for correlation
+
+        - Sample values for each dimension
+
+
+        This endpoint provides the data needed to understand which dimensions
+
+        are stable (good for correlation) vs transient (good for filtering only)'
+      operationId: GetServiceStreamAnalytics
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Dimension analytics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionAnalyticsSummary'
+        '401':
+          description: Unauthorized - Authentication required
+        '403':
+          description: Forbidden - Enterprise feature
+        '500':
+          description: Internal server error
+      security:
+      - Authorization: []
+  /{org_id}/service_streams/_correlate:
+    post:
+      tags:
+      - Service Streams
+      summary: POST /api/{org_id}/service_streams/_correlate
+      description: "Find related telemetry streams for a given log/trace/metric event\n\nRequest body:\n{\n  \"source_stream\": \"default\",\n  \"source_type\": \"logs\",\n  \"available_dimensions\": {\n    \"k8s-cluster\": \"prod\",\n    \"k8s-namespace\": \"app\",\n    \"k8s-deployment\": \"api\",\n    \"k8s-pod\": \"api-xyz\",\n    \"host\": \"node-123\"\n  }\n}\n\nResponse includes:\n- The matched service\n- Which dimensions were used for matching (minimal set)\n- Which dimensions are available for additional filtering\n- All related streams (logs/traces/metrics) with their dimension requirements"
+      operationId: CorrelateServiceStreams
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Correlation request parameters
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CorrelationRequest'
+        required: true
+      responses:
+        '200':
+          description: Correlation results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CorrelationResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Authentication required
+        '403':
+          description: Forbidden - Enterprise feature
+        '404':
+          description: No matching service found
+        '500':
+          description: Internal server error
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+  /{org_id}/service_streams/config/identity:
+    get:
+      tags:
+      - Service Streams
+      operationId: GetServiceIdentityConfig
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Current identity config
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+      security:
+      - Authorization: []
+    put:
+      tags:
+      - Service Streams
+      operationId: SaveServiceIdentityConfig
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: ServiceIdentityConfig JSON
+        content:
+          application/json:
+            schema: {}
+        required: true
+      responses:
+        '200':
+          description: Config saved
+        '400':
+          description: Invalid config
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+      security:
+      - Authorization: []
+components:
+  schemas:
+    CorrelationRequest:
+      type: object
+      required:
+      - source_stream
+      - source_type
+      - available_dimensions
+      properties:
+        available_dimensions:
+          type: object
+          description: Available dimensions from the source event
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        source_stream:
+          type: string
+          description: Source stream name
+        source_type:
+          type: string
+          description: Source stream type (logs/traces/metrics)
+    RelatedStreams:
+      type: object
+      description: Related streams grouped by type
+      required:
+      - logs
+      - traces
+      - metrics
+      properties:
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamInfo'
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamInfo'
+        traces:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamInfo'
+    CorrelationResponse:
+      type: object
+      description: Response from the correlate API
+      required:
+      - service_name
+      - matched_dimensions
+      - additional_dimensions
+      - related_streams
+      properties:
+        additional_dimensions:
+          type: object
+          description: Additional dimensions available for filtering
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        all_streams:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamInfo'
+          description: 'Flattened list of all streams with explicit stream_type
+
+
+            This field provides a flat list of all streams where each stream has its
+
+            stream_type explicitly set. This is useful for UIs that:
+
+            1. Display all streams in a single list/table
+
+            2. Need to query streams without maintaining the nested structure
+
+            3. Pass streams between components (type info is preserved)'
+        matched_dimensions:
+          type: object
+          description: Dimensions that were used for matching (minimal set)
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        matched_set_id:
+          type:
+          - string
+          - 'null'
+          description: 'The identity set that was selected for this correlation (by best-coverage resolution).
+
+            `None` if the feature is not enabled or the set was not determined.'
+        related_streams:
+          $ref: '#/components/schemas/RelatedStreams'
+          description: Related streams grouped by type (for backward compatibility)
+        service_name:
+          type: string
+          description: Matched service name
+    DimensionAnalyticsSummary:
+      type: object
+      description: Dimension analytics summary for an organization
+      required:
+      - org_id
+      - total_dimensions
+      - by_cardinality
+      - recommended_priority_dimensions
+      - dimensions
+      - generated_at
+      properties:
+        available_groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/FoundGroup'
+          description: All alias groups found in the org's stream schemas
+        by_cardinality:
+          type: object
+          description: Dimensions by cardinality class
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          propertyNames:
+            type: string
+        dimensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DimensionAnalytics'
+          description: All dimension analytics (dimensions with ingested data)
+        generated_at:
+          type: integer
+          format: int64
+          description: When this summary was generated
+        org_id:
+          type: string
+          description: Organization ID
+        recommended_priority_dimensions:
+          type: array
+          items:
+            type: string
+          description: 'Recommended priority dimensions for correlation
+
+            (sorted by cardinality, lowest first)'
+        service_field_sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceFieldSource'
+          description: 'Field name sources for the "service" semantic group, ranked by hit count.
+
+            Shows which actual field names in each stream type contributed a service name.'
+        total_dimensions:
+          type: integer
+          description: Total number of dimensions tracked
+          minimum: 0
+    ServiceFieldSource:
+      type: object
+      description: 'Describes a raw field name that was used to populate a semantic group,
+
+        along with which stream types it appeared in and how many services used it.'
+      required:
+      - field_name
+      - stream_types
+      - hit_count
+      properties:
+        field_name:
+          type: string
+          description: The raw field name in the stream, e.g. "kubernetes_labels_app"
+        hit_count:
+          type: integer
+          description: Number of services where this field provided the semantic group value
+          minimum: 0
+        stream_types:
+          type: array
+          items:
+            type: string
+          description: Stream types where this field was used, e.g. ["logs", "traces"]
+    FoundGroup:
+      type: object
+      description: A semantic alias group found in the org's stream schemas.
+      required:
+      - group_id
+      - display
+      - stream_types
+      - aliases
+      - recommended
+      properties:
+        aliases:
+          type: object
+          description: 'Actual field name found per stream type, e.g., {"logs": "k8s_cluster_name"}'
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        cardinality_class:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/CardinalityClass'
+            description: Cardinality class derived from unique_values (None if no data yet)
+        display:
+          type: string
+          description: Human-readable display name, e.g., "K8s Cluster"
+        group_id:
+          type: string
+          description: Semantic group ID, e.g., "k8s-cluster"
+        recommended:
+          type: boolean
+          description: 'True if this group appears in 2+ stream types AND has acceptable cardinality
+
+            (Deprecated: logic moving to UI)'
+        stream_types:
+          type: array
+          items:
+            type: string
+          description: Which stream types contain a field from this group (e.g., ["logs", "traces"])
+        unique_values:
+          type:
+          - integer
+          - 'null'
+          description: Number of unique values seen in actual data (None if no data collected yet)
+          minimum: 0
+    StreamInfo:
+      type: object
+      description: Information about a stream where a service was discovered
+      required:
+      - stream_name
+      properties:
+        filters:
+          type: object
+          description: 'Optional filter conditions that identify this service in the stream
+
+            Example: {"namespace": "production", "cluster": "us-east-1"}'
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        stream_name:
+          type: string
+          description: Stream name
+        stream_type:
+          $ref: '#/components/schemas/StreamType'
+          description: 'Stream type (logs, metrics, traces)
+
+
+            This field explicitly identifies the stream type, enabling UIs to:
+
+            1. Query the correct API endpoint (logs/_search vs metrics/_search)
+
+            2. Display appropriate type badges/icons
+
+            3. Handle flattened stream lists without losing type information'
+    StreamType:
+      type: string
+      enum:
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
+    DimensionAnalytics:
+      type: object
+      description: Dimension analytics tracking
+      required:
+      - dimension_name
+      - cardinality
+      - cardinality_class
+      - service_count
+      - first_seen
+      - last_updated
+      properties:
+        cardinality:
+          type: integer
+          description: Current cardinality (number of unique values seen)
+          minimum: 0
+        cardinality_class:
+          $ref: '#/components/schemas/CardinalityClass'
+          description: Cardinality class
+        dimension_name:
+          type: string
+          description: Dimension name (e.g., "k8s-cluster", "environment", "service")
+        first_seen:
+          type: integer
+          format: int64
+          description: When this dimension was first seen
+        last_updated:
+          type: integer
+          format: int64
+          description: When this dimension was last updated
+        sample_values:
+          type: object
+          description: Sample values mapped by stream type, then stream name (limited to 10 for inspection)
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: array
+              items:
+                type: string
+            propertyNames:
+              type: string
+          propertyNames:
+            type: string
+        service_count:
+          type: integer
+          description: Number of services that have this dimension
+          minimum: 0
+        value_children:
+          type: object
+          description: 'For each unique value of this dimension, the co-occurring values of other dimensions.
+
+            Example: { "common-dev": { "k8s-namespace": ["introspection", "ziox", "dev"] } }'
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: array
+              items:
+                type: string
+            propertyNames:
+              type: string
+          propertyNames:
+            type: string
+        value_counts:
+          type: object
+          description: 'Number of services that carry each specific value of this dimension.
+
+            Example: { "staging": 42, "prod-us-east": 18, "prod-us-west": 11 }
+
+            Used for per-value coverage: value_counts[v] / service_count = fraction of
+
+            env services in that specific group value.'
+          additionalProperties:
+            type: integer
+            minimum: 0
+          propertyNames:
+            type: string
+    CardinalityClass:
+      type: string
+      description: 'Cardinality classification for dimensions
+
+
+        Used to determine which dimensions are stable (good for correlation)
+
+        vs transient (should be filtered out or used only for additional filtering)'
+      enum:
+      - VeryLow
+      - Low
+      - Medium
+      - High
+      - VeryHigh
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

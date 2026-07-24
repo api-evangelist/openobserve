@@ -1,0 +1,52 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Clusters API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Clusters
+  description: Super cluster operations
+paths:
+  /api/clusters:
+    get:
+      tags:
+      - Clusters
+      summary: List available clusters
+      description: Retrieves a list of all available clusters organized by region. Each region contains a list of cluster names that can be used for data processing and storage. This information is useful for understanding your deployment topology and selecting appropriate clusters for workload distribution.
+      operationId: ListClusters
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                propertyNames:
+                  type: string
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: Clusters
+        operation: get
+components:
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

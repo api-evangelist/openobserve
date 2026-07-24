@@ -1,0 +1,230 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Patterns API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Patterns
+  description: Log pattern extraction operations (enterprise)
+paths:
+  /api/{org_id}/streams/{stream_name}/patterns/extract:
+    post:
+      tags:
+      - Patterns
+      summary: Extract patterns from search results
+      description: 'This endpoint runs a search query and extracts patterns from the results.
+
+        It internally uses the same search infrastructure as _search but returns
+
+        only the extracted patterns.
+
+
+        POST /api/{org_id}/streams/{stream_name}/patterns/extract'
+      operationId: ExtractPatterns
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: stream_name
+        in: path
+        description: Stream name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Search query (same format as _search endpoint)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema: {}
+        '400':
+          description: Bad Request
+        '403':
+          description: Forbidden - Enterprise feature only or Unauthorized Access
+        '500':
+          description: Internal Server Error
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Search
+        operation: get
+      x-o2-mcp:
+        description: Extract log patterns
+        category: patterns
+components:
+  schemas:
+    SearchEventType:
+      type: string
+      enum:
+      - ui
+      - dashboards
+      - reports
+      - alerts
+      - values
+      - other
+      - rum
+      - derivedstream
+      - searchjob
+      - download
+      - insights
+    RequestEncoding:
+      type: string
+      enum:
+      - base64
+      - Empty
+    SearchQuery:
+      type: object
+      required:
+      - sql
+      - start_time
+      - end_time
+      properties:
+        action_id:
+          type:
+          - string
+          - 'null'
+        end_time:
+          type: integer
+          format: int64
+        from:
+          type: integer
+          format: int64
+        histogram_interval:
+          type: integer
+          format: int64
+        query_fn:
+          type:
+          - string
+          - 'null'
+        query_type:
+          type: string
+        quick_mode:
+          type: boolean
+        sampling_config:
+          type:
+          - object
+          - 'null'
+        sampling_ratio:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: 'Simplified sampling API: just specify ratio (0.0-1.0), backend uses optimal defaults
+
+            Takes precedence over sampling_config if both are provided'
+        size:
+          type: integer
+          format: int64
+        skip_wal:
+          type: boolean
+        sql:
+          type: string
+        start_time:
+          type: integer
+          format: int64
+        streaming_id:
+          type:
+          - string
+          - 'null'
+        streaming_output:
+          type: boolean
+        track_total_hits:
+          type: boolean
+        uses_zo_fn:
+          type: boolean
+    SearchRequest:
+      type: object
+      required:
+      - query
+      properties:
+        clear_cache:
+          type: boolean
+        clusters:
+          type: array
+          items:
+            type: string
+        encoding:
+          $ref: '#/components/schemas/RequestEncoding'
+        local_mode:
+          type:
+          - boolean
+          - 'null'
+        query:
+          $ref: '#/components/schemas/SearchQuery'
+        regions:
+          type: array
+          items:
+            type: string
+        search_event_context:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/SearchEventContext'
+        search_type:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/SearchEventType'
+        timeout:
+          type: integer
+          format: int64
+        use_cache:
+          type: boolean
+    SearchEventContext:
+      type: object
+      properties:
+        alert_key:
+          type:
+          - string
+          - 'null'
+        alert_name:
+          type:
+          - string
+          - 'null'
+        dashboard_id:
+          type:
+          - string
+          - 'null'
+        dashboard_name:
+          type:
+          - string
+          - 'null'
+        derived_stream_key:
+          type:
+          - string
+          - 'null'
+        folder_id:
+          type:
+          - string
+          - 'null'
+        folder_name:
+          type:
+          - string
+          - 'null'
+        report_id:
+          type:
+          - string
+          - 'null'
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

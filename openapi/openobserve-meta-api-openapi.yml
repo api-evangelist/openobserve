@@ -1,0 +1,48 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Meta API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Meta
+  description: Meta details about the OpenObserve state itself. e.g. healthz
+paths:
+  /healthz:
+    get:
+      tags:
+      - Meta
+      summary: System health check
+      description: Performs a basic health check to verify that the OpenObserve service is running and responding to requests. Returns a simple status indicator that can be used by load balancers, monitoring systems, and orchestration platforms to determine service availability and readiness.
+      operationId: HealthCheck
+      responses:
+        '200':
+          description: Status OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                properties:
+                  status:
+                    type: string
+              example:
+                status: ok
+      x-o2-mcp:
+        enabled: false
+components:
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

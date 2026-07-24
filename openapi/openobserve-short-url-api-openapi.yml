@@ -1,0 +1,125 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Short Url API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Short Url
+  description: Short Url Service
+paths:
+  /api/{org_id}/short:
+    post:
+      tags:
+      - Short Url
+      summary: Create short URL
+      description: Generates a shortened URL from a longer original URL. This is useful for creating more manageable links for dashboards, reports, or search queries that can be easily shared via email, chat, or documentation. The short URL remains valid and can be used to redirect back to the original destination.
+      operationId: createShortUrl
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The original URL to shorten
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - original_url
+              properties:
+                original_url:
+                  type: string
+            example:
+              original_url: https://example.com/some/long/url
+        required: true
+      responses:
+        '200':
+          description: Shortened URL
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - short_url
+                properties:
+                  short_url:
+                    type: string
+              example:
+                short_url: http://localhost:5080/short/ddbffcea3ad44292
+        '400':
+          description: Invalid request
+          content:
+            application/json: {}
+      x-o2-mcp:
+        enabled: false
+      x-o2-ratelimit:
+        module: ShortUrl
+        operation: create
+  /short/{org_id}/short/{short_id}:
+    get:
+      tags:
+      - Short Url
+      summary: Resolve short URL
+      description: Resolves a shortened URL back to its original destination. By default, this endpoint redirects the user to the original URL. When the 'type=ui' query parameter is provided, it returns the original URL as JSON instead of performing a redirect. This is useful for applications that need to inspect or validate URLs before navigation.
+      operationId: resolveShortUrl
+      parameters:
+      - name: short_id
+        in: path
+        description: The short ID to retrieve the original URL
+        required: true
+        schema:
+          type: string
+        example: ddbffcea3ad44292
+      - name: type
+        in: query
+        description: Response type - if 'ui', returns JSON object instead of redirect
+        required: false
+        schema:
+          type: string
+        example: ui
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: JSON response when type=ui
+          content:
+            application/json:
+              schema:
+                type: string
+        '302':
+          description: Redirect to original URL (if < 1024 chars) or /web/short_url/{short_id}
+          headers:
+            Location:
+              schema:
+                type: string
+              description: The original URL or /web/short_url/{short_id} to which the client is redirected
+        '404':
+          description: Short URL not found
+          content:
+            text/plain: {}
+      x-o2-ratelimit:
+        module: ShortUrl
+        operation: get
+      x-o2-mcp:
+        enabled: false
+components:
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

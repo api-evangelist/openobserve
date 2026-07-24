@@ -1,0 +1,329 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Roles API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Roles
+paths:
+  /api/{org_id}/roles:
+    get:
+      tags:
+      - Roles
+      summary: List organization roles
+      description: Retrieves a list of all roles available in the organization, including both standard predefined roles and custom roles. Users will only see roles they have permissions to view when role-based access control is active. Requires enterprise features to be enabled.
+      operationId: ListRoles
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Roles
+        operation: list
+      x-o2-mcp:
+        description: List all roles
+        category: authorization
+    post:
+      tags:
+      - Roles
+      summary: Create custom role
+      description: Creates a new custom role with specified permissions and capabilities. Custom roles allow fine-grained access control beyond the standard predefined roles. Requires enterprise features to be enabled.
+      operationId: CreateRoles
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: UserRoleRequest
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - role
+              properties:
+                custom_role:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                role:
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Create a role
+        category: authorization
+      x-o2-ratelimit:
+        module: Roles
+        operation: create
+  /api/{org_id}/roles/{role_id}:
+    put:
+      tags:
+      - Roles
+      summary: Update role permissions
+      description: Updates an existing role by adding or removing permissions and users. Allows modification of role capabilities and user assignments to maintain proper access control. Standard roles cannot be modified. Requires enterprise features to be enabled.
+      operationId: UpdateRoles
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: role_id
+        in: path
+        description: Role Id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: RoleRequest
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - add
+              - remove
+              properties:
+                add:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/O2EntityAuthorization'
+                add_users:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                  uniqueItems: true
+                remove:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/O2EntityAuthorization'
+                remove_users:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                  uniqueItems: true
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Update a role
+        category: authorization
+      x-o2-ratelimit:
+        module: Roles
+        operation: update
+    delete:
+      tags:
+      - Roles
+      summary: Delete custom role
+      description: Permanently removes a custom role from the organization. Users and groups assigned to this role will lose the associated permissions. Standard predefined roles cannot be deleted. Requires enterprise features to be enabled.
+      operationId: DeleteRole
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: role_id
+        in: path
+        description: Role Id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Roles
+        operation: delete
+      x-o2-mcp:
+        description: Delete a role
+        category: authorization
+        requires_confirmation: true
+  /api/{org_id}/roles/{role_id}/permissions/{resource}:
+    get:
+      tags:
+      - Roles
+      summary: Get role permissions for resource
+      description: Retrieves detailed permissions that a specific role has on a particular resource type. Useful for understanding access control capabilities and auditing role assignments. Requires enterprise features to be enabled.
+      operationId: GetResourcePermission
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: role_id
+        in: path
+        description: Role Id
+        required: true
+        schema:
+          type: string
+      - name: resource
+        in: path
+        description: resource
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+  /api/{org_id}/roles/{role_id}/users:
+    get:
+      tags:
+      - Roles
+      summary: Get users assigned to role
+      description: Retrieves a list of all users who are currently assigned to a specific role. Useful for role management, auditing user permissions, and understanding access control assignments. Requires enterprise features to be enabled.
+      operationId: GetRoleUsers
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: role_id
+        in: path
+        description: Role Id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+components:
+  schemas:
+    Permission:
+      type: string
+      enum:
+      - AllowAll
+      - AllowDelete
+      - AllowGet
+      - AllowList
+      - AllowPost
+      - AllowPut
+      - None
+    O2EntityAuthorization:
+      type: object
+      required:
+      - object
+      - permission
+      properties:
+        object:
+          type: string
+        permission:
+          $ref: '#/components/schemas/Permission'
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

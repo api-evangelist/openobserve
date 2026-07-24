@@ -1,0 +1,53 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Keys API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Keys
+paths:
+  /api/{org_id}/cipher_keys/{key_name}:
+    delete:
+      tags:
+      - Keys
+      summary: Delete encryption key
+      description: Permanently removes an encryption key from the organization. This action cannot be undone and will prevent any future data decryption operations that depend on this key. Ensure all data encrypted with this key is either migrated or no longer needed before deletion. Only available in enterprise deployments for enhanced security management.
+      operationId: DeleteCipherKey
+      parameters:
+      - name: key_name
+        in: path
+        description: name of the key to delete
+        required: true
+        schema:
+          type: string
+        example: test_key
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Empty response
+          content:
+            application/json:
+              schema:
+                default: null
+      x-o2-mcp:
+        enabled: false
+components:
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

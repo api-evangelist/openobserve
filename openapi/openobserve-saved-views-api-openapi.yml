@@ -1,0 +1,352 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Saved Views API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Saved Views
+  description: Collection of saved search views for easy retrieval
+paths:
+  /api/{org_id}/savedviews:
+    get:
+      tags:
+      - Saved Views
+      summary: List saved views
+      description: Retrieves a list of all saved search views for the organization. This provides an overview of all stored queries and visualizations that users have created and saved for reuse. Each view includes basic metadata such as name and ID, allowing users to identify and select the views they want to load.
+      operationId: ListSavedViews
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+              - org_id: some-org-id
+                view_name: view-name
+                view_id: view-id
+                payload: base-64-encoded-versioned-payload
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: List all saved views
+        category: search
+      x-o2-ratelimit:
+        module: Saved Views
+        operation: list
+    post:
+      tags:
+      - Saved Views
+      summary: Create a new saved view
+      description: Creates a saved search view with specified query parameters and filters
+      operationId: CreateSavedViews
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Create view data
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - data
+              - view_name
+              properties:
+                data:
+                  description: 'Base64 encoded string, containing all the data for a given view.
+
+                    This data is expected to be versioned so that the frontend can
+
+                    deserialize as required.'
+                view_name:
+                  type: string
+                  description: User-readable name of the view, doesn't need to be unique.
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - org_id
+                - view_id
+                - view_name
+                properties:
+                  org_id:
+                    type: string
+                  view_id:
+                    type: string
+                  view_name:
+                    type: string
+              example:
+              - org_id: some-org-id
+                view_id: view_id
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Saved Views
+        operation: create
+      x-o2-mcp:
+        description: Create a saved view
+        category: search
+  /api/{org_id}/savedviews/{view_id}:
+    get:
+      tags:
+      - Saved Views
+      summary: Get saved view
+      description: Retrieves a specific saved search view by its ID. Saved views allow users to store and reuse complex search queries, filters, and visualization settings. The view contains all the necessary information to recreate the exact search state, including query parameters, time ranges, and display configurations.
+      operationId: GetSavedView
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: view_id
+        in: path
+        description: The view_id which was stored
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - org_id
+                - data
+                - view_id
+                - view_name
+                properties:
+                  data: {}
+                  org_id:
+                    type: string
+                  view_id:
+                    type: string
+                  view_name:
+                    type: string
+              example:
+                org_id: some-org-id
+                view_id: some-uuid-v4
+                view_name: view-name
+                payload: base64-encoded-object-as-sent-by-frontend
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Saved Views
+        operation: get
+      x-o2-mcp:
+        description: Get saved view details
+        category: search
+    put:
+      tags:
+      - Saved Views
+      summary: Update an existing saved view
+      description: Updates the configuration and parameters of an existing saved search view
+      operationId: UpdateSavedViews
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: view_id
+        in: path
+        description: View id to be updated
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Update view data
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - data
+              - view_name
+              properties:
+                data:
+                  description: 'Base64 encoded string, containing all the data for a given view.
+
+                    This data is expected to be versioned so that the frontend can
+
+                    deserialize as required.'
+                view_name:
+                  type: string
+                  description: User-readable name of the view, doesn't need to be unique.
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - org_id
+                - data
+                - view_id
+                - view_name
+                properties:
+                  data: {}
+                  org_id:
+                    type: string
+                  view_id:
+                    type: string
+                  view_name:
+                    type: string
+              example:
+              - org_id: some-org-id
+                view_name: view-name
+                view_id: view-id
+                payload: base-64-encoded-versioned-payload
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Saved Views
+        operation: update
+      x-o2-mcp:
+        description: Update a saved view
+        category: search
+    delete:
+      tags:
+      - Saved Views
+      summary: Delete saved view
+      description: Permanently removes a saved search view from the organization. This action deletes the stored query configuration, visualization settings, and all associated metadata. Once deleted, the view cannot be recovered, so use this operation carefully when cleaning up unused or outdated saved views.
+      operationId: DeleteSavedViews
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: view_id
+        in: path
+        description: The view_id to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - org_id
+                - view_id
+                properties:
+                  org_id:
+                    type: string
+                  view_id:
+                    type: string
+              example:
+              - org_id: some-org-id
+                view_id: view_id
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Saved Views
+        operation: delete
+      x-o2-mcp:
+        description: Delete a saved view
+        category: search
+        requires_confirmation: true
+components:
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

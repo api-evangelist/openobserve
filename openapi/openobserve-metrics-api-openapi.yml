@@ -1,0 +1,591 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Metrics API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Metrics
+  description: Metrics data ingestion operations
+paths:
+  /api/{org_id}/ingest/metrics/_json:
+    post:
+      tags:
+      - Metrics
+      summary: Ingest metrics via JSON
+      description: Ingests metrics data using JSON format. Accepts an array of metric objects containing metric name, type (counter, gauge, histogram, or summary), labels, timestamp, and value. This endpoint is ideal for custom applications and systems that generate metrics in JSON format rather than protocol buffers.
+      operationId: MetricsIngestionJson
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Ingest data (json array)
+        content:
+          application/json:
+            schema:
+              type: string
+            example:
+            - __name__: metrics stream name
+              __type__: counter / gauge / histogram / summary
+              label_name1: label_value1
+              label_name2: label_value2
+              _timestamp: 1687175143
+              value: 1.2
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                status:
+                - name: up
+                  successful: 3
+                  failed: 0
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+  /api/{org_id}/prometheus/api/v1/format_query:
+    get:
+      tags:
+      - Metrics
+      summary: Format Prometheus query
+      description: Formats and prettifies a Prometheus query expression. Returns the query in a standardized, readable format which helps with query validation, debugging, and ensuring consistent query formatting across applications.
+      operationId: PrometheusFormatQuery
+      parameters:
+      - name: query
+        in: query
+        description: Prometheus expression query string.
+        required: true
+        schema:
+          type: string
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: success
+                data: foo / bar
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Metrics
+        operation: get
+      x-o2-mcp:
+        description: Format PromQL query
+        category: metrics
+  /api/{org_id}/prometheus/api/v1/label/{label_name}/values:
+    get:
+      tags:
+      - Metrics
+      summary: Get label values
+      description: Returns all possible values for a specific label name within the specified time range. Optionally filter by series selector to get values for specific metrics. Essential for building filters and understanding label cardinality.
+      operationId: PrometheusLabelValues
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: label_name
+        in: path
+        description: Label name
+        required: true
+        schema:
+          type: string
+      - name: match[]
+        in: query
+        description: Series selector argument that selects the series from which to read the label values
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        description: '<rfc3339 | unix_timestamp>: Start timestamp'
+        required: false
+        schema:
+          type: string
+      - name: end
+        in: query
+        description: '<rfc3339 | unix_timestamp>: End timestamp'
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: success
+                data:
+                - node
+                - prometheus
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Metrics
+        operation: get
+      x-o2-mcp:
+        description: Get Prometheus label values
+        category: metrics
+  /api/{org_id}/prometheus/api/v1/labels:
+    get:
+      tags:
+      - Metrics
+      summary: Get metric label names
+      description: Returns a list of label names available in the metric data within the specified time range. Optionally filter by series selector to get labels for specific metrics. Useful for building dynamic queries and understanding data structure.
+      operationId: PrometheusLabels
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: match[]
+        in: query
+        description: Series selector argument that selects the series from which to read the label names
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        description: '<rfc3339 | unix_timestamp>: Start timestamp'
+        required: false
+        schema:
+          type: string
+      - name: end
+        in: query
+        description: '<rfc3339 | unix_timestamp>: End timestamp'
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: success
+                data:
+                - __name__
+                - call
+                - code
+                - config
+                - dialer_name
+                - endpoint
+                - event
+                - goversion
+                - handler
+                - instance
+                - interval
+                - job
+                - le
+                - listener_name
+                - name
+                - quantile
+                - reason
+                - role
+                - scrape_job
+                - slice
+                - version
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Metrics
+        operation: get
+      x-o2-mcp:
+        description: Get Prometheus label names, must have start and end time
+        category: metrics
+  /api/{org_id}/prometheus/api/v1/metadata:
+    get:
+      tags:
+      - Metrics
+      summary: Get metric metadata
+      description: Retrieves metadata information about metrics including their type, help text, and units. Provides essential information for understanding metric semantics and proper usage in queries and visualizations.
+      operationId: PrometheusMetadata
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of metrics to return
+        required: true
+        schema:
+          type: string
+      - name: metric
+        in: query
+        description: A metric name to filter metadata for. All metric metadata is retrieved if left empty
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: success
+                data:
+                  cortex_ring_tokens:
+                  - type: gauge
+                    help: Number of tokens in the ring
+                    unit: ''
+                  http_requests_total:
+                  - type: counter
+                    help: Number of HTTP requests
+                    unit: ''
+                  - type: counter
+                    help: Amount of HTTP requests
+                    unit: ''
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: Get Prometheus metadata
+        category: metrics
+      x-o2-ratelimit:
+        module: Metrics
+        operation: get
+  /api/{org_id}/prometheus/api/v1/query:
+    get:
+      tags:
+      - Metrics
+      summary: Execute Prometheus instant query
+      description: Executes a Prometheus instant query at a single point in time. Returns current values for metrics matching the query expression. Compatible with Prometheus instant query API for seamless integration with existing monitoring tools.
+      operationId: PrometheusQuery
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: query
+        in: query
+        description: Prometheus expression query string
+        required: true
+        schema:
+          type: string
+      - name: time
+        in: query
+        description: '<rfc3339 | unix_timestamp>: Evaluation timestamp. Optional'
+        required: false
+        schema:
+          type: string
+      - name: timeout
+        in: query
+        description: Evaluation timeout
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: success
+                data:
+                  resultType: vector
+                  result:
+                  - metric:
+                      __name__: up
+                      job: prometheus
+                      instance: localhost:9090
+                    value:
+                    - 1435781451.781
+                    - '1'
+                  - metric:
+                      __name__: up
+                      job: node
+                      instance: localhost:9100
+                    value:
+                    - 1435781451.781
+                    - '0'
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Metrics
+        operation: get
+      x-o2-mcp:
+        description: Execute PromQL instant query
+        category: metrics
+  /api/{org_id}/prometheus/api/v1/query_range:
+    get:
+      tags:
+      - Metrics
+      summary: Execute Prometheus range query
+      description: Executes a Prometheus range query over a specified time period. Returns time series data with multiple data points for metrics matching the query expression. Compatible with Prometheus range query API for time series analysis and visualization.
+      operationId: PrometheusRangeQuery
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: query
+        in: query
+        description: Prometheus expression query string
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        description: '<rfc3339 | unix_timestamp>: Start timestamp, inclusive'
+        required: true
+        schema:
+          type: string
+      - name: end
+        in: query
+        description: '<rfc3339 | unix_timestamp>: End timestamp, inclusive'
+        required: true
+        schema:
+          type: string
+      - name: step
+        in: query
+        description: Query resolution step width in duration format or float number of seconds
+        required: false
+        schema:
+          type: string
+      - name: timeout
+        in: query
+        description: Evaluation timeout
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: success
+                data:
+                  resultType: matrix
+                  result:
+                  - metric:
+                      __name__: up
+                      job: prometheus
+                      instance: localhost:9090
+                    values:
+                    - - 1435781430.781
+                      - '1'
+                    - - 1435781445.781
+                      - '1'
+                    - - 1435781460.781
+                      - '1'
+                  - metric:
+                      __name__: up
+                      job: node
+                      instance: localhost:9091
+                    values:
+                    - - 1435781430.781
+                      - '0'
+                    - - 1435781445.781
+                      - '0'
+                    - - 1435781460.781
+                      - '1'
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Metrics
+        operation: get
+      x-o2-mcp:
+        description: Execute PromQL range query
+        category: metrics
+        pinned: true
+  /api/{org_id}/prometheus/api/v1/series:
+    get:
+      tags:
+      - Metrics
+      summary: Find metric series
+      description: Finds time series that match given label matchers. Returns the unique combinations of metric names and labels that exist in the specified time range. Useful for discovering available metrics and their label combinations.
+      operationId: PrometheusSeries
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: match[]
+        in: query
+        description: '<series_selector>: Series selector argument that selects the series to return'
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        description: '<rfc3339 | unix_timestamp>: Start timestamp'
+        required: false
+        schema:
+          type: string
+      - name: end
+        in: query
+        description: '<rfc3339 | unix_timestamp>: End timestamp'
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: success
+                data:
+                - __name__: up
+                  job: prometheus
+                  instance: localhost:9090
+                - __name__: up
+                  job: node
+                  instance: localhost:9091
+                - __name__: process_start_time_seconds
+                  job: prometheus
+                  instance: localhost:9090
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Metrics
+        operation: get
+      x-o2-mcp:
+        description: Get Prometheus series, must have start and end time
+        category: metrics
+  /api/{org_id}/prometheus/api/v1/write:
+    post:
+      tags:
+      - Metrics
+      summary: Ingest Prometheus metrics
+      description: Receives Prometheus metrics data via remote write protocol. Accepts protobuf-encoded WriteRequest payloads containing time series data and stores them for querying. Compatible with standard Prometheus remote write configuration.
+      operationId: PrometheusRemoteWrite
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: prometheus WriteRequest
+        content:
+          application/x-protobuf:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+components:
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic

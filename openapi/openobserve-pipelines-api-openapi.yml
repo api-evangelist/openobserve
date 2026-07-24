@@ -1,0 +1,1429 @@
+openapi: 3.1.0
+info:
+  title: openobserve Actions Pipelines API
+  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  contact:
+    name: OpenObserve
+    url: https://openobserve.ai/
+    email: hello@zinclabs.io
+  license:
+    name: AGPL-3.0
+    identifier: AGPL-3.0
+  version: 0.90.0
+tags:
+- name: Pipelines
+paths:
+  /api/{org_id}/pipelines:
+    get:
+      tags:
+      - Pipelines
+      summary: List organization pipelines
+      description: Retrieves all data processing pipelines configured for the organization, including their status and associated triggers
+      operationId: listPipelines
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - list
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Pipeline'
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Pipeline
+        operation: list
+      x-o2-mcp:
+        description: List all pipelines
+        category: pipelines
+        summary_fields:
+        - pipeline_id
+        - name
+        - description
+        - enabled
+    put:
+      tags:
+      - Pipelines
+      summary: Update pipeline
+      description: Updates an existing data processing pipeline with new transformation rules, routing configurations, or other settings
+      operationId: updatePipeline
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Pipeline data
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - nodes
+              - edges
+              properties:
+                description:
+                  type: string
+                edges:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Edge'
+                enabled:
+                  type: boolean
+                name:
+                  type: string
+                nodes:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Node'
+                org:
+                  type: string
+                pipeline_id:
+                  type: string
+                source:
+                  $ref: '#/components/schemas/PipelineSource'
+                version:
+                  type: integer
+                  format: int32
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Pipeline
+        operation: update
+      x-o2-mcp:
+        description: Update an existing pipeline. Uses the same schema as createPipeline - include pipeline_id and version from the existing pipeline. See createPipeline for full node/edge structure documentation.
+        category: pipelines
+    post:
+      tags:
+      - Pipelines
+      summary: Create new pipeline
+      description: Creates a new data processing pipeline with specified transformations and routing rules. Pipelines define how incoming data is processed before storage
+      operationId: createPipeline
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Pipeline data
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - nodes
+              - edges
+              properties:
+                description:
+                  type: string
+                edges:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Edge'
+                enabled:
+                  type: boolean
+                name:
+                  type: string
+                nodes:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Node'
+                org:
+                  type: string
+                pipeline_id:
+                  type: string
+                source:
+                  $ref: '#/components/schemas/PipelineSource'
+                version:
+                  type: integer
+                  format: int32
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        description: "Create a data pipeline for processing and transforming data streams.\n\nPIPELINE STRUCTURE:\n- name: Pipeline name (required, lowercase)\n- source: { \"source_type\": \"realtime\" } for real-time pipelines\n- nodes: Array of processing nodes (required)\n- edges: Array of connections between nodes (required)\n\nNODE STRUCTURE (each node requires):\n- id: Unique identifier (use UUID format)\n- io_type: MUST be one of: \"input\" (source stream), \"output\" (destination stream), \"default\" (processing node like function/condition)\n- position: { \"x\": number, \"y\": number } for visual layout\n- data: Node configuration (structure depends on node_type)\n\nNODE DATA TYPES:\n1. Stream node (input/output): { \"node_type\": \"stream\", \"org_id\": \"default\", \"stream_name\": \"your_stream\", \"stream_type\": \"logs\"|\"metrics\"|\"traces\" }\n2. Function node: { \"node_type\": \"function\", \"name\": \"function_name\", \"after_flatten\": true|false }\n3. Condition node (MUST use version 2): { \"node_type\": \"condition\", \"version\": 2, \"conditions\": <group> }\n\nCONDITION FORMAT (version 2):\nThe conditions field is a group containing a flat array of items. Each item has a logicalOperator field (AND/OR) — this is the boolean connector BEFORE that item. The first item's logicalOperator is ignored but must be present (use AND). AND has higher precedence than OR. Use nested groups for explicit parentheses.\n- Group: { \"filterType\": \"group\", \"logicalOperator\": \"AND\", \"conditions\": [...] }\n- Condition: { \"filterType\": \"condition\", \"column\": \"field\", \"operator\": \"<op>\", \"value\": \"val\", \"logicalOperator\": \"AND\"|\"OR\" }\n- Operators: =, !=, >, >=, <, <=, contains, not_contains\n\nEXAMPLE - status = \"error\" AND (level > 5 OR source = \"nginx\"):\n{ \"node_type\": \"condition\", \"version\": 2, \"conditions\": { \"filterType\": \"group\", \"logicalOperator\": \"AND\", \"conditions\": [{ \"filterType\": \"condition\", \"column\": \"status\", \"operator\": \"=\", \"value\": \"error\", \"logicalOperator\": \"AND\" }, { \"filterType\": \"group\", \"logicalOperator\": \"AND\", \"conditions\": [{ \"filterType\": \"condition\", \"column\": \"level\", \"operator\": \">\", \"value\": \"5\", \"logicalOperator\": \"OR\" }, { \"filterType\": \"condition\", \"column\": \"source\", \"operator\": \"=\", \"value\": \"nginx\", \"logicalOperator\": \"OR\" }] }] } }\n\nEDGE STRUCTURE:\n- id: Format \"e{source_id}-{target_id}\"\n- source: Source node id\n- target: Target node id\n\nEXAMPLE - Simple pipeline with function:\n{\n  \"name\": \"my_pipeline\",\n  \"source\": { \"source_type\": \"realtime\" },\n  \"nodes\": [\n    { \"id\": \"input-1\", \"io_type\": \"input\", \"position\": {\"x\": 100, \"y\": 100}, \"data\": {\"node_type\": \"stream\", \"org_id\": \"default\", \"stream_name\": \"source_stream\", \"stream_type\": \"logs\"} },\n    { \"id\": \"func-1\", \"io_type\": \"default\", \"position\": {\"x\": 100, \"y\": 200}, \"data\": {\"node_type\": \"function\", \"name\": \"my_function\", \"after_flatten\": true} },\n    { \"id\": \"output-1\", \"io_type\": \"output\", \"position\": {\"x\": 100, \"y\": 300}, \"data\": {\"node_type\": \"stream\", \"org_id\": \"default\", \"stream_name\": \"dest_stream\", \"stream_type\": \"logs\"} }\n  ],\n  \"edges\": [\n    { \"id\": \"einput-1-func-1\", \"source\": \"input-1\", \"target\": \"func-1\" },\n    { \"id\": \"efunc-1-output-1\", \"source\": \"func-1\", \"target\": \"output-1\" }\n  ]\n}"
+        category: pipelines
+      x-o2-ratelimit:
+        module: Pipeline
+        operation: create
+  /api/{org_id}/pipelines/backfill:
+    get:
+      tags:
+      - Pipelines
+      summary: List all backfill jobs for an organization
+      description: Returns a list of all backfill jobs in the specified organization.
+      operationId: ListBackfillJobs
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of backfill jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BackfillJobStatus'
+        '500':
+          description: Internal server error
+      security:
+      - Authorization: []
+  /api/{org_id}/pipelines/bulk/enable:
+    post:
+      tags:
+      - Pipelines
+      summary: Enable or disable pipeline in bulk
+      description: Enables or disables data processing pipelines in bulk. Disabled pipelines will not process incoming data until re-enabled
+      operationId: enablePipelineBulk
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: value
+        in: query
+        description: Enable or disable pipeline
+        required: true
+        schema:
+          type: boolean
+      requestBody:
+        description: Pipeline id list
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - ids
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Pipeline
+        operation: update
+      x-o2-mcp:
+        enabled: false
+  /api/{org_id}/pipelines/history:
+    get:
+      tags:
+      - Pipelines
+      summary: Get pipeline execution history
+      description: Retrieves the execution history of pipelines for the organization. This endpoint queries the _meta organization's triggers stream to provide details about when pipelines were triggered, their status, and execution details.
+      operationId: GetPipelineHistory
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: pipeline_id
+        in: query
+        description: Filter by specific pipeline id
+        required: false
+        schema:
+          type: string
+      - name: start_time
+        in: query
+        description: Start time in Unix timestamp microseconds
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: end_time
+        in: query
+        description: End time in Unix timestamp microseconds
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: from
+        in: query
+        description: 'Pagination offset (default: 0)'
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: size
+        in: query
+        description: 'Number of results to return (default: 100, max: 1000)'
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: sort_by
+        in: query
+        description: 'Field to sort by: timestamp, pipeline_name, status, is_realtime, is_silenced, start_time, end_time, duration, retries, delay_in_secs, evaluation_took_in_secs, source_node, query_took, is_partial (default: timestamp)'
+        required: false
+        schema:
+          type: string
+      - name: sort_order
+        in: query
+        description: 'Sort order: asc or desc (default: desc)'
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PipelineHistoryResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json: {}
+        '403':
+          description: Forbidden
+          content:
+            application/json: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json: {}
+      security:
+      - Authorization: []
+  /api/{org_id}/pipelines/streams:
+    get:
+      tags:
+      - Pipelines
+      summary: Get streams with pipelines
+      description: Retrieves a list of streams that have associated data processing pipelines, showing the relationship between streams and their transformation rules
+      operationId: getStreamsWithPipeline
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - list
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Pipeline'
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Pipeline
+        operation: list
+      x-o2-mcp:
+        description: List streams using pipelines
+        category: pipelines
+  /api/{org_id}/pipelines/{pipeline_id}:
+    get:
+      tags:
+      - Pipelines
+      summary: Get pipeline by ID
+      description: Retrieves the details of a specific data processing pipeline by its ID, including its status, trigger info, and any recent errors
+      operationId: getPipeline
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: pipeline_id
+        in: path
+        description: Pipeline ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - name
+                - nodes
+                - edges
+                properties:
+                  description:
+                    type: string
+                  edges:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Edge'
+                  enabled:
+                    type: boolean
+                  last_error:
+                    oneOf:
+                    - type: 'null'
+                    - $ref: '#/components/schemas/PipelineErrorInfo'
+                  name:
+                    type: string
+                  nodes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Node'
+                  org:
+                    type: string
+                  paused_at:
+                    type:
+                    - integer
+                    - 'null'
+                    format: int64
+                  pipeline_id:
+                    type: string
+                  source:
+                    $ref: '#/components/schemas/PipelineSource'
+                  version:
+                    type: integer
+                    format: int32
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Pipeline
+        operation: get
+      x-o2-mcp:
+        description: Get pipeline details by ID
+        category: pipelines
+    delete:
+      tags:
+      - Pipelines
+      summary: Delete pipeline
+      description: Permanently deletes a data processing pipeline. This will stop any ongoing data transformations using this pipeline
+      operationId: deletePipeline
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: pipeline_id
+        in: path
+        description: Pipeline ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Pipeline
+        operation: delete
+      x-o2-mcp:
+        description: Delete a pipeline
+        category: pipelines
+        requires_confirmation: true
+  /api/{org_id}/pipelines/{pipeline_id}/backfill:
+    post:
+      tags:
+      - Pipelines
+      summary: Create a backfill job
+      description: Creates a new backfill job to fill gaps in summary streams.
+      operationId: CreateBackfillJob
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      - name: pipeline_id
+        in: path
+        description: Pipeline ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Backfill parameters
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BackfillRequest'
+            example:
+              start_time: 1704067200000000
+              end_time: 1704153600000000
+              chunk_period_minutes: 60
+              delay_between_chunks_secs: 5
+              delete_before_backfill: false
+        required: true
+      responses:
+        '200':
+          description: Backfill job created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackfillResponse'
+        '400':
+          description: Bad request
+        '404':
+          description: Pipeline not found
+        '500':
+          description: Internal server error
+      security:
+      - Authorization: []
+  /api/{org_id}/pipelines/{pipeline_id}/backfill/{job_id}:
+    get:
+      tags:
+      - Pipelines
+      summary: Get backfill job status
+      description: Returns the status of a specific backfill job.
+      operationId: GetBackfillJob
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      - name: pipeline_id
+        in: path
+        description: Pipeline ID
+        required: true
+        schema:
+          type: string
+      - name: job_id
+        in: path
+        description: Backfill job ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Backfill job status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackfillJobStatus'
+        '404':
+          description: Job not found
+        '500':
+          description: Internal server error
+      security:
+      - Authorization: []
+    put:
+      tags:
+      - Pipelines
+      summary: Update an existing backfill job
+      operationId: UpdateBackfillJob
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      - name: pipeline_id
+        in: path
+        description: Pipeline ID
+        required: true
+        schema:
+          type: string
+      - name: job_id
+        in: path
+        description: Backfill job ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Backfill job parameters
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BackfillRequest'
+        required: true
+      responses:
+        '200':
+          description: Backfill job updated successfully
+        '400':
+          description: Bad request
+        '404':
+          description: Backfill job not found
+        '500':
+          description: Internal server error
+      security:
+      - Authorization: []
+      x-o2-mcp:
+        enabled: false
+    delete:
+      tags:
+      - Pipelines
+      summary: Delete a backfill job
+      description: Deletes a backfill job permanently.
+      operationId: DeleteBackfillJob
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      - name: pipeline_id
+        in: path
+        description: Pipeline ID
+        required: true
+        schema:
+          type: string
+      - name: job_id
+        in: path
+        description: Backfill job ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Backfill job deleted successfully
+        '404':
+          description: Job not found
+        '500':
+          description: Internal server error
+      security:
+      - Authorization: []
+  /api/{org_id}/pipelines/{pipeline_id}/backfill/{job_id}/enable:
+    put:
+      tags:
+      - Pipelines
+      summary: Enable or disable a backfill job
+      description: Enables (resumes) or disables (pauses) a backfill job.
+      operationId: EnableBackfillJob
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization ID
+        required: true
+        schema:
+          type: string
+      - name: pipeline_id
+        in: path
+        description: Pipeline ID
+        required: true
+        schema:
+          type: string
+      - name: job_id
+        in: path
+        description: Backfill job ID
+        required: true
+        schema:
+          type: string
+      - name: value
+        in: query
+        description: Enable (true) or disable (false) the backfill job
+        required: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Backfill job status updated successfully
+        '400':
+          description: Bad request
+        '404':
+          description: Job not found
+        '500':
+          description: Internal server error
+      security:
+      - Authorization: []
+  /api/{org_id}/pipelines/{pipeline_id}/enable:
+    put:
+      tags:
+      - Pipelines
+      summary: Enable or disable pipeline
+      description: Enables or disables a data processing pipeline. Disabled pipelines will not process incoming data until re-enabled
+      operationId: enablePipeline
+      parameters:
+      - name: org_id
+        in: path
+        description: Organization name
+        required: true
+        schema:
+          type: string
+      - name: pipeline_id
+        in: path
+        description: Pipeline ID
+        required: true
+        schema:
+          type: string
+      - name: value
+        in: query
+        description: Enable or disable pipeline
+        required: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                default: null
+        '500':
+          description: Failure
+          content:
+            application/json:
+              schema:
+                default: null
+      security:
+      - Authorization: []
+      x-o2-ratelimit:
+        module: Pipeline
+        operation: update
+      x-o2-mcp:
+        description: Enable or disable a pipeline
+        category: pipelines
+components:
+  schemas:
+    QueryCondition:
+      type: object
+      properties:
+        aggregation:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Aggregation'
+        conditions:
+          type:
+          - object
+          - 'null'
+        multi_time_range:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CompareHistoricData'
+        promql:
+          type:
+          - string
+          - 'null'
+        promql_condition:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Condition'
+        search_event_type:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/SearchEventType'
+        sql:
+          type:
+          - string
+          - 'null'
+        type:
+          $ref: '#/components/schemas/QueryType'
+        vrl_function:
+          type:
+          - string
+          - 'null'
+    DeletionStatus:
+      type: string
+      enum:
+      - not_required
+      - pending
+      - in_progress
+      - completed
+    Edge:
+      type: object
+      description: Connection between two nodes in the pipeline
+      required:
+      - id
+      - source
+      - target
+      properties:
+        id:
+          type: string
+          description: 'Edge identifier, format: "e{source_id}-{target_id}"'
+          example: einput-1-func-1
+        source:
+          type: string
+          description: Source node id (data flows from this node)
+        target:
+          type: string
+          description: Target node id (data flows to this node)
+    SearchEventType:
+      type: string
+      enum:
+      - ui
+      - dashboards
+      - reports
+      - alerts
+      - values
+      - other
+      - rum
+      - derivedstream
+      - searchjob
+      - download
+      - insights
+    StreamParams:
+      type: object
+      properties:
+        org_id:
+          type: string
+          default: ''
+        stream_name:
+          type: string
+          default: ''
+        stream_type:
+          oneOf:
+          - $ref: '#/components/schemas/StreamType'
+          default: logs
+    NodeStyle:
+      type: object
+      properties:
+        backgroundColor:
+          type:
+          - string
+          - 'null'
+    Aggregation:
+      type: object
+      required:
+      - function
+      - having
+      properties:
+        function:
+          $ref: '#/components/schemas/AggFunction'
+        group_by:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        having:
+          $ref: '#/components/schemas/Condition'
+    Condition:
+      type: object
+      required:
+      - column
+      - operator
+      - value
+      properties:
+        column:
+          type: string
+        ignore_case:
+          type: boolean
+        operator:
+          $ref: '#/components/schemas/Operator'
+        value:
+          type: object
+    DerivedStream:
+      type: object
+      properties:
+        delay:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          default: null
+        org_id:
+          type: string
+          default: ''
+        query_condition:
+          oneOf:
+          - $ref: '#/components/schemas/QueryCondition'
+          default:
+            type: custom
+            conditions: null
+            sql: null
+            promql: null
+            promql_condition: null
+            aggregation: null
+            vrl_function: null
+            search_event_type: null
+            multi_time_range: null
+        start_at:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: The datetime from when the pipeline should check for ingested data
+          default: null
+        stream_type:
+          oneOf:
+          - $ref: '#/components/schemas/StreamType'
+          default: logs
+        trigger_condition:
+          oneOf:
+          - $ref: '#/components/schemas/TriggerCondition'
+          default:
+            period: 0
+            operator: '='
+            threshold: 0
+            frequency: 0
+            cron: ''
+            frequency_type: minutes
+            silence: 0
+            tolerance_in_secs: null
+            align_time: false
+        tz_offset:
+          type: integer
+          format: int32
+          description: 'Timezone offset in minutes.
+
+            The negative secs means the Western Hemisphere'
+          default: 0
+    Position:
+      type: object
+      required:
+      - x
+      - y
+      properties:
+        x:
+          type: number
+          format: float
+        y:
+          type: number
+          format: float
+    PipelineSource:
+      oneOf:
+      - allOf:
+        - $ref: '#/components/schemas/StreamParams'
+          description: 'Real-time pipeline: processes data immediately as it''s ingested.
+
+            Example: { "source_type": "realtime" }'
+        - type: object
+          required:
+          - source_type
+          properties:
+            source_type:
+              type: string
+              enum:
+              - realtime
+        description: 'Real-time pipeline: processes data immediately as it''s ingested.
+
+          Example: { "source_type": "realtime" }'
+      - allOf:
+        - $ref: '#/components/schemas/DerivedStream'
+          description: 'Scheduled pipeline: runs periodically based on trigger_condition.
+
+            Example: { "source_type": "scheduled", "org_id": "default", "stream_type": "logs",
+
+            "query_condition": {...}, "trigger_condition": {...} }'
+        - type: object
+          required:
+          - source_type
+          properties:
+            source_type:
+              type: string
+              enum:
+              - scheduled
+        description: 'Scheduled pipeline: runs periodically based on trigger_condition.
+
+          Example: { "source_type": "scheduled", "org_id": "default", "stream_type": "logs",
+
+          "query_condition": {...}, "trigger_condition": {...} }'
+      description: 'Pipeline source type determines when the pipeline runs.
+
+        Use "realtime" for processing data as it arrives, "scheduled" for periodic batch processing.'
+    CompareHistoricData:
+      type: object
+      required:
+      - offSet
+      properties:
+        offSet:
+          type: string
+    BackfillJobStatus:
+      type: object
+      required:
+      - job_id
+      - pipeline_id
+      - start_time
+      - end_time
+      - current_position
+      - progress_percent
+      - status
+      - enabled
+      properties:
+        chunk_period_minutes:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        chunks_completed:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          minimum: 0
+        chunks_total:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          minimum: 0
+        created_at:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        current_position:
+          type: integer
+          format: int64
+        delay_between_chunks_secs:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        delete_before_backfill:
+          type:
+          - boolean
+          - 'null'
+        deletion_job_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        deletion_status:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/DeletionStatus'
+        enabled:
+          type: boolean
+        end_time:
+          type: integer
+          format: int64
+        error:
+          type:
+          - string
+          - 'null'
+        job_id:
+          type: string
+        last_triggered_at:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        pipeline_id:
+          type: string
+        pipeline_name:
+          type:
+          - string
+          - 'null'
+        progress_percent:
+          type: integer
+          format: int32
+          minimum: 0
+        start_time:
+          type: integer
+          format: int64
+        status:
+          type: string
+    FrequencyType:
+      type: string
+      enum:
+      - cron
+      - minutes
+    BackfillResponse:
+      type: object
+      required:
+      - job_id
+      - message
+      properties:
+        job_id:
+          type: string
+        message:
+          type: string
+    Operator:
+      type: string
+      enum:
+      - '='
+      - '!='
+      - '>'
+      - '>='
+      - <
+      - <=
+      - contains
+      - not_contains
+    Pipeline:
+      type: object
+      required:
+      - name
+      - nodes
+      - edges
+      properties:
+        description:
+          type: string
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Edge'
+        enabled:
+          type: boolean
+        last_error:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/PipelineErrorInfo'
+        name:
+          type: string
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Node'
+        org:
+          type: string
+        paused_at:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        pipeline_id:
+          type: string
+        source:
+          $ref: '#/components/schemas/PipelineSource'
+        version:
+          type: integer
+          format: int32
+    AggFunction:
+      type: string
+      enum:
+      - avg
+      - min
+      - max
+      - sum
+      - count
+      - median
+      - p50
+      - p75
+      - p90
+      - p95
+      - p99
+    PipelineHistoryResponse:
+      type: object
+      required:
+      - total
+      - from
+      - size
+      - hits
+      properties:
+        from:
+          type: integer
+          format: int64
+        hits:
+          type: array
+          items:
+            $ref: '#/components/schemas/PipelineHistoryEntry'
+        size:
+          type: integer
+          format: int64
+        total:
+          type: integer
+          minimum: 0
+    TriggerCondition:
+      type: object
+      properties:
+        align_time:
+          type: boolean
+          default: false
+        cron:
+          type: string
+          default: ''
+        frequency:
+          type: integer
+          format: int64
+          description: (seconds)
+          default: 0
+        frequency_type:
+          oneOf:
+          - $ref: '#/components/schemas/FrequencyType'
+          default: minutes
+        operator:
+          oneOf:
+          - $ref: '#/components/schemas/Operator'
+          default: '='
+        period:
+          type: integer
+          format: int64
+          description: (minutes)
+          default: 0
+        silence:
+          type: integer
+          format: int64
+          description: (minutes)
+          default: 0
+        threshold:
+          type: integer
+          format: int64
+          default: 0
+        timezone:
+          type:
+          - string
+          - 'null'
+          default: null
+        tolerance_in_secs:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: (seconds)
+          default: null
+    Node:
+      type: object
+      required:
+      - id
+      - data
+      - position
+      - io_type
+      properties:
+        data:
+          type: object
+          description: "Node configuration. Structure depends on node_type:\n- stream: { \"node_type\": \"stream\", \"org_id\": \"org\", \"stream_name\": \"name\", \"stream_type\":\n  \"logs\"|\"metrics\"|\"traces\" }\n- function: { \"node_type\": \"function\", \"name\": \"func_name\", \"after_flatten\": bool }\n- condition: { \"node_type\": \"condition\", \"conditions\": {...} }\n- query: { \"node_type\": \"query\", \"org_id\": \"org\", \"stream_type\": \"logs\", \"query_condition\":\n  {...}, \"trigger_condition\": {...} }\n- remote_stream: { \"node_type\": \"remote_stream\", \"org_id\": \"org\", \"destination_name\":\n  \"dest\" }"
+        id:
+          type: string
+          description: Unique identifier for the node (use UUID format)
+        io_type:
+          type: string
+          description: 'Node role in the pipeline. MUST be one of:
+
+            - "input": Source stream node (first node in pipeline)
+
+            - "output": Destination stream node (last node in pipeline)
+
+            - "default": Processing node (function, condition, etc.)'
+          example: input
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        position:
+          $ref: '#/components/schemas/Position'
+          description: Visual position for UI rendering
+        style:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/NodeStyle'
+    PipelineHistoryEntry:
+      type: object
+      required:
+      - timestamp
+      - pipeline_name
+      - org
+      - status
+      - is_realtime
+      - is_silenced
+      - start_time
+      - end_time
+      - retries
+      properties:
+        delay_in_secs:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        end_time:
+          type: integer
+          format: int64
+        error:
+          type:
+          - string
+          - 'null'
+        evaluation_took_in_secs:
+          type:
+          - number
+          - 'null'
+          format: double
+        is_partial:
+          type:
+          - boolean
+          - 'null'
+        is_realtime:
+          type: boolean
+        is_silenced:
+          type: boolean
+        org:
+          type: string
+        pipeline_name:
+          type: string
+        query_took:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        retries:
+          type: integer
+          format: int32
+        source_node:
+          type:
+          - string
+          - 'null'
+        start_time:
+          type: integer
+          format: int64
+        status:
+          type: string
+        success_response:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type: integer
+          format: int64
+    QueryType:
+      type: string
+      enum:
+      - custom
+      - sql
+      - promql
+    StreamType:
+      type: string
+      enum:
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
+    BackfillRequest:
+      type: object
+      required:
+      - start_time
+      - end_time
+      properties:
+        chunk_period_minutes:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        delay_between_chunks_secs:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        delete_before_backfill:
+          type: boolean
+        end_time:
+          type: integer
+          format: int64
+          description: End time in microseconds
+        start_time:
+          type: integer
+          format: int64
+          description: Start time in microseconds
+    PipelineErrorInfo:
+      type: object
+      required:
+      - last_error_timestamp
+      properties:
+        error_summary:
+          type:
+          - string
+          - 'null'
+        last_error_timestamp:
+          type: integer
+          format: int64
+        node_errors: {}
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    BasicAuth:
+      type: http
+      scheme: basic
