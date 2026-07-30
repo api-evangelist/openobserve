@@ -5,9 +5,22 @@ description: >-
   telemetry in a single UI with SQL and PromQL querying. The HTTP API exposes ingestion, search, alerting, dashboards,
   pipelines, RUM, and administration endpoints.
 type: Index
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 position: Consumer
 access: 3rd-Party
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/openobserve.png
 url: https://raw.githubusercontent.com/api-evangelist/openobserve/refs/heads/main/apis.yml
 tags:
   - Observability
@@ -20,33 +33,534 @@ created: '2026-03-25'
 modified: '2026-05-19'
 specificationVersion: '0.19'
 apis:
-  - aid: openobserve:openobserve
-    name: OpenObserve
-    description: >-
-      OpenObserve HTTP API for ingesting logs, metrics, and traces; running SQL and PromQL search; managing alerts,
-      dashboards, folders, pipelines, reports, RUM, saved views, service streams, and short URLs; and administering
-      organizations, users, roles, groups, service accounts, rate limits, and meta resources.
-    humanURL: https://openobserve.ai
-    baseURL: https://api.openobserve.ai
-    tags:
-      - Observability
-      - Logs
-      - Metrics
-      - Traces
-      - RUM
-      - Search
-      - Alerts
-      - Dashboards
-      - Pipelines
-    properties:
-      - type: Documentation
-        url: https://openobserve.ai/docs/
-      - type: OpenAPI
-        url: https://raw.githubusercontent.com/api-evangelist/openobserve/refs/heads/main/openapi/openobserve-openapi.json
-      - type: SwaggerUI
-        url: https://api.openobserve.ai/swagger/
-      - type: GitHubRepository
-        url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-actions-api
+  name: OpenObserve Actions API
+  description: The Actions API from OpenObserve — 5 operation(s) for actions.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Actions
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-actions-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-alerts-api
+  name: OpenObserve Alerts API
+  description: Alerts retrieval & management operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Alerts
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-alerts-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-clusters-api
+  name: OpenObserve Clusters API
+  description: Super cluster operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Clusters
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-clusters-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-dashboards-api
+  name: OpenObserve Dashboards API
+  description: Dashboard operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Dashboards
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-dashboards-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-folders-api
+  name: OpenObserve Folders API
+  description: The Folders API from OpenObserve — 6 operation(s) for folders.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Folders
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-folders-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-functions-api
+  name: OpenObserve Functions API
+  description: Functions retrieval & management operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Functions
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-functions-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-groups-api
+  name: OpenObserve Groups API
+  description: The Groups API from OpenObserve — 2 operation(s) for groups.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-groups-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-incidents-api
+  name: OpenObserve Incidents API
+  description: Alert incident correlation & management operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Incidents
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-incidents-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-key-api
+  name: OpenObserve Key API
+  description: The Key API from OpenObserve — 2 operation(s) for key.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Key
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-key-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-keys-api
+  name: OpenObserve Keys API
+  description: The Keys API from OpenObserve — 1 operation(s) for keys.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-keys-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-kv-api
+  name: OpenObserve KV API
+  description: Key Value retrieval & management operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - KV
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-kv-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-logs-api
+  name: OpenObserve Logs API
+  description: Logs data ingestion operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Logs
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-logs-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-mcp-api
+  name: OpenObserve MCP API
+  description: The MCP API from OpenObserve — 2 operation(s) for mcp.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - MCP
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-mcp-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-meta-api
+  name: OpenObserve Meta API
+  description: Meta details about the OpenObserve state itself. e.g. healthz
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Meta
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-meta-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-metrics-api
+  name: OpenObserve Metrics API
+  description: Metrics data ingestion operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-metrics-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-organizations-api
+  name: OpenObserve Organizations API
+  description: Organizations retrieval & management operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-patterns-api
+  name: OpenObserve Patterns API
+  description: Log pattern extraction operations (enterprise)
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Patterns
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-patterns-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-pipelines-api
+  name: OpenObserve Pipelines API
+  description: The Pipelines API from OpenObserve — 10 operation(s) for pipelines.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Pipelines
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-pipelines-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-ratelimit-api
+  name: OpenObserve Ratelimit API
+  description: Ratelimit operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Ratelimit
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-ratelimit-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-report-api
+  name: OpenObserve Report API
+  description: The Report API from OpenObserve — 1 operation(s) for report.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Report
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-report-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-reports-api
+  name: OpenObserve Reports API
+  description: The Reports API from OpenObserve — 9 operation(s) for reports.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-reports-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-roles-api
+  name: OpenObserve Roles API
+  description: The Roles API from OpenObserve — 4 operation(s) for roles.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Roles
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-roles-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-rum-api
+  name: OpenObserve Rum API
+  description: The Rum API from OpenObserve — 3 operation(s) for rum.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Rum
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-rum-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-saved-views-api
+  name: OpenObserve Saved Views API
+  description: Collection of saved search views for easy retrieval
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Saved Views
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-saved-views-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-search-api
+  name: OpenObserve Search API
+  description: Search/Query operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-search-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-search-jobs-api
+  name: OpenObserve Search Jobs API
+  description: The Search Jobs API from OpenObserve — 5 operation(s) for search jobs.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Search Jobs
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-search-jobs-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-service-streams-api
+  name: OpenObserve Service Streams API
+  description: Multi-signal correlation across logs, traces, and metrics (enterprise)
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Service Streams
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-service-streams-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-serviceaccounts-api
+  name: OpenObserve ServiceAccounts API
+  description: The ServiceAccounts API from OpenObserve — 2 operation(s) for serviceaccounts.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - ServiceAccounts
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-serviceaccounts-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-short-url-api
+  name: OpenObserve Short Url API
+  description: Short Url Service
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Short Url
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-short-url-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-streams-api
+  name: OpenObserve Streams API
+  description: Stream retrieval & management operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Streams
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-streams-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-templates-api
+  name: OpenObserve Templates API
+  description: The Templates API from OpenObserve — 3 operation(s) for templates.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-templates-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-traces-api
+  name: OpenObserve Traces API
+  description: Traces data ingestion operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Traces
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-traces-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-users-api
+  name: OpenObserve Users API
+  description: Users retrieval & management operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-users-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
 common:
   - type: AgenticAccess
     url: agentic-access/openobserve-agentic-access.yml
