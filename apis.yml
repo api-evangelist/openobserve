@@ -562,6 +562,9 @@ apis:
   - type: GitHubRepository
     url: https://github.com/openobserve/openobserve
 common:
+  - type: License
+    name: AGPL-3.0
+    url: https://github.com/openobserve/openobserve/blob/main/LICENSE
   - type: AgenticAccess
     url: agentic-access/openobserve-agentic-access.yml
   - type: TrustCenter
