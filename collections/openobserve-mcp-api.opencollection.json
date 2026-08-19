@@ -1,0 +1,58 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions MCP API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "MCP",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Handler for OAuth 2.0 Authorization Server Metadata (Enterprise)\nRFC 8414: https://datatracker.ietf.org/doc/html/rfc8414\nThis endpoint provides discovery information for OAuth clients\nMust be publicly accessible (no auth) per OAuth spec",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/.well-known/oauth-authorization-server"
+          },
+          "docs": "Handler for OAuth 2.0 Authorization Server Metadata (Enterprise)\nRFC 8414: https://datatracker.ietf.org/doc/html/rfc8414\nThis endpoint provides discovery information for OAuth clients\nMust be publicly accessible (no auth) per OAuth spec"
+        },
+        {
+          "info": {
+            "name": "Handler for MCP POST requests (single request/response)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/mcp",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Per MCP 2025-11-25 (Streamable HTTP transport):\n- Requests with `id` → 200 with JSON or SSE response\n- Notifications (no `id`) → 202 Accepted, no body\n- Validates `MCP-Protocol-Version` header on non-initialize requests"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

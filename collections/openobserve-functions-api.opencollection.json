@@ -1,0 +1,276 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Functions API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Functions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create or update enrichment table",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/enrichment_tables/:table_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "table_name",
+                "value": "",
+                "type": "path",
+                "description": "Table name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new enrichment table or updates existing table data for log enrichment"
+        },
+        {
+          "info": {
+            "name": "Create enrichment table from URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/enrichment_tables/:table_name/url",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "table_name",
+                "value": "",
+                "type": "path",
+                "description": "Table name"
+              },
+              {
+                "name": "append",
+                "value": "",
+                "type": "query",
+                "description": "Whether to append data to existing table (default: false)"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new enrichment table by fetching CSV data from a public URL. The process runs asynchronously in the background."
+        },
+        {
+          "info": {
+            "name": "List organization functions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/functions",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves all custom transformation functions available in the organization, including their VRL code, configuration parameters, and current usage status. Shows function metadata such as creation date, last modified time, and pipeline dependencies to help administrators manage data transformation logic across the organization."
+        },
+        {
+          "info": {
+            "name": "Create new function",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/functions",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new custom transformation function using VRL (Vector Remap Language) code. Functions can be used in data ingestion pipelines to transform, enrich, or filter incoming log, metric, and trace data. Support complex data transformations, field extraction, format conversion, and conditional processing to standardize data before storage and indexing."
+        },
+        {
+          "info": {
+            "name": "Validate VRL function syntax",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/functions/test",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Validates VRL (Vector Remap Language) transformation function syntax by testing it against sample events. Returns validation results with any syntax errors or successful transformation output. Use this to verify VRL code is correct before creating or updating a function. Accepts function code, sample events to test against, and optional trans_type (0 for VRL, 1 for JS)."
+        },
+        {
+          "info": {
+            "name": "Get function pipeline dependencies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/functions/:name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "Function name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists all data processing pipelines that currently use the specified transformation function. Returns pipeline names, types, and usage details to help administrators understand the impact scope before making changes to the function. Essential for change management and ensuring data processing continuity during function updates."
+        },
+        {
+          "info": {
+            "name": "Update function",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/functions/:name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "Function name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates an existing transformation function with new VRL code, parameters, or configuration settings. Changes take effect immediately and apply to all data processing pipelines currently using this function. Test function changes thoroughly before deployment to avoid data transformation errors in production pipelines."
+        },
+        {
+          "info": {
+            "name": "Delete function",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/:org_id/functions/:name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "Function name"
+              },
+              {
+                "name": "force",
+                "value": "",
+                "type": "query",
+                "description": "Force delete function regardless pipeline dependencies"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Permanently deletes a custom transformation function from the organization. The function must not be in use by active pipelines unless the force parameter is specified. Once deleted, any pipelines previously using this function will need to be updated with alternative transformation logic to continue functioning properly."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

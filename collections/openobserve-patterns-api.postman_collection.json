@@ -1,0 +1,388 @@
+{
+  "item": [
+    {
+      "id": "3cd9abbd-ac29-4f06-9c1f-88eecd9334d8",
+      "name": "Patterns",
+      "description": {
+        "content": "Log pattern extraction operations (enterprise)",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f2c0946f-6a08-4b12-a798-4c36913822e8",
+          "name": "Extract patterns from search results",
+          "request": {
+            "name": "Extract patterns from search results",
+            "description": {
+              "content": "This endpoint runs a search query and extracts patterns from the results.\nIt internally uses the same search infrastructure as _search but returns\nonly the extracted patterns.\n\nPOST /api/{org_id}/streams/{stream_name}/patterns/extract",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "streams",
+                ":stream_name",
+                "patterns",
+                "extract"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "stream_name",
+                  "description": "(Required) Stream name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": {\n    \"sql\": \"<string>\",\n    \"start_time\": \"<long>\",\n    \"end_time\": \"<long>\",\n    \"action_id\": \"<string,null>\",\n    \"from\": \"<long>\",\n    \"histogram_interval\": \"<long>\",\n    \"query_fn\": \"<string,null>\",\n    \"query_type\": \"<string>\",\n    \"quick_mode\": \"<boolean>\",\n    \"sampling_config\": \"<object>\",\n    \"sampling_ratio\": \"<number,null-double>\",\n    \"size\": \"<long>\",\n    \"skip_wal\": \"<boolean>\",\n    \"streaming_id\": \"<string,null>\",\n    \"streaming_output\": \"<boolean>\",\n    \"track_total_hits\": \"<boolean>\",\n    \"uses_zo_fn\": \"<boolean>\"\n  },\n  \"clear_cache\": \"<boolean>\",\n  \"clusters\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"encoding\": \"<string>\",\n  \"local_mode\": \"<boolean,null>\",\n  \"regions\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"search_event_context\": \"<null>\",\n  \"search_type\": \"<null>\",\n  \"timeout\": \"<long>\",\n  \"use_cache\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c7570d4b-cca1-4bfa-84e8-2644f441faa2",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "patterns",
+                    "extract"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": {\n    \"sql\": \"string\",\n    \"start_time\": 3214,\n    \"end_time\": 1970,\n    \"action_id\": \"string\",\n    \"from\": 5505,\n    \"histogram_interval\": 6833,\n    \"query_fn\": \"string\",\n    \"query_type\": \"string\",\n    \"quick_mode\": false,\n    \"sampling_config\": {},\n    \"sampling_ratio\": 2838.553579225714,\n    \"size\": 9040,\n    \"skip_wal\": false,\n    \"streaming_id\": \"string\",\n    \"streaming_output\": true,\n    \"track_total_hits\": true,\n    \"uses_zo_fn\": false\n  },\n  \"clear_cache\": \"<boolean>\",\n  \"clusters\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"encoding\": \"base64\",\n  \"local_mode\": \"<boolean,null>\",\n  \"regions\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"search_event_context\": \"<null>\",\n  \"search_type\": \"<null>\",\n  \"timeout\": \"<long>\",\n  \"use_cache\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8826f920-18d1-4ee8-a04f-fafdcbe35aad",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "patterns",
+                    "extract"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": {\n    \"sql\": \"string\",\n    \"start_time\": 3214,\n    \"end_time\": 1970,\n    \"action_id\": \"string\",\n    \"from\": 5505,\n    \"histogram_interval\": 6833,\n    \"query_fn\": \"string\",\n    \"query_type\": \"string\",\n    \"quick_mode\": false,\n    \"sampling_config\": {},\n    \"sampling_ratio\": 2838.553579225714,\n    \"size\": 9040,\n    \"skip_wal\": false,\n    \"streaming_id\": \"string\",\n    \"streaming_output\": true,\n    \"track_total_hits\": true,\n    \"uses_zo_fn\": false\n  },\n  \"clear_cache\": \"<boolean>\",\n  \"clusters\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"encoding\": \"base64\",\n  \"local_mode\": \"<boolean,null>\",\n  \"regions\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"search_event_context\": \"<null>\",\n  \"search_type\": \"<null>\",\n  \"timeout\": \"<long>\",\n  \"use_cache\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "db54d976-91c0-4ab3-9fe2-a48cda8345d0",
+              "name": "Forbidden - Enterprise feature only or Unauthorized Access",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "patterns",
+                    "extract"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": {\n    \"sql\": \"string\",\n    \"start_time\": 3214,\n    \"end_time\": 1970,\n    \"action_id\": \"string\",\n    \"from\": 5505,\n    \"histogram_interval\": 6833,\n    \"query_fn\": \"string\",\n    \"query_type\": \"string\",\n    \"quick_mode\": false,\n    \"sampling_config\": {},\n    \"sampling_ratio\": 2838.553579225714,\n    \"size\": 9040,\n    \"skip_wal\": false,\n    \"streaming_id\": \"string\",\n    \"streaming_output\": true,\n    \"track_total_hits\": true,\n    \"uses_zo_fn\": false\n  },\n  \"clear_cache\": \"<boolean>\",\n  \"clusters\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"encoding\": \"base64\",\n  \"local_mode\": \"<boolean,null>\",\n  \"regions\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"search_event_context\": \"<null>\",\n  \"search_type\": \"<null>\",\n  \"timeout\": \"<long>\",\n  \"use_cache\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "5e4e2856-31a8-41a8-85c4-e93a5d17d69e",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "patterns",
+                    "extract"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": {\n    \"sql\": \"string\",\n    \"start_time\": 3214,\n    \"end_time\": 1970,\n    \"action_id\": \"string\",\n    \"from\": 5505,\n    \"histogram_interval\": 6833,\n    \"query_fn\": \"string\",\n    \"query_type\": \"string\",\n    \"quick_mode\": false,\n    \"sampling_config\": {},\n    \"sampling_ratio\": 2838.553579225714,\n    \"size\": 9040,\n    \"skip_wal\": false,\n    \"streaming_id\": \"string\",\n    \"streaming_output\": true,\n    \"track_total_hits\": true,\n    \"uses_zo_fn\": false\n  },\n  \"clear_cache\": \"<boolean>\",\n  \"clusters\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"encoding\": \"base64\",\n  \"local_mode\": \"<boolean,null>\",\n  \"regions\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"search_event_context\": \"<null>\",\n  \"search_type\": \"<null>\",\n  \"timeout\": \"<long>\",\n  \"use_cache\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "0224b71e-25e0-4f9c-9c02-de7437122b11",
+    "name": "openobserve Actions Patterns API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)\n\nContact Support:\n Name: OpenObserve\n Email: hello@zinclabs.io",
+      "type": "text/plain"
+    }
+  }
+}

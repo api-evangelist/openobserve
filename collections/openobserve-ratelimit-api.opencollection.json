@@ -1,0 +1,151 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Ratelimit API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Ratelimit",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List module rate limit rules",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/ratelimit/module_list",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization Name"
+              },
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "query",
+                "description": "Organization Name"
+              },
+              {
+                "name": "interval",
+                "value": "",
+                "type": "query",
+                "description": "Time interval: second/minute/hour (default: second)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves rate limiting rules applied at the organization module level, including thresholds and configurations for different API groups"
+        },
+        {
+          "info": {
+            "name": "List role-based rate limit rules",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/ratelimit/role_list",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization Name"
+              },
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "query",
+                "description": "Organization Name"
+              },
+              {
+                "name": "user_role",
+                "value": "",
+                "type": "query",
+                "description": "User Role Name"
+              },
+              {
+                "name": "interval",
+                "value": "",
+                "type": "query",
+                "description": "Time interval: second/minute/hour (default: second)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves rate limiting rules applied to specific user roles within the organization, showing how different roles have different API usage limits"
+        },
+        {
+          "info": {
+            "name": "Update rate limit rules",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/ratelimit/update",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "query",
+                "description": "Organization name"
+              },
+              {
+                "name": "update_type",
+                "value": "",
+                "type": "query",
+                "description": "Update Type"
+              },
+              {
+                "name": "user_role",
+                "value": "",
+                "type": "query",
+                "description": "UserRole name"
+              },
+              {
+                "name": "interval",
+                "value": "",
+                "type": "query",
+                "description": "Time interval: second/minute/hour (default: second)"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates rate limiting rules for modules or user roles. Allows setting custom thresholds for different API operations and groups"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

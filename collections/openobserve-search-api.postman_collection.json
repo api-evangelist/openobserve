@@ -1,0 +1,2325 @@
+{
+  "item": [
+    {
+      "id": "779fdf3b-4e40-4610-8703-6c1ac8e9b0fe",
+      "name": "Search",
+      "description": {
+        "content": "Search/Query operations",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7447a6d6-ab05-4c40-a1d4-18ebc4a190ed",
+          "name": "Search data with SQL",
+          "request": {
+            "name": "Search data with SQL",
+            "description": {
+              "content": "Executes SQL queries against log streams with support for complex search patterns, time range filtering, aggregations, and histogram generation. Supports advanced features like multi-stream searches, caching, and UI optimizations for dashboard visualizations.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "_search"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+                },
+                {
+                  "disabled": false,
+                  "key": "is_ui_histogram",
+                  "value": "<boolean>",
+                  "description": "Whether to return histogram data for UI (default: false)"
+                },
+                {
+                  "disabled": false,
+                  "key": "is_multi_stream_search",
+                  "value": "<boolean>",
+                  "description": "Indicate is search is for multi stream (default: false)"
+                },
+                {
+                  "disabled": false,
+                  "key": "validate",
+                  "value": "<boolean>",
+                  "description": "Validate query fields against stream schema and User-Defined Schema (UDS). When enabled, returns error if queried fields are not in schema or not allowed by UDS (default: false)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": {\n    \"sql\": \"<string>\",\n    \"start_time\": \"<long>\",\n    \"end_time\": \"<long>\",\n    \"action_id\": \"<string,null>\",\n    \"from\": \"<long>\",\n    \"histogram_interval\": \"<long>\",\n    \"query_fn\": \"<string,null>\",\n    \"query_type\": \"<string>\",\n    \"quick_mode\": \"<boolean>\",\n    \"sampling_config\": \"<object>\",\n    \"sampling_ratio\": \"<number,null-double>\",\n    \"size\": \"<long>\",\n    \"skip_wal\": \"<boolean>\",\n    \"streaming_id\": \"<string,null>\",\n    \"streaming_output\": \"<boolean>\",\n    \"track_total_hits\": \"<boolean>\",\n    \"uses_zo_fn\": \"<boolean>\"\n  },\n  \"clear_cache\": \"<boolean>\",\n  \"clusters\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"encoding\": \"<string>\",\n  \"local_mode\": \"<boolean,null>\",\n  \"regions\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"search_event_context\": \"<null>\",\n  \"search_type\": \"<null>\",\n  \"timeout\": \"<long>\",\n  \"use_cache\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5969f3d2-f704-44bc-84bd-e2188054035d",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "is_ui_histogram",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "is_multi_stream_search",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "validate",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": {\n    \"sql\": \"select * from k8s\",\n    \"start_time\": 1675182660872049,\n    \"end_time\": 1675185660872049,\n    \"from\": 0,\n    \"size\": 10\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"took\": 155,\n  \"hits\": [\n    {\n      \"_p\": \"F\",\n      \"_timestamp\": 1674213225158000,\n      \"kubernetes\": {\n        \"container_hash\": \"dkr.ecr.us-west-2.amazonaws.com/openobserve@sha256:3dbbb0dc1eab2d5a3b3e4a75fd87d194e8095c92d7b2b62e7cdbd07020f54589\",\n        \"container_image\": \"dkr.ecr.us-west-2.amazonaws.com/openobserve:v0.0.3\",\n        \"container_name\": \"openobserve\",\n        \"docker_id\": \"eb0983bdb9ff9360d227e6a0b268fe3b24a0868c2c2d725a1516c11e88bf5789\",\n        \"host\": \"ip.us-east-2.compute.internal\",\n        \"namespace_name\": \"openobserve\",\n        \"pod_id\": \"35a0421f-9203-4d73-9663-9ff0ce26d409\",\n        \"pod_name\": \"openobserve-ingester-0\"\n      },\n      \"log\": \"[2023-01-20T11:13:45Z INFO  actix_web::middleware::logger] 10.2.80.192 \\\"POST /api/demo/_bulk HTTP/1.1\\\" 200 68\",\n      \"stream\": \"stderr\"\n    }\n  ],\n  \"total\": 27179431,\n  \"from\": 0,\n  \"size\": 1,\n  \"scan_size\": 28943\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "943588bd-3a6e-406c-966d-a433d365e304",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "is_ui_histogram",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "is_multi_stream_search",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "validate",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": {\n    \"sql\": \"select * from k8s\",\n    \"start_time\": 1675182660872049,\n    \"end_time\": 1675185660872049,\n    \"from\": 0,\n    \"size\": 10\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "57c79fdc-ea63-4f91-96dd-a56326125e15",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "is_ui_histogram",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "is_multi_stream_search",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "validate",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": {\n    \"sql\": \"select * from k8s\",\n    \"start_time\": 1675182660872049,\n    \"end_time\": 1675185660872049,\n    \"from\": 0,\n    \"size\": 10\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d43e422e-d9fe-41ab-8437-460cdbc34d36",
+          "name": "Search query history",
+          "request": {
+            "name": "Search query history",
+            "description": {
+              "content": "Retrieves historical search queries and their execution details",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "_search_history"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start_time\": \"<long>\",\n  \"end_time\": \"<long>\",\n  \"org_id\": \"<string,null>\",\n  \"size\": \"<long>\",\n  \"stream_name\": \"<string,null>\",\n  \"stream_type\": \"<string,null>\",\n  \"trace_id\": \"<string,null>\",\n  \"user_email\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "92cccb1a-8e1c-4954-a8cd-442337b8c275",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_search_history"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"stream_name\": \"default\",\n  \"stream_type\": \"logs\",\n  \"min_ts\": 1632960000,\n  \"max_ts\": 1633046400,\n  \"trace_id\": \"7f7898fd19424c47ba830a6fa9b25e1f\",\n  \"size\": 100\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"took\": 40,\n  \"took_detail\": {\n    \"total\": 40,\n    \"idx_took\": 0,\n    \"wait_in_queue\": 0\n  },\n  \"hits\": [\n    {\n      \"cached_ratio\": 0,\n      \"end_time\": 15,\n      \"org_id\": \"default\",\n      \"scan_records\": 1,\n      \"scan_size\": 7,\n      \"sql\": \"SELECT COUNT(*) from \\\"default\\\"\",\n      \"start_time\": 0,\n      \"stream_name\": \"default\",\n      \"stream_type\": \"logs\",\n      \"took\": 0.056222333,\n      \"trace_id\": \"7f7898fd19424c47ba830a6fa9b25e1f\",\n      \"function\": \".\"\n    }\n  ],\n  \"total\": 3,\n  \"from\": 0,\n  \"size\": 20,\n  \"cached_ratio\": 0,\n  \"scan_size\": 0,\n  \"idx_scan_size\": 0,\n  \"scan_records\": 3,\n  \"trace_id\": \"2lsPBWjwZxUJ5ugvZ4jApESZEpk\",\n  \"is_partial\": false,\n  \"result_cache_ratio\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a17ca12c-00e9-4469-a372-5d23bd37baa4",
+              "name": "Bad Request - Invalid parameters or body",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_search_history"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"stream_name\": \"default\",\n  \"stream_type\": \"logs\",\n  \"min_ts\": 1632960000,\n  \"max_ts\": 1633046400,\n  \"trace_id\": \"7f7898fd19424c47ba830a6fa9b25e1f\",\n  \"size\": 100\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ab68b96c-823f-49fe-8334-289128b582c7",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_search_history"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"stream_name\": \"default\",\n  \"stream_type\": \"logs\",\n  \"min_ts\": 1632960000,\n  \"max_ts\": 1633046400,\n  \"trace_id\": \"7f7898fd19424c47ba830a6fa9b25e1f\",\n  \"size\": 100\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bec290df-494b-47d1-9904-accf38f0e002",
+          "name": "Search partition data",
+          "request": {
+            "name": "Search partition data",
+            "description": {
+              "content": "Executes search queries on partitioned log data with specified parameters",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "_search_partition"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Stream type. Must be one of: logs, metrics, traces. Defaults to logs if not specified."
+                },
+                {
+                  "disabled": false,
+                  "key": "enable_align_histogram",
+                  "value": "<boolean>",
+                  "description": "(Required) Enable align histogram"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sql\": \"<string>\",\n  \"start_time\": \"<long>\",\n  \"end_time\": \"<long>\",\n  \"clusters\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"encoding\": \"<string>\",\n  \"histogram_interval\": \"<long>\",\n  \"query_fn\": \"<string,null>\",\n  \"regions\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"sampling_ratio\": \"<number,null-double>\",\n  \"streaming_output\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ba1df59f-5f86-46cc-9f86-ed908a4987b2",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_search_partition"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "enable_align_histogram",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sql\": \"select * from k8s \",\n  \"start_time\": 1675182660872049,\n  \"end_time\": 1675185660872049\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"took\": 155,\n  \"file_num\": 10,\n  \"original_size\": 10240,\n  \"compressed_size\": 1024,\n  \"partitions\": [\n    [\n      1674213225158000,\n      1674213225158000\n    ],\n    [\n      1674213225158000,\n      1674213225158000\n    ]\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "33b7eba8-0870-4b0c-be1e-29f368bb318c",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_search_partition"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "enable_align_histogram",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sql\": \"select * from k8s \",\n  \"start_time\": 1675182660872049,\n  \"end_time\": 1675185660872049\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a212f2c0-4449-43de-9802-00ab284792fa",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_search_partition"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "enable_align_histogram",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sql\": \"select * from k8s \",\n  \"start_time\": 1675182660872049,\n  \"end_time\": 1675185660872049\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1bbd885b-35f3-4bda-99b3-2f836bb52356",
+          "name": "Stream search results",
+          "request": {
+            "name": "Stream search results",
+            "description": {
+              "content": "Executes a search query and streams the results back in real-time using HTTP/2 server-sent events. This is ideal for large result sets or long-running queries where you want to receive data as it becomes available rather than waiting for the complete response. Results are streamed as JSON objects separated by newlines.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "_search_stream"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "is_ui_histogram",
+                  "value": "<boolean>",
+                  "description": "(Required) Whether to return histogram data for UI"
+                },
+                {
+                  "disabled": false,
+                  "key": "is_multi_stream_search",
+                  "value": "<boolean>",
+                  "description": "(Required) Indicate is search is for multi stream"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<string>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "eb555b4a-3ac3-4a37-bdd3-d591d5a16892",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_search_stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "is_ui_histogram",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "is_multi_stream_search",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/event-stream"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sql\": \"select * from logs LIMIT 10\",\n  \"start_time\": 1675182660872049,\n  \"end_time\": 1675185660872049\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/event-stream"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "ce9784ef-a8f4-4a48-a179-39772f67ddc1",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_search_stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "is_ui_histogram",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "is_multi_stream_search",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sql\": \"select * from logs LIMIT 10\",\n  \"start_time\": 1675182660872049,\n  \"end_time\": 1675185660872049\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6d95790b-4e6d-43ea-9372-8a564930911e",
+          "name": "Get field values with HTTP/2 streaming",
+          "request": {
+            "name": "Get field values with HTTP/2 streaming",
+            "description": {
+              "content": "Retrieves field values from logs using HTTP/2 streaming for real-time results",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "_values_stream"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<string>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "68f5df5b-a5fd-4d62-b30d-61963d3ebc8f",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_values_stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/event-stream"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sql\": \"select * from logs LIMIT 10\",\n  \"start_time\": 1675182660872049,\n  \"end_time\": 1675185660872049\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/event-stream"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "2f2fcd10-e9e7-436b-8a8d-80229dc86600",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "_values_stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sql\": \"select * from logs LIMIT 10\",\n  \"start_time\": 1675182660872049,\n  \"end_time\": 1675185660872049\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4dd2c453-2b4f-4054-aebc-d34152501794",
+          "name": "Search around specific log entry",
+          "request": {
+            "name": "Search around specific log entry",
+            "description": {
+              "content": "Searches for log entries around a specific key (timestamp or record identifier) within a stream. Returns logs before and after the specified key, useful for investigating context around specific events or errors.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                ":stream_name",
+                "_around"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Stream type. Must be one of: logs, metrics, traces. Defaults to logs if not specified."
+                },
+                {
+                  "disabled": false,
+                  "key": "key",
+                  "value": "<long>",
+                  "description": "(Required) around key"
+                },
+                {
+                  "disabled": false,
+                  "key": "size",
+                  "value": "<long>",
+                  "description": "(Required) around size"
+                },
+                {
+                  "disabled": false,
+                  "key": "regions",
+                  "value": "<string>",
+                  "description": "regions, split by comma"
+                },
+                {
+                  "disabled": false,
+                  "key": "timeout",
+                  "value": "<long>",
+                  "description": "timeout, seconds"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "stream_name",
+                  "description": "(Required) stream_name name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1b0b6c44-7668-4629-a5bf-4acfc1dd3ff8",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    ":stream_name",
+                    "_around"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "key",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "regions",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "timeout",
+                      "value": "<long>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) stream_name name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"took\": 155,\n  \"hits\": [\n    {\n      \"_p\": \"F\",\n      \"_timestamp\": 1674213225158000,\n      \"kubernetes\": {\n        \"container_hash\": \"dkr.ecr.us-west-2.amazonaws.com/openobserve@sha256:3dbbb0dc1eab2d5a3b3e4a75fd87d194e8095c92d7b2b62e7cdbd07020f54589\",\n        \"container_image\": \"dkr.ecr.us-west-2.amazonaws.com/openobserve:v0.0.3\",\n        \"container_name\": \"openobserve\",\n        \"docker_id\": \"eb0983bdb9ff9360d227e6a0b268fe3b24a0868c2c2d725a1516c11e88bf5789\",\n        \"host\": \"ip.us-east-2.compute.internal\",\n        \"namespace_name\": \"openobserve\",\n        \"pod_id\": \"35a0421f-9203-4d73-9663-9ff0ce26d409\",\n        \"pod_name\": \"openobserve-ingester-0\"\n      },\n      \"log\": \"[2023-01-20T11:13:45Z INFO  actix_web::middleware::logger] 10.2.80.192 \\\"POST /api/demo/_bulk HTTP/1.1\\\" 200 68\",\n      \"stream\": \"stderr\"\n    }\n  ],\n  \"total\": 10,\n  \"from\": 0,\n  \"size\": 10,\n  \"scan_size\": 28943\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cfffc12a-c3bd-46a9-b25f-ad1ab0fc20b1",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    ":stream_name",
+                    "_around"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "key",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "regions",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "timeout",
+                      "value": "<long>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) stream_name name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e14416fd-6b74-40a4-90fd-d3d099a5dabf",
+          "name": "Search around specific log record",
+          "request": {
+            "name": "Search around specific log record",
+            "description": {
+              "content": "Advanced version of around search that accepts a full log record in the request body instead of just a key. Searches for log entries around the specified record, providing better context matching based on the complete record data.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                ":stream_name",
+                "_around"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "size",
+                  "value": "<long>",
+                  "description": "(Required) around size"
+                },
+                {
+                  "disabled": false,
+                  "key": "regions",
+                  "value": "<string>",
+                  "description": "regions, split by comma"
+                },
+                {
+                  "disabled": false,
+                  "key": "timeout",
+                  "value": "<long>",
+                  "description": "timeout, seconds"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "stream_name",
+                  "description": "(Required) stream_name name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<string>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "99a8cd3f-46d3-4bcc-9647-f0b6b8685c7a",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    ":stream_name",
+                    "_around"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "size",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "regions",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "timeout",
+                      "value": "<long>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) stream_name name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"_timestamp\": 1675182660872049,\n  \"container_image\": \"dkr.ecr.us-west-2.amazonaws.com/openobserve:v0.0.3\",\n  \"container_name\": \"openobserve\",\n  \"docker_id\": \"eb0983bdb9ff9360d227e6a0b268fe3b24a0868c2c2d725a1516c11e88bf5789\",\n  \"host\": \"ip.us-east-2.compute.internal\",\n  \"namespace_name\": \"openobserve\",\n  \"pod_id\": \"35a0421f-9203-4d73-9663-9ff0ce26d409\",\n  \"pod_name\": \"openobserve-ingester-0\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"took\": 155,\n  \"hits\": [\n    {\n      \"_p\": \"F\",\n      \"_timestamp\": 1674213225158000,\n      \"kubernetes\": {\n        \"container_hash\": \"dkr.ecr.us-west-2.amazonaws.com/openobserve@sha256:3dbbb0dc1eab2d5a3b3e4a75fd87d194e8095c92d7b2b62e7cdbd07020f54589\",\n        \"container_image\": \"dkr.ecr.us-west-2.amazonaws.com/openobserve:v0.0.3\",\n        \"container_name\": \"openobserve\",\n        \"docker_id\": \"eb0983bdb9ff9360d227e6a0b268fe3b24a0868c2c2d725a1516c11e88bf5789\",\n        \"host\": \"ip.us-east-2.compute.internal\",\n        \"namespace_name\": \"openobserve\",\n        \"pod_id\": \"35a0421f-9203-4d73-9663-9ff0ce26d409\",\n        \"pod_name\": \"openobserve-ingester-0\"\n      },\n      \"log\": \"[2023-01-20T11:13:45Z INFO  actix_web::middleware::logger] 10.2.80.192 \\\"POST /api/demo/_bulk HTTP/1.1\\\" 200 68\",\n      \"stream\": \"stderr\"\n    }\n  ],\n  \"total\": 10,\n  \"from\": 0,\n  \"size\": 10,\n  \"scan_size\": 28943\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1ae795e5-617c-4214-b99d-8f844cd627d5",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    ":stream_name",
+                    "_around"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "size",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "regions",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "timeout",
+                      "value": "<long>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) stream_name name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"_timestamp\": 1675182660872049,\n  \"container_image\": \"dkr.ecr.us-west-2.amazonaws.com/openobserve:v0.0.3\",\n  \"container_name\": \"openobserve\",\n  \"docker_id\": \"eb0983bdb9ff9360d227e6a0b268fe3b24a0868c2c2d725a1516c11e88bf5789\",\n  \"host\": \"ip.us-east-2.compute.internal\",\n  \"namespace_name\": \"openobserve\",\n  \"pod_id\": \"35a0421f-9203-4d73-9663-9ff0ce26d409\",\n  \"pod_name\": \"openobserve-ingester-0\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1e88a195-ea94-4aeb-8ec2-a23162380ad1",
+          "name": "Get distinct field values",
+          "request": {
+            "name": "Get distinct field values",
+            "description": {
+              "content": "Retrieves the top N distinct values for specified fields within a stream and time range. Supports filtering, keyword search, and frequency counting. Essential for building dynamic filters, dropdowns, and understanding data cardinality in dashboards and analytics.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                ":stream_name",
+                "_values"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Stream type. Must be one of: logs, metrics, traces. Defaults to logs if not specified."
+                },
+                {
+                  "disabled": false,
+                  "key": "fields",
+                  "value": "<string>",
+                  "description": "(Required) fields, split by comma"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter",
+                  "value": "<string>",
+                  "description": "filter, eg: a=b"
+                },
+                {
+                  "disabled": false,
+                  "key": "keyword",
+                  "value": "<string>",
+                  "description": "keyword, eg: abc"
+                },
+                {
+                  "disabled": false,
+                  "key": "size",
+                  "value": "<long>",
+                  "description": "(Required) size"
+                },
+                {
+                  "disabled": false,
+                  "key": "from",
+                  "value": "<long>",
+                  "description": "(Required) from"
+                },
+                {
+                  "disabled": false,
+                  "key": "start_time",
+                  "value": "<long>",
+                  "description": "(Required) start time"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_time",
+                  "value": "<long>",
+                  "description": "(Required) end time"
+                },
+                {
+                  "disabled": false,
+                  "key": "regions",
+                  "value": "<string>",
+                  "description": "regions, split by comma"
+                },
+                {
+                  "disabled": false,
+                  "key": "timeout",
+                  "value": "<long>",
+                  "description": "timeout, seconds"
+                },
+                {
+                  "disabled": false,
+                  "key": "no_count",
+                  "value": "<boolean>",
+                  "description": "no need count, true of false"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "stream_name",
+                  "description": "(Required) stream_name name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "afdc9210-9c5c-484f-9448-ab17d96d3a28",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    ":stream_name",
+                    "_values"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "keyword",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "from",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "start_time",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "end_time",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "regions",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "timeout",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "no_count",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) stream_name name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"took\": 155,\n  \"values\": [\n    {\n      \"field\": \"field1\",\n      \"values\": [\n        \"value1\",\n        \"value2\"\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9a45cebf-b584-4a4b-aac7-d25b6f9e1d35",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    ":stream_name",
+                    "_values"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "keyword",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "from",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "start_time",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "end_time",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "regions",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "timeout",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "no_count",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) stream_name name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "70bc03e3-2124-44bf-9c88-5f1358ea8125",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    ":stream_name",
+                    "_values"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "keyword",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "from",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "start_time",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "end_time",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "regions",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "timeout",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "no_count",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) stream_name name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "17fa5ddb-2e88-46a9-bf81-5ee79156b05f",
+    "name": "openobserve Actions Search API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)\n\nContact Support:\n Name: OpenObserve\n Email: hello@zinclabs.io",
+      "type": "text/plain"
+    }
+  }
+}

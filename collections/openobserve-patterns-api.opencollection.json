@@ -1,0 +1,53 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Patterns API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Patterns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Extract patterns from search results",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/streams/:stream_name/patterns/extract",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "path",
+                "description": "Stream name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "This endpoint runs a search query and extracts patterns from the results.\nIt internally uses the same search infrastructure as _search but returns\nonly the extracted patterns.\n\nPOST /api/{org_id}/streams/{stream_name}/patterns/extract"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

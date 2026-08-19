@@ -1,0 +1,372 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Metrics API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Metrics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Ingest metrics via JSON",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/ingest/metrics/_json",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Ingests metrics data using JSON format. Accepts an array of metric objects containing metric name, type (counter, gauge, histogram, or summary), labels, timestamp, and value. This endpoint is ideal for custom applications and systems that generate metrics in JSON format rather than protocol buffers."
+        },
+        {
+          "info": {
+            "name": "Format Prometheus query",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/prometheus/api/v1/format_query",
+            "params": [
+              {
+                "name": "query",
+                "value": "",
+                "type": "query",
+                "description": "Prometheus expression query string."
+              },
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Formats and prettifies a Prometheus query expression. Returns the query in a standardized, readable format which helps with query validation, debugging, and ensuring consistent query formatting across applications."
+        },
+        {
+          "info": {
+            "name": "Get label values",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/prometheus/api/v1/label/:label_name/values",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "label_name",
+                "value": "",
+                "type": "path",
+                "description": "Label name"
+              },
+              {
+                "name": "match[]",
+                "value": "",
+                "type": "query",
+                "description": "Series selector argument that selects the series from which to read the label values"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "<rfc3339 | unix_timestamp>: Start timestamp"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "<rfc3339 | unix_timestamp>: End timestamp"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns all possible values for a specific label name within the specified time range. Optionally filter by series selector to get values for specific metrics. Essential for building filters and understanding label cardinality."
+        },
+        {
+          "info": {
+            "name": "Get metric label names",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/prometheus/api/v1/labels",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "match[]",
+                "value": "",
+                "type": "query",
+                "description": "Series selector argument that selects the series from which to read the label names"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "<rfc3339 | unix_timestamp>: Start timestamp"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "<rfc3339 | unix_timestamp>: End timestamp"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns a list of label names available in the metric data within the specified time range. Optionally filter by series selector to get labels for specific metrics. Useful for building dynamic queries and understanding data structure."
+        },
+        {
+          "info": {
+            "name": "Get metric metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/prometheus/api/v1/metadata",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of metrics to return"
+              },
+              {
+                "name": "metric",
+                "value": "",
+                "type": "query",
+                "description": "A metric name to filter metadata for. All metric metadata is retrieved if left empty"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves metadata information about metrics including their type, help text, and units. Provides essential information for understanding metric semantics and proper usage in queries and visualizations."
+        },
+        {
+          "info": {
+            "name": "Execute Prometheus instant query",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/prometheus/api/v1/query",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "query",
+                "value": "",
+                "type": "query",
+                "description": "Prometheus expression query string"
+              },
+              {
+                "name": "time",
+                "value": "",
+                "type": "query",
+                "description": "<rfc3339 | unix_timestamp>: Evaluation timestamp. Optional"
+              },
+              {
+                "name": "timeout",
+                "value": "",
+                "type": "query",
+                "description": "Evaluation timeout"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Executes a Prometheus instant query at a single point in time. Returns current values for metrics matching the query expression. Compatible with Prometheus instant query API for seamless integration with existing monitoring tools."
+        },
+        {
+          "info": {
+            "name": "Execute Prometheus range query",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/prometheus/api/v1/query_range",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "query",
+                "value": "",
+                "type": "query",
+                "description": "Prometheus expression query string"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "<rfc3339 | unix_timestamp>: Start timestamp, inclusive"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "<rfc3339 | unix_timestamp>: End timestamp, inclusive"
+              },
+              {
+                "name": "step",
+                "value": "",
+                "type": "query",
+                "description": "Query resolution step width in duration format or float number of seconds"
+              },
+              {
+                "name": "timeout",
+                "value": "",
+                "type": "query",
+                "description": "Evaluation timeout"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Executes a Prometheus range query over a specified time period. Returns time series data with multiple data points for metrics matching the query expression. Compatible with Prometheus range query API for time series analysis and visualization."
+        },
+        {
+          "info": {
+            "name": "Find metric series",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/prometheus/api/v1/series",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "match[]",
+                "value": "",
+                "type": "query",
+                "description": "<series_selector>: Series selector argument that selects the series to return"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "<rfc3339 | unix_timestamp>: Start timestamp"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query",
+                "description": "<rfc3339 | unix_timestamp>: End timestamp"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Finds time series that match given label matchers. Returns the unique combinations of metric names and labels that exist in the specified time range. Useful for discovering available metrics and their label combinations."
+        },
+        {
+          "info": {
+            "name": "Ingest Prometheus metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/prometheus/api/v1/write",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Receives Prometheus metrics data via remote write protocol. Accepts protobuf-encoded WriteRequest payloads containing time series data and stores them for querying. Compatible with standard Prometheus remote write configuration."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

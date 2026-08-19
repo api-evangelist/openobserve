@@ -1,0 +1,946 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Alerts API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Alerts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List organization alerts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Optional folder ID filter parameter."
+              },
+              {
+                "name": "stream_type",
+                "value": "",
+                "type": "query",
+                "description": "Optional stream type filter parameter."
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "query",
+                "description": "Optional stream name filter parameter.\n\nThis parameter is only used if `stream_type` is also provided."
+              },
+              {
+                "name": "alert_name_substring",
+                "value": "",
+                "type": "query",
+                "description": "Optional case-insensitive name substring filter parameter."
+              },
+              {
+                "name": "owner",
+                "value": "",
+                "type": "query",
+                "description": "Optional owner user filter parameter."
+              },
+              {
+                "name": "enabled",
+                "value": "",
+                "type": "query",
+                "description": "Optional enabled filter parameter."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "The optional number of alerts to retrieve. If not set then all alerts\nthat match the query parameters will be returned."
+              },
+              {
+                "name": "page_idx",
+                "value": "",
+                "type": "query",
+                "description": "The optional page index. If not set then defaults to `0`.\n\nThis parameter is only used if `page_size` is also set."
+              },
+              {
+                "name": "alert_type",
+                "value": "",
+                "type": "query",
+                "description": "Optional alert type filter: `all` (default), `scheduled`, `realtime`,\nor `anomaly_detection`."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a list of all alerts in the organization with filtering and pagination options. Shows alert summaries including names, status, folder organization, and basic configuration details for monitoring and management purposes."
+        },
+        {
+          "info": {
+            "name": "Create new alert",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID (Required if alert folder is not the default folder)"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new alert with specified conditions, triggers, and notifications. Users can define custom queries, thresholds, and notification destinations to monitor their data and receive timely alerts when conditions are met."
+        },
+        {
+          "info": {
+            "name": "Enable or disable alert in bulk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts/bulk/enable",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "value",
+                "value": "",
+                "type": "query",
+                "description": "Set to `true` to enable the alert or `false` to disable the alert."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Toggles the active status of alerts to enable or disable its monitoring and notification functionality in bulk. When disabled, the alert will stop evaluating conditions and sending notifications until re-enabled."
+        },
+        {
+          "info": {
+            "name": "Generate SQL from alert query parameters",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts/generate_sql",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Generates a SQL query string based on alert query parameters including stream, aggregations, and conditions. This endpoint is useful for testing alert queries and understanding the SQL that will be executed."
+        },
+        {
+          "info": {
+            "name": "Move alerts between folders",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts/move",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "From Folder ID (Required if RBAC enabled)"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Moves one or more alerts from their current folder to a specified destination folder. Helps organize alerts into logical groups and manage access permissions when using role-based access control."
+        },
+        {
+          "info": {
+            "name": "Get alert details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts/:alert_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "alert_id",
+                "value": "",
+                "type": "path",
+                "description": "Alert ID"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID (Required if RBAC enabled)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves detailed information about a specific alert including its configuration, conditions, triggers, notification settings, and current status. Useful for viewing and understanding existing alert setups."
+        },
+        {
+          "info": {
+            "name": "Update alert configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts/:alert_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "alert_id",
+                "value": "",
+                "type": "path",
+                "description": "Alert ID"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID (Required if RBAC enabled)"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates an existing alert's configuration including conditions, queries, thresholds, notification destinations, and scheduling. Allows users to modify alert behavior and settings as monitoring requirements change."
+        },
+        {
+          "info": {
+            "name": "Delete alert",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts/:alert_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "alert_id",
+                "value": "",
+                "type": "path",
+                "description": "Alert ID"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID (Required if RBAC enabled)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Permanently removes an alert and all its configurations including conditions, triggers, and notification settings. This action cannot be undone and will stop all monitoring and notifications for the deleted alert."
+        },
+        {
+          "info": {
+            "name": "Clone an alert or anomaly detection config",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts/:alert_id/clone",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "alert_id",
+                "value": "",
+                "type": "path",
+                "description": "Source alert or anomaly config ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a copy of an existing alert or anomaly detection config. For anomaly configs, the clone starts untrained with counters reset. Provide an optional name and folder_id in the request body."
+        },
+        {
+          "info": {
+            "name": "Enable or disable alert",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts/:alert_id/enable",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "alert_id",
+                "value": "",
+                "type": "path",
+                "description": "Alert ID"
+              },
+              {
+                "name": "value",
+                "value": "",
+                "type": "query",
+                "description": "Set to `true` to enable the alert or `false` to disable the alert."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Toggles the active status of an alert to enable or disable its monitoring and notification functionality. When disabled, the alert will stop evaluating conditions and sending notifications until re-enabled."
+        },
+        {
+          "info": {
+            "name": "Export alert configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts/:alert_id/export",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "alert_id",
+                "value": "",
+                "type": "path",
+                "description": "Alert ID"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID (Required if RBAC enabled)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Exports the complete configuration of a specific alert in a format suitable for backup, sharing, or importing into other environments. Includes all alert settings, conditions, and notification configurations."
+        },
+        {
+          "info": {
+            "name": "Trigger retraining for an anomaly detection alert",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts/:alert_id/retrain",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "alert_id",
+                "value": "",
+                "type": "path",
+                "description": "Anomaly detection alert ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Triggers a model retrain for an anomaly detection alert. Returns 400 if called on a non-anomaly alert type."
+        },
+        {
+          "info": {
+            "name": "Manually trigger alert",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v2/:org_id/alerts/:alert_id/trigger",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "alert_id",
+                "value": "",
+                "type": "path",
+                "description": "Alert ID"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID (Required if RBAC enabled)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Manually triggers an alert to test its functionality and notification delivery. Useful for testing alert configurations, verifying notification channels, and ensuring alerts work as expected before relying on them for monitoring."
+        },
+        {
+          "info": {
+            "name": "Get deduplication summary statistics for an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/alerts/dedup/summary",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get deduplication summary statistics for an organization"
+        },
+        {
+          "info": {
+            "name": "Get deduplication configuration for an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/alerts/deduplication/config",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get deduplication configuration for an organization"
+        },
+        {
+          "info": {
+            "name": "Set deduplication configuration for an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/alerts/deduplication/config",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Set deduplication configuration for an organization"
+        },
+        {
+          "info": {
+            "name": "Delete deduplication configuration for an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/:org_id/alerts/deduplication/config",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete deduplication configuration for an organization"
+        },
+        {
+          "info": {
+            "name": "Get semantic field groups for an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/alerts/deduplication/semantic-groups",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get semantic field groups for an organization"
+        },
+        {
+          "info": {
+            "name": "Save semantic field groups for an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/alerts/deduplication/semantic-groups",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Merges provided groups with existing ones:\n- Groups with matching IDs are updated (replaced)\n- New groups (no matching ID) are added\n- Existing groups not in the request are preserved"
+        },
+        {
+          "info": {
+            "name": "Preview diff between imported semantic groups and current DB state",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/alerts/deduplication/semantic-groups/preview-diff",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "This endpoint compares the provided semantic groups with what's currently stored\nand returns a diff showing additions, modifications, and unchanged groups.\nThe UI can use this to show users what will change before they commit."
+        },
+        {
+          "info": {
+            "name": "List alert destinations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/alerts/destinations",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "module",
+                "value": "",
+                "type": "query",
+                "description": "Destination module filter, none, alert, or pipeline"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a list of all alert destinations configured for an organization. Optionally filter by module type (alert or pipeline) to get specific destination categories. Returns destination names, types, and basic configuration details to help administrators manage notification routing and review available delivery options."
+        },
+        {
+          "info": {
+            "name": "Create alert or pipeline destination",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/alerts/destinations",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "module",
+                "value": "",
+                "type": "query",
+                "description": "Destination module type: 'alert' (default) or 'pipeline'"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new alert destination configuration for an organization. Destinations define where alert notifications are sent when alert conditions are met, including webhooks, email addresses, and SNS topics.\n\nIMPORTANT: The `template` field is REQUIRED to create an alert destination. Use 'Default' for the built-in template. For pipeline destinations, this includes external systems like OpenObserve, Splunk, Elasticsearch, etc. Use the 'module' query parameter to specify destination type: 'alert' (d"
+        },
+        {
+          "info": {
+            "name": "Get alert destination",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/alerts/destinations/:destination_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "destination_name",
+                "value": "",
+                "type": "path",
+                "description": "Destination name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves the configuration details for a specific alert destination. Returns the complete destination setup including delivery method, authentication credentials, notification settings, and other configuration parameters. Used for reviewing and managing existing destination configurations."
+        },
+        {
+          "info": {
+            "name": "Update alert or pipeline destination",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/alerts/destinations/:destination_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "destination_name",
+                "value": "",
+                "type": "path",
+                "description": "Destination name"
+              },
+              {
+                "name": "module",
+                "value": "",
+                "type": "query",
+                "description": "Destination module type: 'alert' (default) or 'pipeline'"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates an existing destination configuration. For alert destinations, allows modification of settings such as webhook URLs, authentication credentials, notification channels, and other delivery parameters. For pipeline destinations, allows updating external system endpoints, output formats, and metadata. Use the 'module' query parameter to specify destination type: 'alert' (default) or 'pipeline'."
+        },
+        {
+          "info": {
+            "name": "Delete alert destination",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/:org_id/alerts/destinations/:destination_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "destination_name",
+                "value": "",
+                "type": "path",
+                "description": "Destination name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Removes an alert destination configuration from the organization. The destination must not be in use by any active alerts or pipelines before deletion. Once deleted, any alerts previously configured to use this destination will need to be updated with alternative notification methods to continue functioning."
+        },
+        {
+          "info": {
+            "name": "Get alert execution history",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/alerts/history",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "alert_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by specific alert id"
+              },
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "Start time in Unix timestamp microseconds"
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "End time in Unix timestamp microseconds"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "Pagination offset (default: 0)"
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return (default: 100, max: 1000)"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Field to sort by: timestamp, alert_name, status, is_realtime, is_silenced, start_time, end_time, duration, retries, delay_in_secs, evaluation_took_in_secs, source_node, query_took (default: timestamp)"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "Sort order: asc or desc (default: desc)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves the execution history of alerts for the organization. This endpoint queries the organization's own triggers stream to provide details about when alerts were triggered, their status, and execution details."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

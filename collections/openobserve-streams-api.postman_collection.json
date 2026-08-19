@@ -1,0 +1,1763 @@
+{
+  "item": [
+    {
+      "id": "685fd2dc-7039-4c16-b188-c8603534995a",
+      "name": "Streams",
+      "description": {
+        "content": "Stream retrieval & management operations",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "4cf78e50-e66e-4f2a-a0e5-ee48ab4b5cf8",
+          "name": "List organization streams",
+          "request": {
+            "name": "List organization streams",
+            "description": {
+              "content": "Retrieves a paginated list of streams within the organization, with optional filtering by type and keyword. Supports sorting by various metrics",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "streams"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+                },
+                {
+                  "disabled": false,
+                  "key": "keyword",
+                  "value": "<string>",
+                  "description": "Keyword"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "<integer>",
+                  "description": "Offset"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Limit"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort",
+                  "value": "<string>",
+                  "description": "Sort"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "5a000d52-2639-4e1b-a83d-6ba1b856b6a0",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "keyword",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"list\": [\n    {\n      \"name\": \"string\",\n      \"storage_type\": \"string\",\n      \"stream_type\": \"service_graph\",\n      \"stats\": {\n        \"created_at\": 5030,\n        \"doc_time_min\": 5959,\n        \"doc_time_max\": 4099,\n        \"doc_num\": 8684,\n        \"file_num\": 4055,\n        \"storage_size\": 7419.231633957987,\n        \"compressed_size\": 8212.038635080977,\n        \"index_size\": 8103.310247595521\n      },\n      \"schema\": [\n        {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        }\n      ],\n      \"settings\": {\n        \"approx_partition\": true,\n        \"bloom_filter_fields\": [\n          \"string\",\n          \"string\"\n        ],\n        \"cross_links\": [\n          {\n            \"name\": \"string\",\n            \"url\": \"string\",\n            \"fields\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ]\n          },\n          {\n            \"name\": \"string\",\n            \"url\": \"string\",\n            \"fields\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ]\n          }\n        ],\n        \"data_retention\": 6105,\n        \"defined_schema_fields\": [\n          \"string\",\n          \"string\"\n        ],\n        \"distinct_value_fields\": [\n          {\n            \"name\": \"string\",\n            \"added_ts\": 7139\n          },\n          {\n            \"name\": \"string\",\n            \"added_ts\": 5136\n          }\n        ],\n        \"enable_distinct_fields\": true,\n        \"enable_log_patterns_extraction\": true,\n        \"extended_retention_days\": [\n          {\n            \"start\": 7693,\n            \"end\": 965\n          },\n          {\n            \"start\": 7883,\n            \"end\": 4090\n          }\n        ],\n        \"flatten_level\": 3460,\n        \"full_text_search_keys\": [\n          \"string\",\n          \"string\"\n        ],\n        \"index_all_values\": true,\n        \"index_fields\": [\n          \"string\",\n          \"string\"\n        ],\n        \"index_original_data\": false,\n        \"index_updated_at\": 3893,\n        \"is_llm_stream\": false,\n        \"max_query_range\": 5304,\n        \"partition_keys\": [\n          {\n            \"field\": \"string\",\n            \"disabled\": false,\n            \"types\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"field\": \"string\",\n            \"disabled\": false,\n            \"types\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"storage_type\": \"normal\",\n        \"store_original_data\": false\n      },\n      \"total_fields\": 4101,\n      \"is_derived\": false,\n      \"metrics_meta\": null,\n      \"pattern_associations\": [\n        {\n          \"field\": \"string\",\n          \"pattern_name\": \"string\",\n          \"description\": \"string\",\n          \"pattern\": \"string\",\n          \"pattern_id\": \"string\",\n          \"policy\": \"string\",\n          \"apply_at\": \"string\"\n        },\n        {\n          \"field\": \"string\",\n          \"pattern_name\": \"string\",\n          \"description\": \"string\",\n          \"pattern\": \"string\",\n          \"pattern_id\": \"string\",\n          \"policy\": \"string\",\n          \"apply_at\": \"string\"\n        }\n      ],\n      \"uds_schema\": [\n        {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        }\n      ]\n    },\n    {\n      \"name\": \"string\",\n      \"storage_type\": \"string\",\n      \"stream_type\": \"enrichment_tables\",\n      \"stats\": {\n        \"created_at\": 2767,\n        \"doc_time_min\": 5764,\n        \"doc_time_max\": 5517,\n        \"doc_num\": 6225,\n        \"file_num\": 1486,\n        \"storage_size\": 3798.1782128493955,\n        \"compressed_size\": 7624.721767062641,\n        \"index_size\": 5796.232617478982\n      },\n      \"schema\": [\n        {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        }\n      ],\n      \"settings\": {\n        \"approx_partition\": true,\n        \"bloom_filter_fields\": [\n          \"string\",\n          \"string\"\n        ],\n        \"cross_links\": [\n          {\n            \"name\": \"string\",\n            \"url\": \"string\",\n            \"fields\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ]\n          },\n          {\n            \"name\": \"string\",\n            \"url\": \"string\",\n            \"fields\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ]\n          }\n        ],\n        \"data_retention\": 9960,\n        \"defined_schema_fields\": [\n          \"string\",\n          \"string\"\n        ],\n        \"distinct_value_fields\": [\n          {\n            \"name\": \"string\",\n            \"added_ts\": 3565\n          },\n          {\n            \"name\": \"string\",\n            \"added_ts\": 8767\n          }\n        ],\n        \"enable_distinct_fields\": true,\n        \"enable_log_patterns_extraction\": true,\n        \"extended_retention_days\": [\n          {\n            \"start\": 6142,\n            \"end\": 4033\n          },\n          {\n            \"start\": 7111,\n            \"end\": 2476\n          }\n        ],\n        \"flatten_level\": 4007,\n        \"full_text_search_keys\": [\n          \"string\",\n          \"string\"\n        ],\n        \"index_all_values\": false,\n        \"index_fields\": [\n          \"string\",\n          \"string\"\n        ],\n        \"index_original_data\": false,\n        \"index_updated_at\": 9454,\n        \"is_llm_stream\": true,\n        \"max_query_range\": 8793,\n        \"partition_keys\": [\n          {\n            \"field\": \"string\",\n            \"disabled\": false,\n            \"types\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"field\": \"string\",\n            \"disabled\": true,\n            \"types\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"storage_type\": \"normal\",\n        \"store_original_data\": false\n      },\n      \"total_fields\": 6691,\n      \"is_derived\": true,\n      \"metrics_meta\": null,\n      \"pattern_associations\": [\n        {\n          \"field\": \"string\",\n          \"pattern_name\": \"string\",\n          \"description\": \"string\",\n          \"pattern\": \"string\",\n          \"pattern_id\": \"string\",\n          \"policy\": \"string\",\n          \"apply_at\": \"string\"\n        },\n        {\n          \"field\": \"string\",\n          \"pattern_name\": \"string\",\n          \"description\": \"string\",\n          \"pattern\": \"string\",\n          \"pattern_id\": \"string\",\n          \"policy\": \"string\",\n          \"apply_at\": \"string\"\n        }\n      ],\n      \"uds_schema\": [\n        {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"string\",\n          \"type\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"total\": 7188\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d8fa0120-8cfa-4b04-b3b1-3f3f19324dea",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "keyword",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f3ef69df-02aa-4de1-a321-92bb61ec401f",
+          "name": "Create new stream",
+          "request": {
+            "name": "Create new stream",
+            "description": {
+              "content": "Creates a new stream with specified settings and schema definition. The stream will be used to store and organize data of the specified type",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "streams",
+                ":stream_name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "stream_name",
+                  "description": "(Required) Stream name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fields\": [\n    {\n      \"name\": \"<string>\",\n      \"type\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"type\": \"<string>\"\n    }\n  ],\n  \"settings\": {\n    \"approx_partition\": \"<boolean>\",\n    \"bloom_filter_fields\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"cross_links\": [\n      {\n        \"name\": \"<string>\",\n        \"url\": \"<string>\",\n        \"fields\": [\n          {\n            \"name\": \"<string>\",\n            \"alias\": \"<string,null>\"\n          },\n          {\n            \"name\": \"<string>\",\n            \"alias\": \"<string,null>\"\n          }\n        ]\n      },\n      {\n        \"name\": \"<string>\",\n        \"url\": \"<string>\",\n        \"fields\": [\n          {\n            \"name\": \"<string>\",\n            \"alias\": \"<string,null>\"\n          },\n          {\n            \"name\": \"<string>\",\n            \"alias\": \"<string,null>\"\n          }\n        ]\n      }\n    ],\n    \"data_retention\": \"<long>\",\n    \"defined_schema_fields\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"distinct_value_fields\": [\n      {\n        \"name\": \"<string>\",\n        \"added_ts\": \"<long>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"added_ts\": \"<long>\"\n      }\n    ],\n    \"enable_distinct_fields\": \"<boolean>\",\n    \"enable_log_patterns_extraction\": \"<boolean>\",\n    \"extended_retention_days\": [\n      {\n        \"start\": \"<long>\",\n        \"end\": \"<long>\"\n      },\n      {\n        \"start\": \"<long>\",\n        \"end\": \"<long>\"\n      }\n    ],\n    \"flatten_level\": \"<integer,null-int64>\",\n    \"full_text_search_keys\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"index_all_values\": \"<boolean>\",\n    \"index_fields\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"index_original_data\": \"<boolean>\",\n    \"index_updated_at\": \"<long>\",\n    \"is_llm_stream\": \"<boolean>\",\n    \"max_query_range\": \"<long>\",\n    \"partition_keys\": [\n      {\n        \"field\": \"<string>\",\n        \"disabled\": \"<boolean>\",\n        \"types\": \"<string>\"\n      },\n      {\n        \"field\": \"<string>\",\n        \"disabled\": \"<boolean>\",\n        \"types\": \"<string>\"\n      }\n    ],\n    \"storage_type\": \"<string>\",\n    \"store_original_data\": \"<boolean>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8a3629d7-a182-432c-b14d-1563ae4c9eef",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fields\": [\n    {\n      \"name\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"type\": \"string\"\n    }\n  ],\n  \"settings\": {\n    \"approx_partition\": false,\n    \"bloom_filter_fields\": [\n      \"string\",\n      \"string\"\n    ],\n    \"cross_links\": [\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      },\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"data_retention\": 1417,\n    \"defined_schema_fields\": [\n      \"string\",\n      \"string\"\n    ],\n    \"distinct_value_fields\": [\n      {\n        \"name\": \"string\",\n        \"added_ts\": 1895\n      },\n      {\n        \"name\": \"string\",\n        \"added_ts\": 676\n      }\n    ],\n    \"enable_distinct_fields\": false,\n    \"enable_log_patterns_extraction\": false,\n    \"extended_retention_days\": [\n      {\n        \"start\": 2078,\n        \"end\": 2576\n      },\n      {\n        \"start\": 7654,\n        \"end\": 8080\n      }\n    ],\n    \"flatten_level\": 9167,\n    \"full_text_search_keys\": [\n      \"string\",\n      \"string\"\n    ],\n    \"index_all_values\": false,\n    \"index_fields\": [\n      \"string\",\n      \"string\"\n    ],\n    \"index_original_data\": false,\n    \"index_updated_at\": 1220,\n    \"is_llm_stream\": true,\n    \"max_query_range\": 4256,\n    \"partition_keys\": [\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      },\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      }\n    ],\n    \"storage_type\": \"compliance\",\n    \"store_original_data\": false\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e099525b-9f52-45a2-af59-b7067782f854",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fields\": [\n    {\n      \"name\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"type\": \"string\"\n    }\n  ],\n  \"settings\": {\n    \"approx_partition\": false,\n    \"bloom_filter_fields\": [\n      \"string\",\n      \"string\"\n    ],\n    \"cross_links\": [\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      },\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"data_retention\": 1417,\n    \"defined_schema_fields\": [\n      \"string\",\n      \"string\"\n    ],\n    \"distinct_value_fields\": [\n      {\n        \"name\": \"string\",\n        \"added_ts\": 1895\n      },\n      {\n        \"name\": \"string\",\n        \"added_ts\": 676\n      }\n    ],\n    \"enable_distinct_fields\": false,\n    \"enable_log_patterns_extraction\": false,\n    \"extended_retention_days\": [\n      {\n        \"start\": 2078,\n        \"end\": 2576\n      },\n      {\n        \"start\": 7654,\n        \"end\": 8080\n      }\n    ],\n    \"flatten_level\": 9167,\n    \"full_text_search_keys\": [\n      \"string\",\n      \"string\"\n    ],\n    \"index_all_values\": false,\n    \"index_fields\": [\n      \"string\",\n      \"string\"\n    ],\n    \"index_original_data\": false,\n    \"index_updated_at\": 1220,\n    \"is_llm_stream\": true,\n    \"max_query_range\": 4256,\n    \"partition_keys\": [\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      },\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      }\n    ],\n    \"storage_type\": \"compliance\",\n    \"store_original_data\": false\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c9364d0b-2b7d-4079-826e-77834aa67099",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fields\": [\n    {\n      \"name\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"type\": \"string\"\n    }\n  ],\n  \"settings\": {\n    \"approx_partition\": false,\n    \"bloom_filter_fields\": [\n      \"string\",\n      \"string\"\n    ],\n    \"cross_links\": [\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      },\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"data_retention\": 1417,\n    \"defined_schema_fields\": [\n      \"string\",\n      \"string\"\n    ],\n    \"distinct_value_fields\": [\n      {\n        \"name\": \"string\",\n        \"added_ts\": 1895\n      },\n      {\n        \"name\": \"string\",\n        \"added_ts\": 676\n      }\n    ],\n    \"enable_distinct_fields\": false,\n    \"enable_log_patterns_extraction\": false,\n    \"extended_retention_days\": [\n      {\n        \"start\": 2078,\n        \"end\": 2576\n      },\n      {\n        \"start\": 7654,\n        \"end\": 8080\n      }\n    ],\n    \"flatten_level\": 9167,\n    \"full_text_search_keys\": [\n      \"string\",\n      \"string\"\n    ],\n    \"index_all_values\": false,\n    \"index_fields\": [\n      \"string\",\n      \"string\"\n    ],\n    \"index_original_data\": false,\n    \"index_updated_at\": 1220,\n    \"is_llm_stream\": true,\n    \"max_query_range\": 4256,\n    \"partition_keys\": [\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      },\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      }\n    ],\n    \"storage_type\": \"compliance\",\n    \"store_original_data\": false\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7b7eea11-062a-4c95-ae55-a1c5018b0b57",
+          "name": "Delete stream",
+          "request": {
+            "name": "Delete stream",
+            "description": {
+              "content": "Permanently deletes a stream and all its associated data. Use delete_all parameter to remove related resources like alerts and dashboards",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "streams",
+                ":stream_name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+                },
+                {
+                  "disabled": false,
+                  "key": "delete_all",
+                  "value": "<boolean>",
+                  "description": "(Required) Delete all related feature resources"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "stream_name",
+                  "description": "(Required) Stream name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "be4191d3-1643-419d-9a75-c2b059767e97",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "delete_all",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a4a6fcd0-ae56-4247-9ed8-057430581050",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "delete_all",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "746a98db-b7ca-4a7e-a4ca-3f7729f0c9a8",
+          "name": "Delete stream fields",
+          "request": {
+            "name": "Delete stream fields",
+            "description": {
+              "content": "Removes specified fields from the stream schema. This operation will affect how future data is indexed and queried for this stream",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "streams",
+                ":stream_name",
+                "delete_fields"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "stream_name",
+                  "description": "(Required) Stream name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fields\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "adc9f339-a6bf-42e1-8836-41e217e38e18",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "delete_fields"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fields\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c775f3c1-b48d-4840-b102-e12d637d2e4a",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "delete_fields"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fields\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "da23b68f-d3ad-4b2e-aaa7-1701c547a0fc",
+              "name": "NotFound",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "delete_fields"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fields\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e6c6486b-57f8-41b7-8856-8d184ddbff5f",
+          "name": "Get stream schema",
+          "request": {
+            "name": "Get stream schema",
+            "description": {
+              "content": "Retrieves the schema definition for a specific stream, including field types and metadata. Supports filtering by keyword and pagination",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "streams",
+                ":stream_name",
+                "schema"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+                },
+                {
+                  "disabled": false,
+                  "key": "keyword",
+                  "value": "<string>",
+                  "description": "Keyword filter for field names (default: empty)"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "<integer>",
+                  "description": "Pagination offset (default: 0)"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Pagination limit (default: 0 = all)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "stream_name",
+                  "description": "(Required) Stream name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "fec610fa-39fa-4e39-a13d-1f536d8fc91f",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "schema"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "keyword",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "76ff0abc-8895-48fe-8aff-bc401b31998f",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "schema"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "keyword",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0c118cbc-9a17-44f0-a70c-a5d2392a9acc",
+          "name": "Update stream settings",
+          "request": {
+            "name": "Update stream settings",
+            "description": {
+              "content": "Updates configuration settings for an existing stream, including retention policies, partitioning, and other stream-specific options",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "streams",
+                ":stream_name",
+                "settings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "stream_name",
+                  "description": "(Required) Stream name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approx_partition\": \"<boolean,null>\",\n  \"bloom_filter_fields\": {\n    \"add\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"remove\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"cross_links\": {\n    \"add\": [\n      {\n        \"name\": \"<string>\",\n        \"url\": \"<string>\",\n        \"fields\": [\n          {\n            \"name\": \"<string>\",\n            \"alias\": \"<string,null>\"\n          },\n          {\n            \"name\": \"<string>\",\n            \"alias\": \"<string,null>\"\n          }\n        ]\n      },\n      {\n        \"name\": \"<string>\",\n        \"url\": \"<string>\",\n        \"fields\": [\n          {\n            \"name\": \"<string>\",\n            \"alias\": \"<string,null>\"\n          },\n          {\n            \"name\": \"<string>\",\n            \"alias\": \"<string,null>\"\n          }\n        ]\n      }\n    ],\n    \"remove\": [\n      {\n        \"name\": \"<string>\",\n        \"url\": \"<string>\",\n        \"fields\": [\n          {\n            \"name\": \"<string>\",\n            \"alias\": \"<string,null>\"\n          },\n          {\n            \"name\": \"<string>\",\n            \"alias\": \"<string,null>\"\n          }\n        ]\n      },\n      {\n        \"name\": \"<string>\",\n        \"url\": \"<string>\",\n        \"fields\": [\n          {\n            \"name\": \"<string>\",\n            \"alias\": \"<string,null>\"\n          },\n          {\n            \"name\": \"<string>\",\n            \"alias\": \"<string,null>\"\n          }\n        ]\n      }\n    ]\n  },\n  \"data_retention\": \"<integer,null-int64>\",\n  \"defined_schema_fields\": {\n    \"add\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"remove\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"distinct_value_fields\": {\n    \"add\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"remove\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"enable_distinct_fields\": \"<boolean,null>\",\n  \"enable_log_patterns_extraction\": \"<boolean,null>\",\n  \"extended_retention_days\": {\n    \"add\": [\n      {\n        \"start\": \"<long>\",\n        \"end\": \"<long>\"\n      },\n      {\n        \"start\": \"<long>\",\n        \"end\": \"<long>\"\n      }\n    ],\n    \"remove\": [\n      {\n        \"start\": \"<long>\",\n        \"end\": \"<long>\"\n      },\n      {\n        \"start\": \"<long>\",\n        \"end\": \"<long>\"\n      }\n    ]\n  },\n  \"flatten_level\": \"<integer,null-int64>\",\n  \"full_text_search_keys\": {\n    \"add\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"remove\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"index_all_values\": \"<boolean,null>\",\n  \"index_fields\": {\n    \"add\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"remove\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"index_original_data\": \"<boolean,null>\",\n  \"max_query_range\": \"<integer,null-int64>\",\n  \"partition_keys\": {\n    \"add\": [\n      {\n        \"field\": \"<string>\",\n        \"disabled\": \"<boolean>\",\n        \"types\": \"<string>\"\n      },\n      {\n        \"field\": \"<string>\",\n        \"disabled\": \"<boolean>\",\n        \"types\": \"<string>\"\n      }\n    ],\n    \"remove\": [\n      {\n        \"field\": \"<string>\",\n        \"disabled\": \"<boolean>\",\n        \"types\": \"<string>\"\n      },\n      {\n        \"field\": \"<string>\",\n        \"disabled\": \"<boolean>\",\n        \"types\": \"<string>\"\n      }\n    ]\n  },\n  \"pattern_associations\": {\n    \"add\": [\n      {\n        \"field\": \"<string>\",\n        \"pattern_name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"pattern\": \"<string>\",\n        \"pattern_id\": \"<string>\",\n        \"policy\": \"<string>\",\n        \"apply_at\": \"<string>\"\n      },\n      {\n        \"field\": \"<string>\",\n        \"pattern_name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"pattern\": \"<string>\",\n        \"pattern_id\": \"<string>\",\n        \"policy\": \"<string>\",\n        \"apply_at\": \"<string>\"\n      }\n    ],\n    \"remove\": [\n      {\n        \"field\": \"<string>\",\n        \"pattern_name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"pattern\": \"<string>\",\n        \"pattern_id\": \"<string>\",\n        \"policy\": \"<string>\",\n        \"apply_at\": \"<string>\"\n      },\n      {\n        \"field\": \"<string>\",\n        \"pattern_name\": \"<string>\",\n        \"description\": \"<string>\",\n        \"pattern\": \"<string>\",\n        \"pattern_id\": \"<string>\",\n        \"policy\": \"<string>\",\n        \"apply_at\": \"<string>\"\n      }\n    ]\n  },\n  \"storage_type\": \"<null>\",\n  \"store_original_data\": \"<boolean,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a93c7865-c6ea-4db5-a517-e3b0fab4f935",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "settings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"approx_partition\": \"<boolean,null>\",\n  \"bloom_filter_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"cross_links\": {\n    \"add\": [\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      },\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"remove\": [\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      },\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      }\n    ]\n  },\n  \"data_retention\": \"<integer,null-int64>\",\n  \"defined_schema_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"distinct_value_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"enable_distinct_fields\": \"<boolean,null>\",\n  \"enable_log_patterns_extraction\": \"<boolean,null>\",\n  \"extended_retention_days\": {\n    \"add\": [\n      {\n        \"start\": 2391,\n        \"end\": 3513\n      },\n      {\n        \"start\": 3071,\n        \"end\": 3072\n      }\n    ],\n    \"remove\": [\n      {\n        \"start\": 7736,\n        \"end\": 2889\n      },\n      {\n        \"start\": 1583,\n        \"end\": 606\n      }\n    ]\n  },\n  \"flatten_level\": \"<integer,null-int64>\",\n  \"full_text_search_keys\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"index_all_values\": \"<boolean,null>\",\n  \"index_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"index_original_data\": \"<boolean,null>\",\n  \"max_query_range\": \"<integer,null-int64>\",\n  \"partition_keys\": {\n    \"add\": [\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      },\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      }\n    ],\n    \"remove\": [\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      },\n      {\n        \"field\": \"string\",\n        \"disabled\": true,\n        \"types\": \"value\"\n      }\n    ]\n  },\n  \"pattern_associations\": {\n    \"add\": [\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      },\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      }\n    ],\n    \"remove\": [\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      },\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      }\n    ]\n  },\n  \"storage_type\": \"<null>\",\n  \"store_original_data\": \"<boolean,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "69737f09-4615-4716-ada7-4e4781f20d73",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "settings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"approx_partition\": \"<boolean,null>\",\n  \"bloom_filter_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"cross_links\": {\n    \"add\": [\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      },\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"remove\": [\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      },\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      }\n    ]\n  },\n  \"data_retention\": \"<integer,null-int64>\",\n  \"defined_schema_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"distinct_value_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"enable_distinct_fields\": \"<boolean,null>\",\n  \"enable_log_patterns_extraction\": \"<boolean,null>\",\n  \"extended_retention_days\": {\n    \"add\": [\n      {\n        \"start\": 2391,\n        \"end\": 3513\n      },\n      {\n        \"start\": 3071,\n        \"end\": 3072\n      }\n    ],\n    \"remove\": [\n      {\n        \"start\": 7736,\n        \"end\": 2889\n      },\n      {\n        \"start\": 1583,\n        \"end\": 606\n      }\n    ]\n  },\n  \"flatten_level\": \"<integer,null-int64>\",\n  \"full_text_search_keys\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"index_all_values\": \"<boolean,null>\",\n  \"index_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"index_original_data\": \"<boolean,null>\",\n  \"max_query_range\": \"<integer,null-int64>\",\n  \"partition_keys\": {\n    \"add\": [\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      },\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      }\n    ],\n    \"remove\": [\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      },\n      {\n        \"field\": \"string\",\n        \"disabled\": true,\n        \"types\": \"value\"\n      }\n    ]\n  },\n  \"pattern_associations\": {\n    \"add\": [\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      },\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      }\n    ],\n    \"remove\": [\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      },\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      }\n    ]\n  },\n  \"storage_type\": \"<null>\",\n  \"store_original_data\": \"<boolean,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "75084eab-c902-4a0c-b19a-891dbac0f421",
+              "name": "NotFound",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "settings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"approx_partition\": \"<boolean,null>\",\n  \"bloom_filter_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"cross_links\": {\n    \"add\": [\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      },\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"remove\": [\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      },\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      }\n    ]\n  },\n  \"data_retention\": \"<integer,null-int64>\",\n  \"defined_schema_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"distinct_value_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"enable_distinct_fields\": \"<boolean,null>\",\n  \"enable_log_patterns_extraction\": \"<boolean,null>\",\n  \"extended_retention_days\": {\n    \"add\": [\n      {\n        \"start\": 2391,\n        \"end\": 3513\n      },\n      {\n        \"start\": 3071,\n        \"end\": 3072\n      }\n    ],\n    \"remove\": [\n      {\n        \"start\": 7736,\n        \"end\": 2889\n      },\n      {\n        \"start\": 1583,\n        \"end\": 606\n      }\n    ]\n  },\n  \"flatten_level\": \"<integer,null-int64>\",\n  \"full_text_search_keys\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"index_all_values\": \"<boolean,null>\",\n  \"index_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"index_original_data\": \"<boolean,null>\",\n  \"max_query_range\": \"<integer,null-int64>\",\n  \"partition_keys\": {\n    \"add\": [\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      },\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      }\n    ],\n    \"remove\": [\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      },\n      {\n        \"field\": \"string\",\n        \"disabled\": true,\n        \"types\": \"value\"\n      }\n    ]\n  },\n  \"pattern_associations\": {\n    \"add\": [\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      },\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      }\n    ],\n    \"remove\": [\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      },\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      }\n    ]\n  },\n  \"storage_type\": \"<null>\",\n  \"store_original_data\": \"<boolean,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2bcdf3b0-408a-4476-bb49-1be50b857313",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "streams",
+                    ":stream_name",
+                    "settings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "stream_name",
+                      "description": "(Required) Stream name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"approx_partition\": \"<boolean,null>\",\n  \"bloom_filter_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"cross_links\": {\n    \"add\": [\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      },\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"remove\": [\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      },\n      {\n        \"name\": \"string\",\n        \"url\": \"string\",\n        \"fields\": [\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          },\n          {\n            \"name\": \"string\",\n            \"alias\": \"string\"\n          }\n        ]\n      }\n    ]\n  },\n  \"data_retention\": \"<integer,null-int64>\",\n  \"defined_schema_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"distinct_value_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"enable_distinct_fields\": \"<boolean,null>\",\n  \"enable_log_patterns_extraction\": \"<boolean,null>\",\n  \"extended_retention_days\": {\n    \"add\": [\n      {\n        \"start\": 2391,\n        \"end\": 3513\n      },\n      {\n        \"start\": 3071,\n        \"end\": 3072\n      }\n    ],\n    \"remove\": [\n      {\n        \"start\": 7736,\n        \"end\": 2889\n      },\n      {\n        \"start\": 1583,\n        \"end\": 606\n      }\n    ]\n  },\n  \"flatten_level\": \"<integer,null-int64>\",\n  \"full_text_search_keys\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"index_all_values\": \"<boolean,null>\",\n  \"index_fields\": {\n    \"add\": [\n      \"string\",\n      \"string\"\n    ],\n    \"remove\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"index_original_data\": \"<boolean,null>\",\n  \"max_query_range\": \"<integer,null-int64>\",\n  \"partition_keys\": {\n    \"add\": [\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      },\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      }\n    ],\n    \"remove\": [\n      {\n        \"field\": \"string\",\n        \"disabled\": false,\n        \"types\": \"value\"\n      },\n      {\n        \"field\": \"string\",\n        \"disabled\": true,\n        \"types\": \"value\"\n      }\n    ]\n  },\n  \"pattern_associations\": {\n    \"add\": [\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      },\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      }\n    ],\n    \"remove\": [\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      },\n      {\n        \"field\": \"string\",\n        \"pattern_name\": \"string\",\n        \"description\": \"string\",\n        \"pattern\": \"string\",\n        \"pattern_id\": \"string\",\n        \"policy\": \"string\",\n        \"apply_at\": \"string\"\n      }\n    ]\n  },\n  \"storage_type\": \"<null>\",\n  \"store_original_data\": \"<boolean,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "8427b09e-3cae-4e9e-bb11-fc879fc59dfe",
+    "name": "openobserve Actions Streams API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)\n\nContact Support:\n Name: OpenObserve\n Email: hello@zinclabs.io",
+      "type": "text/plain"
+    }
+  }
+}

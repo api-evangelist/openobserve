@@ -1,0 +1,3052 @@
+{
+  "item": [
+    {
+      "id": "7585058e-d98f-4c3d-9510-3c42d4cc6e08",
+      "name": "Reports",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7ef7ae02-255d-4340-8777-49f4ea94f837",
+          "name": "List dashboard reports (v2)",
+          "request": {
+            "name": "List dashboard reports (v2)",
+            "description": {
+              "content": "Lists reports for the organization, optionally filtered by folder.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                ":org_id",
+                "reports"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "folder",
+                  "value": "<string>",
+                  "description": "Folder ID filter"
+                },
+                {
+                  "disabled": false,
+                  "key": "dashboard_id",
+                  "value": "<string>",
+                  "description": "Dashboard ID filter"
+                },
+                {
+                  "disabled": false,
+                  "key": "cache",
+                  "value": "<boolean>",
+                  "description": "Filter destination-less (cache) reports"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "d3033655-e7e2-4fe9-b0c3-5ed3a1192164",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "folder",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "dashboard_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "cache",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"orgId\": \"string\",\n    \"dashboards\": [\n      {\n        \"dashboard\": \"string\",\n        \"folder\": \"string\",\n        \"tabs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"attachment_dimensions\": null,\n        \"email_attachment_type\": \"inline\",\n        \"report_type\": \"pdf\",\n        \"timerange\": {\n          \"type\": \"relative\",\n          \"period\": \"string\",\n          \"from\": 4533,\n          \"to\": 49\n        },\n        \"variables\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          }\n        ]\n      },\n      {\n        \"dashboard\": \"string\",\n        \"folder\": \"string\",\n        \"tabs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"attachment_dimensions\": null,\n        \"email_attachment_type\": \"inline\",\n        \"report_type\": \"png\",\n        \"timerange\": {\n          \"type\": \"absolute\",\n          \"period\": \"string\",\n          \"from\": 8338,\n          \"to\": 1823\n        },\n        \"variables\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"destinations\": [\n      {\n        \"email\": \"string\"\n      },\n      {\n        \"email\": \"string\"\n      }\n    ],\n    \"owner\": \"string\",\n    \"lastEditedBy\": \"string\",\n    \"createdAt\": \"1965-09-13T10:34:40.787Z\",\n    \"description\": \"string\",\n    \"enabled\": false,\n    \"frequency\": {\n      \"align_time\": false,\n      \"cron\": \"string\",\n      \"interval\": 2041,\n      \"type\": \"hours\"\n    },\n    \"imagePreview\": true,\n    \"message\": \"string\",\n    \"name\": \"string\",\n    \"start\": 9774,\n    \"timezone\": \"string\",\n    \"timezoneOffset\": 7347,\n    \"title\": \"string\",\n    \"updatedAt\": \"1998-06-09T11:03:57.018Z\"\n  },\n  {\n    \"orgId\": \"string\",\n    \"dashboards\": [\n      {\n        \"dashboard\": \"string\",\n        \"folder\": \"string\",\n        \"tabs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"attachment_dimensions\": null,\n        \"email_attachment_type\": \"inline\",\n        \"report_type\": \"pdf\",\n        \"timerange\": {\n          \"type\": \"absolute\",\n          \"period\": \"string\",\n          \"from\": 2155,\n          \"to\": 149\n        },\n        \"variables\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          }\n        ]\n      },\n      {\n        \"dashboard\": \"string\",\n        \"folder\": \"string\",\n        \"tabs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"attachment_dimensions\": null,\n        \"email_attachment_type\": \"standard\",\n        \"report_type\": \"pdf\",\n        \"timerange\": {\n          \"type\": \"absolute\",\n          \"period\": \"string\",\n          \"from\": 554,\n          \"to\": 2106\n        },\n        \"variables\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"destinations\": [\n      {\n        \"email\": \"string\"\n      },\n      {\n        \"email\": \"string\"\n      }\n    ],\n    \"owner\": \"string\",\n    \"lastEditedBy\": \"string\",\n    \"createdAt\": \"1991-06-21T17:09:06.463Z\",\n    \"description\": \"string\",\n    \"enabled\": true,\n    \"frequency\": {\n      \"align_time\": false,\n      \"cron\": \"string\",\n      \"interval\": 5792,\n      \"type\": \"once\"\n    },\n    \"imagePreview\": true,\n    \"message\": \"string\",\n    \"name\": \"string\",\n    \"start\": 4752,\n    \"timezone\": \"string\",\n    \"timezoneOffset\": 1130,\n    \"title\": \"string\",\n    \"updatedAt\": \"1974-06-15T13:14:33.032Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0c332f30-54f0-4263-b632-cf075e9fc671",
+          "name": "Create dashboard report (v2)",
+          "request": {
+            "name": "Create dashboard report (v2)",
+            "description": {
+              "content": "Creates a new automated dashboard report in the specified folder. Pass `?folder=<folder_id>` to place the report in a non-default folder.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                ":org_id",
+                "reports"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "folder",
+                  "value": "<string>",
+                  "description": "Folder ID (defaults to 'default')"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orgId\": \"<string>\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"<string>\",\n      \"folder\": \"<string>\",\n      \"tabs\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"attachment_dimensions\": \"<null>\",\n      \"email_attachment_type\": \"<string>\",\n      \"report_type\": \"<string>\",\n      \"timerange\": {\n        \"type\": \"<string>\",\n        \"period\": \"<string>\",\n        \"from\": \"<long>\",\n        \"to\": \"<long>\"\n      },\n      \"variables\": [\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        },\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"<string>\",\n      \"folder\": \"<string>\",\n      \"tabs\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"attachment_dimensions\": \"<null>\",\n      \"email_attachment_type\": \"<string>\",\n      \"report_type\": \"<string>\",\n      \"timerange\": {\n        \"type\": \"<string>\",\n        \"period\": \"<string>\",\n        \"from\": \"<long>\",\n        \"to\": \"<long>\"\n      },\n      \"variables\": [\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        },\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"<string>\"\n    },\n    {\n      \"email\": \"<string>\"\n    }\n  ],\n  \"owner\": \"<string>\",\n  \"lastEditedBy\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"description\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"frequency\": {\n    \"align_time\": \"<boolean>\",\n    \"cron\": \"<string>\",\n    \"interval\": \"<long>\",\n    \"type\": \"<string>\"\n  },\n  \"imagePreview\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"name\": \"<string>\",\n  \"start\": \"<long>\",\n  \"timezone\": \"<string>\",\n  \"timezoneOffset\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "390e6aae-cc0c-40be-a23a-a05344403485",
+              "name": "Report created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "folder",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<string>\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"inline\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"relative\",\n        \"period\": \"string\",\n        \"from\": 6943,\n        \"to\": 8951\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"standard\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"absolute\",\n        \"period\": \"string\",\n        \"from\": 6603,\n        \"to\": 216\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"string\"\n    },\n    {\n      \"email\": \"string\"\n    }\n  ],\n  \"owner\": \"<string>\",\n  \"lastEditedBy\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"description\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"frequency\": {\n    \"align_time\": true,\n    \"cron\": \"string\",\n    \"interval\": 3490,\n    \"type\": \"once\"\n  },\n  \"imagePreview\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"name\": \"<string>\",\n  \"start\": \"<long>\",\n  \"timezone\": \"<string>\",\n  \"timezoneOffset\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6679e945-7364-4b8b-acc5-494e26388171",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "folder",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<string>\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"inline\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"relative\",\n        \"period\": \"string\",\n        \"from\": 6943,\n        \"to\": 8951\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"standard\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"absolute\",\n        \"period\": \"string\",\n        \"from\": 6603,\n        \"to\": 216\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"string\"\n    },\n    {\n      \"email\": \"string\"\n    }\n  ],\n  \"owner\": \"<string>\",\n  \"lastEditedBy\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"description\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"frequency\": {\n    \"align_time\": true,\n    \"cron\": \"string\",\n    \"interval\": 3490,\n    \"type\": \"once\"\n  },\n  \"imagePreview\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"name\": \"<string>\",\n  \"start\": \"<long>\",\n  \"timezone\": \"<string>\",\n  \"timezoneOffset\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1cda8a98-36db-45dd-8f08-2d20e3fc09a4",
+          "name": "Delete multiple dashboard reports by ID (v2)",
+          "request": {
+            "name": "Delete multiple dashboard reports by ID (v2)",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                ":org_id",
+                "reports",
+                "bulk"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "94938e16-1693-49be-ab8f-3f39c1c73e66",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    "bulk"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"successful\": [\n    \"string\",\n    \"string\"\n  ],\n  \"unsuccessful\": [\n    \"string\",\n    \"string\"\n  ],\n  \"err\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5f8f42ea-7561-477d-9a7d-280797782008",
+          "name": "Move reports between folders (v2)",
+          "request": {
+            "name": "Move reports between folders (v2)",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                ":org_id",
+                "reports",
+                "move"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"report_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"dst_folder_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b4779975-f11b-474e-a8c7-8402eda3ef5f",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    "move"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"report_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"dst_folder_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8651d523-bf66-4b8b-a7b2-4ae47f6ecfc7",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    "move"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"report_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"dst_folder_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bce95c67-ccde-4fac-ad0d-67c856466494",
+          "name": "Get dashboard report by ID (v2)",
+          "request": {
+            "name": "Get dashboard report by ID (v2)",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                ":org_id",
+                "reports",
+                ":report_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "report_id",
+                  "description": "(Required) Report ID (KSUID)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c4e5e6c6-8f4e-4d1a-9517-83618e0c8b97",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    ":report_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "report_id",
+                      "description": "(Required) Report ID (KSUID)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"orgId\": \"string\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"inline\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"relative\",\n        \"period\": \"string\",\n        \"from\": 8346,\n        \"to\": 5191\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"inline\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"absolute\",\n        \"period\": \"string\",\n        \"from\": 1938,\n        \"to\": 6626\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"string\"\n    },\n    {\n      \"email\": \"string\"\n    }\n  ],\n  \"owner\": \"string\",\n  \"lastEditedBy\": \"string\",\n  \"createdAt\": \"1992-01-20T06:54:09.261Z\",\n  \"description\": \"string\",\n  \"enabled\": true,\n  \"frequency\": {\n    \"align_time\": false,\n    \"cron\": \"string\",\n    \"interval\": 1057,\n    \"type\": \"days\"\n  },\n  \"imagePreview\": false,\n  \"message\": \"string\",\n  \"name\": \"string\",\n  \"start\": 6928,\n  \"timezone\": \"string\",\n  \"timezoneOffset\": 8539,\n  \"title\": \"string\",\n  \"updatedAt\": \"2007-01-13T17:51:47.733Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b3d26b52-a6cc-406e-89ac-3fe32d0a0d5e",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    ":report_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "report_id",
+                      "description": "(Required) Report ID (KSUID)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4eee0b1a-7969-43c2-9e17-cbc5a2c26ac3",
+          "name": "Update dashboard report by ID (v2)",
+          "request": {
+            "name": "Update dashboard report by ID (v2)",
+            "description": {
+              "content": "Updates an existing report. Pass `?folder=<folder_id>` to move the report to a different folder at the same time.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                ":org_id",
+                "reports",
+                ":report_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "folder",
+                  "value": "<string>",
+                  "description": "Move to this folder ID"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "report_id",
+                  "description": "(Required) Report ID (KSUID)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orgId\": \"<string>\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"<string>\",\n      \"folder\": \"<string>\",\n      \"tabs\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"attachment_dimensions\": \"<null>\",\n      \"email_attachment_type\": \"<string>\",\n      \"report_type\": \"<string>\",\n      \"timerange\": {\n        \"type\": \"<string>\",\n        \"period\": \"<string>\",\n        \"from\": \"<long>\",\n        \"to\": \"<long>\"\n      },\n      \"variables\": [\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        },\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"<string>\",\n      \"folder\": \"<string>\",\n      \"tabs\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"attachment_dimensions\": \"<null>\",\n      \"email_attachment_type\": \"<string>\",\n      \"report_type\": \"<string>\",\n      \"timerange\": {\n        \"type\": \"<string>\",\n        \"period\": \"<string>\",\n        \"from\": \"<long>\",\n        \"to\": \"<long>\"\n      },\n      \"variables\": [\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        },\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"<string>\"\n    },\n    {\n      \"email\": \"<string>\"\n    }\n  ],\n  \"owner\": \"<string>\",\n  \"lastEditedBy\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"description\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"frequency\": {\n    \"align_time\": \"<boolean>\",\n    \"cron\": \"<string>\",\n    \"interval\": \"<long>\",\n    \"type\": \"<string>\"\n  },\n  \"imagePreview\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"name\": \"<string>\",\n  \"start\": \"<long>\",\n  \"timezone\": \"<string>\",\n  \"timezoneOffset\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "da073c40-da79-4a1b-a406-b89be2b8e076",
+              "name": "Updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    ":report_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "folder",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "report_id",
+                      "description": "(Required) Report ID (KSUID)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<string>\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"inline\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"relative\",\n        \"period\": \"string\",\n        \"from\": 6943,\n        \"to\": 8951\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"standard\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"absolute\",\n        \"period\": \"string\",\n        \"from\": 6603,\n        \"to\": 216\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"string\"\n    },\n    {\n      \"email\": \"string\"\n    }\n  ],\n  \"owner\": \"<string>\",\n  \"lastEditedBy\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"description\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"frequency\": {\n    \"align_time\": true,\n    \"cron\": \"string\",\n    \"interval\": 3490,\n    \"type\": \"once\"\n  },\n  \"imagePreview\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"name\": \"<string>\",\n  \"start\": \"<long>\",\n  \"timezone\": \"<string>\",\n  \"timezoneOffset\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5305efda-7da2-4c54-ab28-5012fd2b0c09",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    ":report_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "folder",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "report_id",
+                      "description": "(Required) Report ID (KSUID)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<string>\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"inline\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"relative\",\n        \"period\": \"string\",\n        \"from\": 6943,\n        \"to\": 8951\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"standard\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"absolute\",\n        \"period\": \"string\",\n        \"from\": 6603,\n        \"to\": 216\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"string\"\n    },\n    {\n      \"email\": \"string\"\n    }\n  ],\n  \"owner\": \"<string>\",\n  \"lastEditedBy\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"description\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"frequency\": {\n    \"align_time\": true,\n    \"cron\": \"string\",\n    \"interval\": 3490,\n    \"type\": \"once\"\n  },\n  \"imagePreview\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"name\": \"<string>\",\n  \"start\": \"<long>\",\n  \"timezone\": \"<string>\",\n  \"timezoneOffset\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7c44bd0b-2620-42d5-95b6-a9aff2f82c6c",
+          "name": "Delete dashboard report by ID (v2)",
+          "request": {
+            "name": "Delete dashboard report by ID (v2)",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                ":org_id",
+                "reports",
+                ":report_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "report_id",
+                  "description": "(Required) Report ID (KSUID)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "21fa3715-73ca-4b0b-a2cc-e0c75c86d575",
+              "name": "Deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    ":report_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "report_id",
+                      "description": "(Required) Report ID (KSUID)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "036af344-2114-4fdc-8847-88a1491a36fc",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    ":report_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "report_id",
+                      "description": "(Required) Report ID (KSUID)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fb2f5ccc-c894-42f0-aa1c-8b45489b3249",
+          "name": "Enable or disable a report by ID (v2)",
+          "request": {
+            "name": "Enable or disable a report by ID (v2)",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                ":org_id",
+                "reports",
+                ":report_id",
+                "enable"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "value",
+                  "value": "<boolean>",
+                  "description": "(Required) true to enable, false to disable"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "report_id",
+                  "description": "(Required) Report ID (KSUID)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "dde9e30c-f9cc-404d-9213-7f628d1f4f27",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    ":report_id",
+                    "enable"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "value",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "report_id",
+                      "description": "(Required) Report ID (KSUID)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f2f1afcb-4a44-4d4c-993f-6033f59ab3d3",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    ":report_id",
+                    "enable"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "value",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "report_id",
+                      "description": "(Required) Report ID (KSUID)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "28ed5e26-6942-489e-8743-39fd06cc3910",
+          "name": "Manually trigger a report by ID (v2)",
+          "request": {
+            "name": "Manually trigger a report by ID (v2)",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                ":org_id",
+                "reports",
+                ":report_id",
+                "trigger"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "report_id",
+                  "description": "(Required) Report ID (KSUID)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "af2290ff-f67e-4561-81aa-904770580f37",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    ":report_id",
+                    "trigger"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "report_id",
+                      "description": "(Required) Report ID (KSUID)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2d7ed174-f9e9-4ebb-9b10-76f0ae6635fd",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    ":org_id",
+                    "reports",
+                    ":report_id",
+                    "trigger"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "report_id",
+                      "description": "(Required) Report ID (KSUID)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5c330267-9de7-4b63-b21f-0b2aeacb8327",
+          "name": "List dashboard reports",
+          "request": {
+            "name": "List dashboard reports",
+            "description": {
+              "content": "Retrieves a list of all dashboard reports configured for the organization. Optionally filter by folder or dashboard to get specific report subsets. Returns report metadata including schedules, status, destinations, and execution history to help administrators manage automated reporting and monitor delivery performance.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "reports"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "746b31a0-b97f-47de-a24c-841d74b7a735",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"orgId\": \"string\",\n    \"dashboards\": [\n      {\n        \"dashboard\": \"string\",\n        \"folder\": \"string\",\n        \"tabs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"attachment_dimensions\": null,\n        \"email_attachment_type\": \"inline\",\n        \"report_type\": \"pdf\",\n        \"timerange\": {\n          \"type\": \"relative\",\n          \"period\": \"string\",\n          \"from\": 4533,\n          \"to\": 49\n        },\n        \"variables\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          }\n        ]\n      },\n      {\n        \"dashboard\": \"string\",\n        \"folder\": \"string\",\n        \"tabs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"attachment_dimensions\": null,\n        \"email_attachment_type\": \"inline\",\n        \"report_type\": \"png\",\n        \"timerange\": {\n          \"type\": \"absolute\",\n          \"period\": \"string\",\n          \"from\": 8338,\n          \"to\": 1823\n        },\n        \"variables\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"destinations\": [\n      {\n        \"email\": \"string\"\n      },\n      {\n        \"email\": \"string\"\n      }\n    ],\n    \"owner\": \"string\",\n    \"lastEditedBy\": \"string\",\n    \"createdAt\": \"1965-09-13T10:34:40.787Z\",\n    \"description\": \"string\",\n    \"enabled\": false,\n    \"frequency\": {\n      \"align_time\": false,\n      \"cron\": \"string\",\n      \"interval\": 2041,\n      \"type\": \"hours\"\n    },\n    \"imagePreview\": true,\n    \"message\": \"string\",\n    \"name\": \"string\",\n    \"start\": 9774,\n    \"timezone\": \"string\",\n    \"timezoneOffset\": 7347,\n    \"title\": \"string\",\n    \"updatedAt\": \"1998-06-09T11:03:57.018Z\"\n  },\n  {\n    \"orgId\": \"string\",\n    \"dashboards\": [\n      {\n        \"dashboard\": \"string\",\n        \"folder\": \"string\",\n        \"tabs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"attachment_dimensions\": null,\n        \"email_attachment_type\": \"inline\",\n        \"report_type\": \"pdf\",\n        \"timerange\": {\n          \"type\": \"absolute\",\n          \"period\": \"string\",\n          \"from\": 2155,\n          \"to\": 149\n        },\n        \"variables\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          }\n        ]\n      },\n      {\n        \"dashboard\": \"string\",\n        \"folder\": \"string\",\n        \"tabs\": [\n          \"string\",\n          \"string\"\n        ],\n        \"attachment_dimensions\": null,\n        \"email_attachment_type\": \"standard\",\n        \"report_type\": \"pdf\",\n        \"timerange\": {\n          \"type\": \"absolute\",\n          \"period\": \"string\",\n          \"from\": 554,\n          \"to\": 2106\n        },\n        \"variables\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\",\n            \"id\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"destinations\": [\n      {\n        \"email\": \"string\"\n      },\n      {\n        \"email\": \"string\"\n      }\n    ],\n    \"owner\": \"string\",\n    \"lastEditedBy\": \"string\",\n    \"createdAt\": \"1991-06-21T17:09:06.463Z\",\n    \"description\": \"string\",\n    \"enabled\": true,\n    \"frequency\": {\n      \"align_time\": false,\n      \"cron\": \"string\",\n      \"interval\": 5792,\n      \"type\": \"once\"\n    },\n    \"imagePreview\": true,\n    \"message\": \"string\",\n    \"name\": \"string\",\n    \"start\": 4752,\n    \"timezone\": \"string\",\n    \"timezoneOffset\": 1130,\n    \"title\": \"string\",\n    \"updatedAt\": \"1974-06-15T13:14:33.032Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e0c8ae83-24bf-44fa-8516-dfa2683f9590",
+          "name": "Create dashboard report",
+          "request": {
+            "name": "Create dashboard report",
+            "description": {
+              "content": "Creates a new automated dashboard report configuration. Reports can be scheduled to automatically generate and distribute dashboard snapshots via email or other notification channels. Includes support for custom time ranges, recipient lists, delivery schedules, and output formats to keep stakeholders informed of key metrics and trends.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "reports"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orgId\": \"<string>\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"<string>\",\n      \"folder\": \"<string>\",\n      \"tabs\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"attachment_dimensions\": \"<null>\",\n      \"email_attachment_type\": \"<string>\",\n      \"report_type\": \"<string>\",\n      \"timerange\": {\n        \"type\": \"<string>\",\n        \"period\": \"<string>\",\n        \"from\": \"<long>\",\n        \"to\": \"<long>\"\n      },\n      \"variables\": [\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        },\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"<string>\",\n      \"folder\": \"<string>\",\n      \"tabs\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"attachment_dimensions\": \"<null>\",\n      \"email_attachment_type\": \"<string>\",\n      \"report_type\": \"<string>\",\n      \"timerange\": {\n        \"type\": \"<string>\",\n        \"period\": \"<string>\",\n        \"from\": \"<long>\",\n        \"to\": \"<long>\"\n      },\n      \"variables\": [\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        },\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"<string>\"\n    },\n    {\n      \"email\": \"<string>\"\n    }\n  ],\n  \"owner\": \"<string>\",\n  \"lastEditedBy\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"description\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"frequency\": {\n    \"align_time\": \"<boolean>\",\n    \"cron\": \"<string>\",\n    \"interval\": \"<long>\",\n    \"type\": \"<string>\"\n  },\n  \"imagePreview\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"name\": \"<string>\",\n  \"start\": \"<long>\",\n  \"timezone\": \"<string>\",\n  \"timezoneOffset\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8cc2c666-764a-4913-9165-75aed58b8dce",
+              "name": "Report created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Network Traffic Overview\",\n  \"description\": \"Traffic patterns and network performance of the infrastructure\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dd235998-bcc3-46c5-af50-bc7ebcc9e132",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Network Traffic Overview\",\n  \"description\": \"Traffic patterns and network performance of the infrastructure\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "12665800-c100-4c97-ac5d-36e39ea8b0fd",
+          "name": "Get dashboard report",
+          "request": {
+            "name": "Get dashboard report",
+            "description": {
+              "content": "Retrieves the complete configuration and details for a specific dashboard report. Returns report parameters including schedule settings, dashboard selection, recipient lists, delivery options, and execution status. Used for reviewing existing report configurations before making modifications or troubleshooting delivery issues.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "reports",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Report name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a308138e-e6bc-4a4e-837a-a9dd7551fbdb",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Report name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"orgId\": \"string\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"inline\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"relative\",\n        \"period\": \"string\",\n        \"from\": 8346,\n        \"to\": 5191\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"inline\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"absolute\",\n        \"period\": \"string\",\n        \"from\": 1938,\n        \"to\": 6626\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"string\"\n    },\n    {\n      \"email\": \"string\"\n    }\n  ],\n  \"owner\": \"string\",\n  \"lastEditedBy\": \"string\",\n  \"createdAt\": \"1992-01-20T06:54:09.261Z\",\n  \"description\": \"string\",\n  \"enabled\": true,\n  \"frequency\": {\n    \"align_time\": false,\n    \"cron\": \"string\",\n    \"interval\": 1057,\n    \"type\": \"days\"\n  },\n  \"imagePreview\": false,\n  \"message\": \"string\",\n  \"name\": \"string\",\n  \"start\": 6928,\n  \"timezone\": \"string\",\n  \"timezoneOffset\": 8539,\n  \"title\": \"string\",\n  \"updatedAt\": \"2007-01-13T17:51:47.733Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7e4f88c5-87e0-46e3-89c4-74e7c2ec575a",
+              "name": "Report not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Report name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "38918bd3-11ca-43ea-a0f8-26357a984dce",
+          "name": "Update dashboard report",
+          "request": {
+            "name": "Update dashboard report",
+            "description": {
+              "content": "Updates an existing dashboard report configuration. Allows modification of report parameters including schedule, recipients, dashboard selection, time ranges, and delivery options. Changes take effect on the next scheduled execution, ensuring report distribution continues with updated settings and content selection.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "reports",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Report name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orgId\": \"<string>\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"<string>\",\n      \"folder\": \"<string>\",\n      \"tabs\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"attachment_dimensions\": \"<null>\",\n      \"email_attachment_type\": \"<string>\",\n      \"report_type\": \"<string>\",\n      \"timerange\": {\n        \"type\": \"<string>\",\n        \"period\": \"<string>\",\n        \"from\": \"<long>\",\n        \"to\": \"<long>\"\n      },\n      \"variables\": [\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        },\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"<string>\",\n      \"folder\": \"<string>\",\n      \"tabs\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"attachment_dimensions\": \"<null>\",\n      \"email_attachment_type\": \"<string>\",\n      \"report_type\": \"<string>\",\n      \"timerange\": {\n        \"type\": \"<string>\",\n        \"period\": \"<string>\",\n        \"from\": \"<long>\",\n        \"to\": \"<long>\"\n      },\n      \"variables\": [\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        },\n        {\n          \"key\": \"<string>\",\n          \"value\": \"<string>\",\n          \"id\": \"<string,null>\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"<string>\"\n    },\n    {\n      \"email\": \"<string>\"\n    }\n  ],\n  \"owner\": \"<string>\",\n  \"lastEditedBy\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"description\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"frequency\": {\n    \"align_time\": \"<boolean>\",\n    \"cron\": \"<string>\",\n    \"interval\": \"<long>\",\n    \"type\": \"<string>\"\n  },\n  \"imagePreview\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"name\": \"<string>\",\n  \"start\": \"<long>\",\n  \"timezone\": \"<string>\",\n  \"timezoneOffset\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7ddd1f3f-1b6d-4d78-a283-2fa3699e574e",
+              "name": "Report updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Report name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<string>\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"inline\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"relative\",\n        \"period\": \"string\",\n        \"from\": 6943,\n        \"to\": 8951\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"standard\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"absolute\",\n        \"period\": \"string\",\n        \"from\": 6603,\n        \"to\": 216\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"string\"\n    },\n    {\n      \"email\": \"string\"\n    }\n  ],\n  \"owner\": \"<string>\",\n  \"lastEditedBy\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"description\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"frequency\": {\n    \"align_time\": true,\n    \"cron\": \"string\",\n    \"interval\": 3490,\n    \"type\": \"once\"\n  },\n  \"imagePreview\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"name\": \"<string>\",\n  \"start\": \"<long>\",\n  \"timezone\": \"<string>\",\n  \"timezoneOffset\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fe4fd9d4-4299-47fb-87f8-06d6c0048f73",
+              "name": "Report not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Report name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<string>\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"inline\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"relative\",\n        \"period\": \"string\",\n        \"from\": 6943,\n        \"to\": 8951\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"standard\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"absolute\",\n        \"period\": \"string\",\n        \"from\": 6603,\n        \"to\": 216\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"string\"\n    },\n    {\n      \"email\": \"string\"\n    }\n  ],\n  \"owner\": \"<string>\",\n  \"lastEditedBy\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"description\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"frequency\": {\n    \"align_time\": true,\n    \"cron\": \"string\",\n    \"interval\": 3490,\n    \"type\": \"once\"\n  },\n  \"imagePreview\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"name\": \"<string>\",\n  \"start\": \"<long>\",\n  \"timezone\": \"<string>\",\n  \"timezoneOffset\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bcf965ce-4266-4f44-9ff9-d1c308f07532",
+              "name": "Failed to update the report",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Report name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<string>\",\n  \"dashboards\": [\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"inline\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"relative\",\n        \"period\": \"string\",\n        \"from\": 6943,\n        \"to\": 8951\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    },\n    {\n      \"dashboard\": \"string\",\n      \"folder\": \"string\",\n      \"tabs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"attachment_dimensions\": null,\n      \"email_attachment_type\": \"standard\",\n      \"report_type\": \"png\",\n      \"timerange\": {\n        \"type\": \"absolute\",\n        \"period\": \"string\",\n        \"from\": 6603,\n        \"to\": 216\n      },\n      \"variables\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"destinations\": [\n    {\n      \"email\": \"string\"\n    },\n    {\n      \"email\": \"string\"\n    }\n  ],\n  \"owner\": \"<string>\",\n  \"lastEditedBy\": \"<string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"description\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"frequency\": {\n    \"align_time\": true,\n    \"cron\": \"string\",\n    \"interval\": 3490,\n    \"type\": \"once\"\n  },\n  \"imagePreview\": \"<boolean>\",\n  \"message\": \"<string>\",\n  \"name\": \"<string>\",\n  \"start\": \"<long>\",\n  \"timezone\": \"<string>\",\n  \"timezoneOffset\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ee8b707a-6a22-4335-aee5-05734b8f314e",
+          "name": "Delete dashboard report",
+          "request": {
+            "name": "Delete dashboard report",
+            "description": {
+              "content": "Removes a dashboard report configuration from the organization. This action cancels any scheduled report deliveries and permanently removes the report configuration. Recipients will no longer receive automated report deliveries, and the report configuration cannot be recovered once deleted.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "reports",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Report name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "23423314-e56f-41cb-b4b8-7e3494453a59",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Report name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aca1be40-f6f9-4a7f-acc9-4c3239d84127",
+              "name": "NotFound",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Report name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d0dea95d-385e-480d-b6a8-cf9edeff78bc",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Report name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d2b96935-4128-4334-a0b1-930584ec176f",
+          "name": "Manually trigger dashboard report",
+          "request": {
+            "name": "Manually trigger dashboard report",
+            "description": {
+              "content": "Manually triggers immediate execution of a dashboard report outside of its regular schedule. Generates the report with current data and delivers it to configured destinations. Useful for ad-hoc reporting needs, testing report configurations, or providing immediate updates to stakeholders between scheduled deliveries.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                ":org_id",
+                "reports",
+                ":name",
+                "trigger"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "org_id",
+                  "description": "(Required) Organization name"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Report name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "eea1d49c-46f6-495f-bf96-cb7f27d96339",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports",
+                    ":name",
+                    "trigger"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Report name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "61472bd9-eede-40dd-9cc5-5faefbbcbc85",
+              "name": "NotFound",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports",
+                    ":name",
+                    "trigger"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Report name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "580956fc-ff31-4fad-a4af-e76dab692347",
+              "name": "Failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    ":org_id",
+                    "reports",
+                    ":name",
+                    "trigger"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "org_id",
+                      "description": "(Required) Organization name"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) Report name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "null",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "3c27d442-8459-4939-aaed-d0fd7fdb4363",
+    "name": "openobserve Actions Reports API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)\n\nContact Support:\n Name: OpenObserve\n Email: hello@zinclabs.io",
+      "type": "text/plain"
+    }
+  }
+}

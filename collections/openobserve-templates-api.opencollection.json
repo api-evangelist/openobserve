@@ -1,0 +1,194 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Templates API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Templates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List alert templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/alerts/templates",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a list of all alert notification templates configured for an organization. Returns template names, types, and basic metadata to help administrators manage notification formatting options. Templates provide reusable formatting configurations that ensure consistent alert notifications across different channels and destinations."
+        },
+        {
+          "info": {
+            "name": "Create alert template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/alerts/templates",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new alert notification template for an organization. Templates define the format and content of alert notifications, including message structure, variable substitutions, and styling options. Templates can be reused across multiple alert destinations to maintain consistent notification formatting and branding across different channels."
+        },
+        {
+          "info": {
+            "name": "Get system prebuilt templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/alerts/templates/system/prebuilt",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves all system-defined prebuilt templates. These templates are provided by OpenObserve for common notification destinations like Slack, Microsoft Teams, Email, PagerDuty, etc. System templates are read-only and serve as the foundation for prebuilt alert destinations. This endpoint returns the complete template configurations including body, type, and metadata. Requires LIST permission on templates."
+        },
+        {
+          "info": {
+            "name": "Get alert template",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/alerts/templates/:template_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "template_name",
+                "value": "",
+                "type": "path",
+                "description": "Template name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves the configuration and content of a specific alert notification template. Returns the template structure including message format, variable definitions, styling options, and other formatting parameters. Used for reviewing existing templates and understanding notification formats before making modifications."
+        },
+        {
+          "info": {
+            "name": "Update alert template",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/alerts/templates/:template_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "template_name",
+                "value": "",
+                "type": "path",
+                "description": "Template name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates an existing alert notification template. Allows modification of template content, formatting, variable placeholders, and styling options. Changes to templates will apply to all future alert notifications that use this template, providing a centralized way to update notification formats across multiple alerts and destinations."
+        },
+        {
+          "info": {
+            "name": "Delete alert template",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/:org_id/alerts/templates/:template_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "template_name",
+                "value": "",
+                "type": "path",
+                "description": "Template name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Removes an alert notification template from the organization. The template must not be in use by any active destinations before deletion. Once deleted, any destinations previously using this template will need to be updated with alternative templates to continue formatting notifications properly."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

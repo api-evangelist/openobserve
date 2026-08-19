@@ -1,0 +1,507 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Reports API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List dashboard reports (v2)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v2/:org_id/reports",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID filter"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "query",
+                "description": "Dashboard ID filter"
+              },
+              {
+                "name": "cache",
+                "value": "",
+                "type": "query",
+                "description": "Filter destination-less (cache) reports"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists reports for the organization, optionally filtered by folder."
+        },
+        {
+          "info": {
+            "name": "Create dashboard report (v2)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v2/:org_id/reports",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID (defaults to 'default')"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new automated dashboard report in the specified folder. Pass `?folder=<folder_id>` to place the report in a non-default folder."
+        },
+        {
+          "info": {
+            "name": "Delete multiple dashboard reports by ID (v2)",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v2/:org_id/reports/bulk",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete multiple dashboard reports by ID (v2)"
+        },
+        {
+          "info": {
+            "name": "Move reports between folders (v2)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v2/:org_id/reports/move",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Move reports between folders (v2)"
+        },
+        {
+          "info": {
+            "name": "Get dashboard report by ID (v2)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v2/:org_id/reports/:report_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "report_id",
+                "value": "",
+                "type": "path",
+                "description": "Report ID (KSUID)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get dashboard report by ID (v2)"
+        },
+        {
+          "info": {
+            "name": "Update dashboard report by ID (v2)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v2/:org_id/reports/:report_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "report_id",
+                "value": "",
+                "type": "path",
+                "description": "Report ID (KSUID)"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Move to this folder ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates an existing report. Pass `?folder=<folder_id>` to move the report to a different folder at the same time."
+        },
+        {
+          "info": {
+            "name": "Delete dashboard report by ID (v2)",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v2/:org_id/reports/:report_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "report_id",
+                "value": "",
+                "type": "path",
+                "description": "Report ID (KSUID)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete dashboard report by ID (v2)"
+        },
+        {
+          "info": {
+            "name": "Enable or disable a report by ID (v2)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v2/:org_id/reports/:report_id/enable",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "report_id",
+                "value": "",
+                "type": "path",
+                "description": "Report ID (KSUID)"
+              },
+              {
+                "name": "value",
+                "value": "",
+                "type": "query",
+                "description": "true to enable, false to disable"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Enable or disable a report by ID (v2)"
+        },
+        {
+          "info": {
+            "name": "Manually trigger a report by ID (v2)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v2/:org_id/reports/:report_id/trigger",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "report_id",
+                "value": "",
+                "type": "path",
+                "description": "Report ID (KSUID)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Manually trigger a report by ID (v2)"
+        },
+        {
+          "info": {
+            "name": "List dashboard reports",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/reports",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a list of all dashboard reports configured for the organization. Optionally filter by folder or dashboard to get specific report subsets. Returns report metadata including schedules, status, destinations, and execution history to help administrators manage automated reporting and monitor delivery performance."
+        },
+        {
+          "info": {
+            "name": "Create dashboard report",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/reports",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new automated dashboard report configuration. Reports can be scheduled to automatically generate and distribute dashboard snapshots via email or other notification channels. Includes support for custom time ranges, recipient lists, delivery schedules, and output formats to keep stakeholders informed of key metrics and trends."
+        },
+        {
+          "info": {
+            "name": "Get dashboard report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/reports/:name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "Report name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves the complete configuration and details for a specific dashboard report. Returns report parameters including schedule settings, dashboard selection, recipient lists, delivery options, and execution status. Used for reviewing existing report configurations before making modifications or troubleshooting delivery issues."
+        },
+        {
+          "info": {
+            "name": "Update dashboard report",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/reports/:name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "Report name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates an existing dashboard report configuration. Allows modification of report parameters including schedule, recipients, dashboard selection, time ranges, and delivery options. Changes take effect on the next scheduled execution, ensuring report distribution continues with updated settings and content selection."
+        },
+        {
+          "info": {
+            "name": "Delete dashboard report",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/:org_id/reports/:name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "Report name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Removes a dashboard report configuration from the organization. This action cancels any scheduled report deliveries and permanently removes the report configuration. Recipients will no longer receive automated report deliveries, and the report configuration cannot be recovered once deleted."
+        },
+        {
+          "info": {
+            "name": "Manually trigger dashboard report",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/reports/:name/trigger",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "Report name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Manually triggers immediate execution of a dashboard report outside of its regular schedule. Generates the report with current data and delivers it to configured destinations. Useful for ad-hoc reporting needs, testing report configurations, or providing immediate updates to stakeholders between scheduled deliveries."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

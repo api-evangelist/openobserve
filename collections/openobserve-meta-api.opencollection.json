@@ -1,0 +1,29 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Meta API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Meta",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "System health check",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/healthz"
+          },
+          "docs": "Performs a basic health check to verify that the OpenObserve service is running and responding to requests. Returns a simple status indicator that can be used by load balancers, monitoring systems, and orchestration platforms to determine service availability and readiness."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

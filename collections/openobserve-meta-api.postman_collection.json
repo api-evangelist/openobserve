@@ -1,0 +1,102 @@
+{
+  "item": [
+    {
+      "id": "937e6763-d985-488c-8419-adf2eab9f335",
+      "name": "Meta",
+      "description": {
+        "content": "Meta details about the OpenObserve state itself. e.g. healthz",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "15433a17-8c33-4f18-bd8d-e1efc1b8458c",
+          "name": "System health check",
+          "request": {
+            "name": "System health check",
+            "description": {
+              "content": "Performs a basic health check to verify that the OpenObserve service is running and responding to requests. Returns a simple status indicator that can be used by load balancers, monitoring systems, and orchestration platforms to determine service availability and readiness.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "healthz"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1825dda2-894f-4d52-86fe-967393342cc5",
+              "name": "Status OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "healthz"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"ok\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "961525c4-3898-4ae9-aa5f-3f5276bc6510",
+    "name": "openobserve Actions Meta API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)\n\nContact Support:\n Name: OpenObserve\n Email: hello@zinclabs.io",
+      "type": "text/plain"
+    }
+  }
+}

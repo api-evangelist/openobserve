@@ -1,0 +1,196 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Actions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List automated actions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/actions",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a list of all automated actions configured for the organization. Returns action metadata including names, status, execution schedules, and basic configuration details. Helps administrators manage automation workflows, monitor action health, and understand the complete automation landscape across the organization."
+        },
+        {
+          "info": {
+            "name": "Download action package",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/actions/download/:ksuid",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "ksuid",
+                "value": "",
+                "type": "path",
+                "description": "Action ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Downloads the complete action package as a ZIP file containing all source code, configuration files, dependencies, and metadata for a specific automated action. Useful for backup, version control, sharing actions across environments, or performing offline analysis of action implementations."
+        },
+        {
+          "info": {
+            "name": "Upload automated action package",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/actions/upload",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Uploads a ZIP file containing an automated action package with source code, configuration, and dependencies. The package is extracted, validated, and deployed to the action execution environment. Supports both new action creation and updates to existing actions. Includes validation of environment variables, execution parameters, and package integrity."
+        },
+        {
+          "info": {
+            "name": "Get automated action details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/actions/:action_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "action_id",
+                "value": "",
+                "type": "path",
+                "description": "Action ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves complete configuration and runtime details for a specific automated action. Returns execution parameters, environment variables, scheduling configuration, execution history, and performance metrics. Used for monitoring action behavior, troubleshooting issues, and reviewing automation settings."
+        },
+        {
+          "info": {
+            "name": "Update automated action",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/actions/:action_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "action_id",
+                "value": "",
+                "type": "path",
+                "description": "Action ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates the configuration and parameters of an existing automated action. Allows modification of execution settings, environment variables, scheduling parameters, and other action properties. Changes take effect on the next execution cycle, ensuring continuous operation with updated configuration."
+        },
+        {
+          "info": {
+            "name": "Delete automated action",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/:org_id/actions/:ksuid",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "ksuid",
+                "value": "",
+                "type": "path",
+                "description": "Action ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Permanently removes an automated action from the organization. The action must not be in use by active workflows or schedules before deletion. Once deleted, any scheduled executions or trigger-based invocations will stop, and the action configuration cannot be recovered."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,70 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Short Url API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Short Url",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create short URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/short",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generates a shortened URL from a longer original URL. This is useful for creating more manageable links for dashboards, reports, or search queries that can be easily shared via email, chat, or documentation. The short URL remains valid and can be used to redirect back to the original destination."
+        },
+        {
+          "info": {
+            "name": "Resolve short URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/short/:org_id/short/:short_id",
+            "params": [
+              {
+                "name": "short_id",
+                "value": "ddbffcea3ad44292",
+                "type": "path",
+                "description": "The short ID to retrieve the original URL"
+              },
+              {
+                "name": "type",
+                "value": "ui",
+                "type": "query",
+                "description": "Response type - if 'ui', returns JSON object instead of redirect"
+              },
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Resolves a shortened URL back to its original destination. By default, this endpoint redirects the user to the original URL. When the 'type=ui' query parameter is provided, it returns the original URL as JSON instead of performing a redirect. This is useful for applications that need to inspect or validate URLs before navigation."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

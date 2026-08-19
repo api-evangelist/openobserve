@@ -1,0 +1,42 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Keys API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Keys",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Delete encryption key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/:org_id/cipher_keys/:key_name",
+            "params": [
+              {
+                "name": "key_name",
+                "value": "test_key",
+                "type": "path",
+                "description": "name of the key to delete"
+              },
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Permanently removes an encryption key from the organization. This action cannot be undone and will prevent any future data decryption operations that depend on this key. Ensure all data encrypted with this key is either migrated or no longer needed before deletion. Only available in enterprise deployments for enhanced security management."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

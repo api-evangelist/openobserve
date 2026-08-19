@@ -1,0 +1,625 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Dashboards API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Dashboards",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List organization dashboards",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/dashboards",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Optional folder ID filter parameter\n\nIf neither `folder` nor any other filter parameter are set then this\nwill search for all dashboards in the \"default\" folder.\n\nIf `folder` is not set and another filter parameter, such as `title`, is\nset then this will search for dashboards in all folders."
+              },
+              {
+                "name": "title",
+                "value": "",
+                "type": "query",
+                "description": "The optional case-insensitive title substring with which to filter\ndashboards."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "The optional number of dashboards to retrieve. If not set then all\ndashboards that match the query parameters will be returned.\n\nCurrently this parameter is only untilized by the API when the `title`\nparameter is also set."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a list of dashboards within the organization, with optional filtering by folder and pagination support"
+        },
+        {
+          "info": {
+            "name": "Create new dashboard",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/dashboards",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID where the dashboard will be created. Used for RBAC checks in enterprise version. Defaults to 'default' if not specified"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new dashboard with specified title, description, and visualization panels. The dashboard will be saved in the specified folder"
+        },
+        {
+          "info": {
+            "name": "Move multiple dashboards",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/:org_id/dashboards/move",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Moves multiple dashboards to a specified destination folder in a single batch operation. Useful for organizing dashboards efficiently"
+        },
+        {
+          "info": {
+            "name": "Get dashboard details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/dashboards/:dashboard_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "path",
+                "description": "Dashboard ID"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID where the dashboard is located. Used for RBAC permission checks in enterprise version"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves complete details of a specific dashboard including its panels, queries, and visualization configurations"
+        },
+        {
+          "info": {
+            "name": "Update existing dashboard",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/dashboards/:dashboard_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "path",
+                "description": "Dashboard ID"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID where the dashboard is located"
+              },
+              {
+                "name": "hash",
+                "value": "",
+                "type": "query",
+                "description": "Hash value for conflict detection. Required when updating an existing dashboard to prevent concurrent edit conflicts"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates an existing dashboard with new content, panels, or settings. Supports concurrent edit conflict detection using hash values"
+        },
+        {
+          "info": {
+            "name": "Delete dashboard",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/:org_id/dashboards/:dashboard_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "path",
+                "description": "Dashboard ID"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID where the dashboard is located. Used for RBAC permission checks in enterprise version"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Permanently deletes a dashboard and all its associated panels and configurations. This action cannot be undone"
+        },
+        {
+          "info": {
+            "name": "Get timed annotations for dashboard",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/dashboards/:dashboard_id/annotations",
+            "params": [
+              {
+                "name": "panels",
+                "value": "",
+                "type": "query",
+                "description": "Commas separated list of panels"
+              },
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "Time in microseconds"
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "Time in microseconds"
+              },
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves timed annotations for dashboard panels within a specified time range"
+        },
+        {
+          "info": {
+            "name": "Create timed annotations for dashboard",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/dashboards/:dashboard_id/annotations",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates new timed annotations for specific panels within a dashboard"
+        },
+        {
+          "info": {
+            "name": "Delete timed annotations from dashboard",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/:org_id/dashboards/:dashboard_id/annotations",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Removes timed annotations from dashboard panels based on specified criteria"
+        },
+        {
+          "info": {
+            "name": "Remove timed annotation from panel",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/:org_id/dashboards/:dashboard_id/annotations/panels/:timed_annotation_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "timed_annotation_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Removes a specific timed annotation from a dashboard panel"
+        },
+        {
+          "info": {
+            "name": "Update timed annotation",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/dashboards/:dashboard_id/annotations/:timed_annotation_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "timed_annotation_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates an existing timed annotation with new content or metadata"
+        },
+        {
+          "info": {
+            "name": "Add a panel to a dashboard",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/dashboards/:dashboard_id/panels",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "path",
+                "description": "Dashboard ID"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID where the dashboard is located"
+              },
+              {
+                "name": "hash",
+                "value": "",
+                "type": "query",
+                "description": "Hash value for conflict detection"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Add a panel to an existing dashboard. Layout auto-computed if not specified. Returns new hash for chaining."
+        },
+        {
+          "info": {
+            "name": "Update a single panel in a dashboard",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/dashboards/:dashboard_id/panels/:panel_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "path",
+                "description": "Dashboard ID"
+              },
+              {
+                "name": "panel_id",
+                "value": "",
+                "type": "path",
+                "description": "Panel ID"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID where the dashboard is located"
+              },
+              {
+                "name": "hash",
+                "value": "",
+                "type": "query",
+                "description": "Hash value for conflict detection"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update a single panel in a dashboard by panel ID. Preserves layout if not explicitly set."
+        },
+        {
+          "info": {
+            "name": "Delete a single panel from a dashboard",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/:org_id/dashboards/:dashboard_id/panels/:panel_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "path",
+                "description": "Dashboard ID"
+              },
+              {
+                "name": "panel_id",
+                "value": "",
+                "type": "path",
+                "description": "Panel ID"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "Folder ID where the dashboard is located"
+              },
+              {
+                "name": "hash",
+                "value": "",
+                "type": "query",
+                "description": "Hash value for conflict detection"
+              },
+              {
+                "name": "tabId",
+                "value": "",
+                "type": "query",
+                "description": "Tab ID to search for the panel"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete a single panel from a dashboard by panel ID."
+        },
+        {
+          "info": {
+            "name": "Move dashboard to folder",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/folders/dashboards/:dashboard_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "dashboard_id",
+                "value": "",
+                "type": "path",
+                "description": "Dashboard ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Moves a dashboard from one folder to another within the organization. The dashboard content remains unchanged"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

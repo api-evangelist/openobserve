@@ -1,0 +1,294 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Streams API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Streams",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List organization streams",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/streams",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+              },
+              {
+                "name": "keyword",
+                "value": "",
+                "type": "query",
+                "description": "Keyword"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offset"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sort"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a paginated list of streams within the organization, with optional filtering by type and keyword. Supports sorting by various metrics"
+        },
+        {
+          "info": {
+            "name": "Create new stream",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/streams/:stream_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "path",
+                "description": "Stream name"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new stream with specified settings and schema definition. The stream will be used to store and organize data of the specified type"
+        },
+        {
+          "info": {
+            "name": "Delete stream",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/:org_id/streams/:stream_name",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "path",
+                "description": "Stream name"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+              },
+              {
+                "name": "delete_all",
+                "value": "",
+                "type": "query",
+                "description": "Delete all related feature resources"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Permanently deletes a stream and all its associated data. Use delete_all parameter to remove related resources like alerts and dashboards"
+        },
+        {
+          "info": {
+            "name": "Delete stream fields",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/streams/:stream_name/delete_fields",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "path",
+                "description": "Stream name"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Removes specified fields from the stream schema. This operation will affect how future data is indexed and queried for this stream"
+        },
+        {
+          "info": {
+            "name": "Get stream schema",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/streams/:stream_name/schema",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "path",
+                "description": "Stream name"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+              },
+              {
+                "name": "keyword",
+                "value": "",
+                "type": "query",
+                "description": "Keyword filter for field names (default: empty)"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Pagination offset (default: 0)"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Pagination limit (default: 0 = all)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves the schema definition for a specific stream, including field types and metadata. Supports filtering by keyword and pagination"
+        },
+        {
+          "info": {
+            "name": "Update stream settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/:org_id/streams/:stream_name/settings",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "path",
+                "description": "Stream name"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Stream type. one of: logs, metrics, traces. Defaults to logs."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates configuration settings for an existing stream, including retention policies, partitioning, and other stream-specific options"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

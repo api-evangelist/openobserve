@@ -1,0 +1,148 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Service Streams API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Service Streams",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "ListServiceStreams",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/:org_id/service_streams",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "GET /api/{org_id}/service_streams/_analytics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/:org_id/service_streams/_analytics",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get comprehensive dimension analytics including cardinality classification\n\nReturns:\n- Cardinality of each dimension\n- Cardinality class (VeryLow/Low/Medium/High/VeryHigh)\n- Recommended priority dimensions for correlation\n- Sample values for each dimension\n\nThis endpoint provides the data needed to understand which dimensions\nare stable (good for correlation) vs transient (good for filtering only)"
+        },
+        {
+          "info": {
+            "name": "POST /api/{org_id}/service_streams/_correlate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/:org_id/service_streams/_correlate",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Find related telemetry streams for a given log/trace/metric event\n\nRequest body:\n{\n  \"source_stream\": \"default\",\n  \"source_type\": \"logs\",\n  \"available_dimensions\": {\n    \"k8s-cluster\": \"prod\",\n    \"k8s-namespace\": \"app\",\n    \"k8s-deployment\": \"api\",\n    \"k8s-pod\": \"api-xyz\",\n    \"host\": \"node-123\"\n  }\n}\n\nResponse includes:\n- The matched service\n- Which dimensions were used for matching (minimal set)\n- Which dimensions are available for additional filtering\n- All related streams (logs/traces/metr"
+        },
+        {
+          "info": {
+            "name": "GetServiceIdentityConfig",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/:org_id/service_streams/config/identity",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "SaveServiceIdentityConfig",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/:org_id/service_streams/config/identity",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

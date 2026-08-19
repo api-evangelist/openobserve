@@ -1,0 +1,341 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Traces API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Traces",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get current service graph topology",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/traces/service_graph/topology/current",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "query",
+                "description": "Optional stream name to filter service graph topology"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns service graph topology from stream storage (last 60 minutes). Stream-only - NO in-memory metrics."
+        },
+        {
+          "info": {
+            "name": "Ingest trace data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/v1/traces",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Accepts and processes distributed tracing data from applications and services. Supports both Protocol Buffers and JSON formats for OTLP (OpenTelemetry Protocol) trace ingestion. Use this endpoint to send trace spans, timing information, and service dependency data for observability and performance monitoring."
+        },
+        {
+          "info": {
+            "name": "Get recent trace data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/:stream_name/traces/latest",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "path",
+                "description": "Stream name"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "filter, eg: a=b AND c=d"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "from"
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "size"
+              },
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "start time"
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "end time"
+              },
+              {
+                "name": "timeout",
+                "value": "",
+                "type": "query",
+                "description": "timeout, seconds"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "sort by field: start_time, duration (default: start_time)"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "sort order: asc, desc (default: desc)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves the most recent trace data from a specific stream within a time range. Returns trace summaries including trace IDs, span counts, service names, and timing information. You can filter results and control pagination to analyze distributed system performance and identify bottlenecks or errors in your applications."
+        },
+        {
+          "info": {
+            "name": "Get recent session data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/:stream_name/traces/session",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "path",
+                "description": "Stream name"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "filter, eg: a=b AND c=d"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "from"
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "size"
+              },
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "start time"
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "end time"
+              },
+              {
+                "name": "timeout",
+                "value": "",
+                "type": "query",
+                "description": "timeout, seconds"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves the most recent LLM session data from a specific trace stream within a time range. Sessions group multiple traces that share the same session ID. Returns session summaries including session IDs, trace counts, LLM usage statistics, cost, and timing information."
+        },
+        {
+          "info": {
+            "name": "Get recent user data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/:stream_name/traces/user",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "path",
+                "description": "Stream name"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "filter, eg: a=b AND c=d"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "from"
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "size"
+              },
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "start time"
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "end time"
+              },
+              {
+                "name": "timeout",
+                "value": "",
+                "type": "query",
+                "description": "timeout, seconds"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves the most recent LLM user data from a specific trace stream within a time range. Users group multiple traces that share the same user ID. Returns user summaries including user IDs, event counts, LLM usage statistics, cost, and timing information."
+        },
+        {
+          "info": {
+            "name": "Get trace DAG structure",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/:org_id/:stream_name/traces/:trace_id/dag",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "path",
+                "description": "Stream name"
+              },
+              {
+                "name": "trace_id",
+                "value": "",
+                "type": "path",
+                "description": "Trace ID"
+              },
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "start time in microseconds"
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "end time in microseconds"
+              },
+              {
+                "name": "timeout",
+                "value": "",
+                "type": "query",
+                "description": "timeout, seconds"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves the DAG (Directed Acyclic Graph) structure of all spans for a specific trace. Returns nodes (spans) and edges (parent-child relationships) that can be visualized as a trace execution graph. Each node contains span details like service name, operation, and status information."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,146 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "openobserve Actions Logs API",
+    "version": "0.90.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Logs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Bulk ingest logs (Elasticsearch compatible)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/_bulk",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Ingests multiple log records in bulk using Elasticsearch-compatible NDJSON format. Each line contains either an index/create action followed by the document data. This endpoint provides high-throughput ingestion for applications migrating from or integrating with Elasticsearch."
+        },
+        {
+          "info": {
+            "name": "Ingest logs via Loki API",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/loki/api/v1/push",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Ingests log data using Grafana Loki-compatible API format. Supports both JSON and Protocol Buffers content types with optional compression (gzip for JSON, snappy for Protobuf). Stream names are extracted from the 'stream_name' label in stream metadata. Provides seamless migration path from Loki deployments to OpenObserve while maintaining API compatibility."
+        },
+        {
+          "info": {
+            "name": "Ingest logs via JSON array",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/:stream_name/_json",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "path",
+                "description": "Stream name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Ingests log data using a JSON array format where multiple log records are submitted as an array in a single request. This is ideal for batch processing scenarios where applications collect multiple log entries before sending them together for improved efficiency."
+        },
+        {
+          "info": {
+            "name": "Ingest logs via multi-line JSON",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/:org_id/:stream_name/_multi",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Organization name"
+              },
+              {
+                "name": "stream_name",
+                "value": "",
+                "type": "path",
+                "description": "Stream name"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Ingests log data using multi-line JSON format where each line contains a separate JSON object representing a log record. This format is efficient for streaming applications and tools that generate logs in newline-delimited JSON format."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
