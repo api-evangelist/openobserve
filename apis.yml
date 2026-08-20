@@ -28,6 +28,13 @@ tags:
   - Metrics
   - Traces
   - RUM
+  - Open-Source
+tags_raw:
+  - Observability
+  - Logs
+  - Metrics
+  - Traces
+  - RUM
   - Open Source
 created: '2026-03-25'
 modified: '2026-05-19'
@@ -71,6 +78,8 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
+  - Cluster
+  tags_raw:
   - Clusters
   properties:
   - type: OpenAPI
@@ -135,6 +144,8 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
+  - Group
+  tags_raw:
   - Groups
   properties:
   - type: OpenAPI
@@ -279,6 +290,8 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -327,6 +340,8 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
+  - Rate-Limit
+  tags_raw:
   - Ratelimit
   properties:
   - type: OpenAPI
@@ -391,6 +406,8 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
+  - RUM
+  tags_raw:
   - Rum
   properties:
   - type: OpenAPI
@@ -471,6 +488,8 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
+  - Service Accounts
+  tags_raw:
   - ServiceAccounts
   properties:
   - type: OpenAPI
@@ -487,6 +506,8 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
+  - Short URL
+  tags_raw:
   - Short Url
   properties:
   - type: OpenAPI
@@ -551,6 +572,8 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
