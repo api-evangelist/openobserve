@@ -5,6 +5,19 @@ description: >-
   telemetry in a single UI with SQL and PromQL querying. The HTTP API exposes ingestion, search, alerting, dashboards,
   pipelines, RUM, and administration endpoints.
 type: Index
+deliveryModel:
+  model: self-hosted
+  license: AGPL-3.0
+  open_source: true
+  commercial: false
+  callable_host: true
+  label: Self-hosted open source · you run it yourself
+  confidence: high
+  source:
+  - license
+  - openapi
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
@@ -585,6 +598,17 @@ apis:
   - type: GitHubRepository
     url: https://github.com/openobserve/openobserve
 common:
+  - type: CapabilityMap
+    url: capabilities/openobserve-capability-edges.yml
+    name: OpenObserve Business Capability Map
+  - type: IssueTracker
+    url: https://github.com/openobserve/openobserve/issues
+  - type: Releases
+    url: https://github.com/openobserve/openobserve/releases
+  - type: SecurityPolicy
+    url: https://github.com/openobserve/openobserve/blob/main/SECURITY.md
+  - type: ContributionGuide
+    url: https://github.com/openobserve/openobserve/blob/main/CONTRIBUTING.md
   - type: License
     name: AGPL-3.0
     url: https://github.com/openobserve/openobserve/blob/main/LICENSE
