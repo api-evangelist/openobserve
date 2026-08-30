@@ -353,7 +353,7 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
-  - Rate-Limit
+  - Ratelimit
   tags_raw:
   - Ratelimit
   properties:
@@ -419,7 +419,7 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
-  - RUM
+  - Rum
   tags_raw:
   - Rum
   properties:
@@ -501,7 +501,7 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
-  - Service Accounts
+  - ServiceAccounts
   tags_raw:
   - ServiceAccounts
   properties:
@@ -519,7 +519,7 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
-  - Short URL
+  - Short Url
   tags_raw:
   - Short Url
   properties:
