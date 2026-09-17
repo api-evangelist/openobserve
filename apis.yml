@@ -348,24 +348,6 @@ apis:
     url: https://api.openobserve.ai/swagger/
   - type: GitHubRepository
     url: https://github.com/openobserve/openobserve
-- aid: openobserve:openobserve-ratelimit-api
-  name: OpenObserve Ratelimit API
-  description: Ratelimit operations
-  humanURL: https://openobserve.ai
-  baseURL: https://api.openobserve.ai
-  tags:
-  - Rate-Limit
-  tags_raw:
-  - Ratelimit
-  properties:
-  - type: OpenAPI
-    url: openapi/openobserve-ratelimit-api-openapi.yml
-  - type: Documentation
-    url: https://openobserve.ai/docs/
-  - type: SwaggerUI
-    url: https://api.openobserve.ai/swagger/
-  - type: GitHubRepository
-    url: https://github.com/openobserve/openobserve
 - aid: openobserve:openobserve-report-api
   name: OpenObserve Report API
   description: The Report API from OpenObserve — 1 operation(s) for report.
@@ -496,24 +478,6 @@ apis:
     url: https://api.openobserve.ai/swagger/
   - type: GitHubRepository
     url: https://github.com/openobserve/openobserve
-- aid: openobserve:openobserve-serviceaccounts-api
-  name: OpenObserve ServiceAccounts API
-  description: The ServiceAccounts API from OpenObserve — 2 operation(s) for serviceaccounts.
-  humanURL: https://openobserve.ai
-  baseURL: https://api.openobserve.ai
-  tags:
-  - Service Accounts
-  tags_raw:
-  - ServiceAccounts
-  properties:
-  - type: OpenAPI
-    url: openapi/openobserve-serviceaccounts-api-openapi.yml
-  - type: Documentation
-    url: https://openobserve.ai/docs/
-  - type: SwaggerUI
-    url: https://api.openobserve.ai/swagger/
-  - type: GitHubRepository
-    url: https://github.com/openobserve/openobserve
 - aid: openobserve:openobserve-short-url-api
   name: OpenObserve Short Url API
   description: Short Url Service
@@ -592,6 +556,38 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/openobserve-users-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-rate-limit-api
+  name: OpenObserve Rate Limit API
+  description: Ratelimit operations
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Rate Limit
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-rate-limit-api-openapi.yml
+  - type: Documentation
+    url: https://openobserve.ai/docs/
+  - type: SwaggerUI
+    url: https://api.openobserve.ai/swagger/
+  - type: GitHubRepository
+    url: https://github.com/openobserve/openobserve
+- aid: openobserve:openobserve-service-accounts-api
+  name: OpenObserve Service Accounts API
+  description: The Service Accounts API from OpenObserve — 2 operation(s) for service accounts.
+  humanURL: https://openobserve.ai
+  baseURL: https://api.openobserve.ai
+  tags:
+  - Service Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/openobserve-service-accounts-api-openapi.yml
   - type: Documentation
     url: https://openobserve.ai/docs/
   - type: SwaggerUI
