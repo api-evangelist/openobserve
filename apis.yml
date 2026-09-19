@@ -568,6 +568,8 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
+  - Rate-Limit
+  tags_raw:
   - Rate Limit
   properties:
   - type: OpenAPI
