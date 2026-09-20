@@ -123,7 +123,8 @@ edges:
   reason: Real user monitoring ingestion of front-end telemetry and session replay is observability instrumentation
     of the running service; a product-usage-telemetry reading is possible, hence not higher.
 - tag: ServiceAccounts
-  spec_file: openobserve-serviceaccounts-api-openapi.yml
+  spec_file: openobserve-service-accounts-api-openapi.yml
+  reanchored_from: openobserve-serviceaccounts-api-openapi.yml
   capability_id: BC-620.20
   capability_id_l1: BC-620
   capability_name: Identity & Access Management
