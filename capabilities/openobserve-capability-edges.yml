@@ -1,0 +1,142 @@
+slug: openobserve
+provider: OpenObserve
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 13
+edges:
+- tag: Metrics
+  spec_file: openobserve-metrics-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.9
+  evidence: POST /api/{org_id}/ingest/metrics/_json  MetricsIngestionJson  Ingest metrics via JSON; GET
+    .../prometheus/api/v1/query  Execute Prometheus instant query
+  reason: Ingestion and PromQL querying of service metrics is exactly observability management (metrics
+    pillar) for a running service.
+- tag: Logs
+  spec_file: openobserve-logs-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.85
+  evidence: POST /api/{org_id}/_bulk  LogsIngestionBulk  Bulk ingest logs (Elasticsearch compatible);
+    LogsIngestionLoki  Ingest logs via Loki API
+  reason: Log ingestion endpoints directly realise observability (logs) management for running systems.
+- tag: Roles
+  spec_file: openobserve-roles-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.85
+  evidence: 'PUT /api/{org_id}/roles/{role_id}  UpdateRoles  Update role permissions; GET /api/{org_id}/roles/{role_id}/users  GetRoleUsers  Get
+    users assigned to role; schemas: Permission, O2EntityAuthorization'
+  reason: Custom roles, resource permissions and role-user assignment are role-based access control, i.e.
+    Identity & Access Management.
+- tag: Traces
+  spec_file: openobserve-traces-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.85
+  evidence: POST /api/{org_id}/v1/traces  PostTraces  Ingest trace data; GET /api/{org_id}/traces/service_graph/topology/current
+  reason: Distributed trace ingestion, service graph topology and trace DAG retrieval are canonical observability
+    (traces) operations.
+- tag: Alerts
+  spec_file: openobserve-alerts-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.8
+  evidence: CreateAlert  Create new alert; TriggerCondition; CloneAlert  Clone an alert or anomaly detection
+    config; RetrainAlert  Trigger retraining for an anomaly detection alert
+  reason: Observability alerting configuration on logs/metrics streams — monitoring of the running service,
+    not financial-crime or business alerting. Sub-capability could arguably be Incident Response, so 0.8.
+- tag: Incidents
+  spec_file: openobserve-incidents-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.8
+  evidence: GET /api/v2/{org_id}/alerts/incidents  ListIncidents  List alert incidents; POST .../rca  TriggerIncidentRca  Trigger
+    RCA analysis for an incident; IncidentSeverity, IncidentStatus
+  reason: Production incident lifecycle derived from alerts with severity/status and RCA — incident response
+    management for a running service. Could alternatively be IT Service Management, hence 0.8.
+- tag: Dashboards
+  spec_file: openobserve-dashboards-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.75
+  evidence: 'CreateDashboard  Create new dashboard; GetAnnotations  Get timed annotations for dashboard;
+    AddPanel  Add a panel to a dashboard; schemas: PromQLOperation, Panel'
+  reason: Dashboards of logs/metrics/traces panels with PromQL queries are observability visualisation
+    of the running service, not general BI. Some chance a grader prefers Analytics & BI Management, hence
+    0.75.
+- tag: Reports
+  spec_file: openobserve-reports-api-openapi.yml
+  capability_id: BC-610.50
+  capability_id_l1: BC-610
+  capability_name: Analytics & BI Management
+  confidence: 0.75
+  evidence: 'POST /api/v2/{org_id}/reports  CreateReportV2  Create dashboard report (v2); PUT .../trigger  TriggerReportV2  Manually
+    trigger a report; schemas: ReportFrequency, ReportDestination, ReportEmailAttachmentType'
+  reason: Lifecycle of scheduled dashboard reports with frequencies, destinations and email attachments
+    is reporting/BI delivery rather than a narrower observability function.
+- tag: Search
+  spec_file: openobserve-search-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.72
+  evidence: POST /api/{org_id}/_search  SearchSQL  Search data with SQL; GET /api/{org_id}/{stream_name}/_around  Search
+    around specific log entry
+  reason: Querying logs/metrics/traces with SQL in an observability platform is the analysis face of observability
+    management (logs, metrics, traces made understandable in production), not a generic search utility.
+- tag: Groups
+  spec_file: openobserve-groups-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: POST /api/{org_id}/groups  CreateGroup  Create user group; PUT /api/{org_id}/groups/{group_name}  UpdateGroup  Update
+    user group
+  reason: User group CRUD for organisation access control maps to identity and access management; thin
+    context (no explicit role/permission schemas) so 0.7.
+- tag: Rum
+  spec_file: openobserve-rum-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.7
+  evidence: POST /rum/v1/{org_id}/rum  RumIngestionMulti  Ingest RUM data events; POST /rum/v1/{org_id}/replay  Ingest
+    session replay data
+  reason: Real user monitoring ingestion of front-end telemetry and session replay is observability instrumentation
+    of the running service; a product-usage-telemetry reading is possible, hence not higher.
+- tag: ServiceAccounts
+  spec_file: openobserve-serviceaccounts-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: POST /api/{org_id}/service_accounts  ServiceAccountSave  Create service account
+  reason: Lifecycle of machine/service identities used to access the platform is identity and access management;
+    no business capability beyond IAM is implied.
+- tag: Users
+  spec_file: openobserve-users-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: POST /api/{org_id}/users  UserSave  Create new user; DELETE /api/{org_id}/users/{email_id}  RemoveUserFromOrg
+  reason: Administrative user account and org-membership lifecycle with role requests (UserRoleRequest)
+    is identity and access management, not HR employee records.
