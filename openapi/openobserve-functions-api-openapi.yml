@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: openobserve Actions Functions API
-  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  title: openobserve Functions API
+  description: OpenObserve API documents https://openobserve.ai/docs/
   contact:
     name: OpenObserve
     url: https://openobserve.ai/
@@ -449,48 +449,6 @@ paths:
         requires_confirmation: true
 components:
   schemas:
-    StreamOrder:
-      type: object
-      properties:
-        applyBeforeFlattening:
-          type: boolean
-        isRemoved:
-          type: boolean
-        order:
-          type: integer
-          format: int32
-          minimum: 0
-        stream:
-          type: string
-        streamType:
-          $ref: '#/components/schemas/StreamType'
-    Transform:
-      type: object
-      required:
-      - function
-      properties:
-        function:
-          type: string
-        name:
-          type: string
-        numArgs:
-          type: integer
-          format: int32
-          minimum: 0
-        params:
-          type: string
-        streams:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/StreamOrder'
-        transType:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          minimum: 0
     EnrichmentTableUrlRequest:
       type: object
       description: 'Request body for creating an enrichment table from a public URL.
@@ -540,6 +498,48 @@ components:
       - file_list
       - metadata
       - index
+    Transform:
+      type: object
+      required:
+      - function
+      properties:
+        function:
+          type: string
+        name:
+          type: string
+        numArgs:
+          type: integer
+          format: int32
+          minimum: 0
+        params:
+          type: string
+        streams:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/StreamOrder'
+        transType:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          minimum: 0
+    StreamOrder:
+      type: object
+      properties:
+        applyBeforeFlattening:
+          type: boolean
+        isRemoved:
+          type: boolean
+        order:
+          type: integer
+          format: int32
+          minimum: 0
+        stream:
+          type: string
+        streamType:
+          $ref: '#/components/schemas/StreamType'
   securitySchemes:
     Authorization:
       type: apiKey

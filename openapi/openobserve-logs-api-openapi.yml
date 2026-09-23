@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: openobserve Actions Logs API
-  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  title: openobserve Logs API
+  description: OpenObserve API documents https://openobserve.ai/docs/
   contact:
     name: OpenObserve
     url: https://openobserve.ai/
@@ -258,25 +258,6 @@ paths:
         enabled: false
 components:
   schemas:
-    LokiStream:
-      type: object
-      description: Loki stream containing labels and log entries
-      required:
-      - stream
-      - values
-      properties:
-        stream:
-          type: object
-          description: 'Stream labels as key-value pairs (e.g., {"service": "api", "stream_name": "logs"})'
-          additionalProperties:
-            type: string
-          propertyNames:
-            type: string
-        values:
-          type: array
-          items:
-            $ref: '#/components/schemas/LokiEntry'
-          description: Array of log entries, each containing timestamp, message, and optional structured metadata
     LokiEntry:
       type: object
       description: Loki log entry containing timestamp, message, and optional metadata
@@ -299,6 +280,25 @@ components:
         timestamp:
           type: string
           description: Timestamp as nanosecond unix epoch string (e.g., "1609459200000000000")
+    LokiStream:
+      type: object
+      description: Loki stream containing labels and log entries
+      required:
+      - stream
+      - values
+      properties:
+        stream:
+          type: object
+          description: 'Stream labels as key-value pairs (e.g., {"service": "api", "stream_name": "logs"})'
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/LokiEntry'
+          description: Array of log entries, each containing timestamp, message, and optional structured metadata
   securitySchemes:
     Authorization:
       type: apiKey

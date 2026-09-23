@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: openobserve Actions Patterns API
-  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  title: openobserve Patterns API
+  description: OpenObserve API documents https://openobserve.ai/docs/
   contact:
     name: OpenObserve
     url: https://openobserve.ai/
@@ -70,25 +70,6 @@ paths:
         category: patterns
 components:
   schemas:
-    SearchEventType:
-      type: string
-      enum:
-      - ui
-      - dashboards
-      - reports
-      - alerts
-      - values
-      - other
-      - rum
-      - derivedstream
-      - searchjob
-      - download
-      - insights
-    RequestEncoding:
-      type: string
-      enum:
-      - base64
-      - Empty
     SearchQuery:
       type: object
       required:
@@ -149,6 +130,20 @@ components:
           type: boolean
         uses_zo_fn:
           type: boolean
+    SearchEventType:
+      type: string
+      enum:
+      - ui
+      - dashboards
+      - reports
+      - alerts
+      - values
+      - other
+      - rum
+      - derivedstream
+      - searchjob
+      - download
+      - insights
     SearchRequest:
       type: object
       required:
@@ -185,6 +180,11 @@ components:
           format: int64
         use_cache:
           type: boolean
+    RequestEncoding:
+      type: string
+      enum:
+      - base64
+      - Empty
     SearchEventContext:
       type: object
       properties:

@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: openobserve Actions Ratelimit API
-  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  title: openobserve Ratelimit API
+  description: OpenObserve API documents https://openobserve.ai/docs/
   contact:
     name: OpenObserve
     url: https://openobserve.ai/
@@ -11,13 +11,13 @@ info:
     identifier: AGPL-3.0
   version: 0.90.0
 tags:
-- name: Ratelimit
+- name: Rate Limit
   description: Ratelimit operations
 paths:
   /api/{org_id}/ratelimit/module_list:
     get:
       tags:
-      - Ratelimit
+      - Rate Limit
       summary: List module rate limit rules
       description: Retrieves rate limiting rules applied at the organization module level, including thresholds and configurations for different API groups
       operationId: listModuleRatelimitRule
@@ -63,7 +63,7 @@ paths:
   /api/{org_id}/ratelimit/role_list:
     get:
       tags:
-      - Ratelimit
+      - Rate Limit
       summary: List role-based rate limit rules
       description: Retrieves rate limiting rules applied to specific user roles within the organization, showing how different roles have different API usage limits
       operationId: listRoleRatelimitRule
@@ -115,7 +115,7 @@ paths:
   /api/{org_id}/ratelimit/update:
     put:
       tags:
-      - Ratelimit
+      - Rate Limit
       summary: Update rate limit rules
       description: Updates rate limiting rules for modules or user roles. Allows setting custom thresholds for different API operations and groups
       operationId: UpdateRatelimitRule

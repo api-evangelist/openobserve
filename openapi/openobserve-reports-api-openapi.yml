@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: openobserve Actions Reports API
-  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  title: openobserve Reports API
+  description: OpenObserve API documents https://openobserve.ai/docs/
   contact:
     name: OpenObserve
     url: https://openobserve.ai/
@@ -119,7 +119,7 @@ paths:
       tags:
       - Reports
       summary: Create dashboard report (v2)
-      description: Creates a new automated dashboard report in the specified folder. Pass `?folder=<folder_id>` to place the report in a non-default folder.
+      description: Creates a new automated dashboard report in the specified folder. Pass `?folder=` to place the report in a non-default folder.
       operationId: CreateReportV2
       parameters:
       - name: org_id
@@ -394,7 +394,7 @@ paths:
       tags:
       - Reports
       summary: Update dashboard report by ID (v2)
-      description: Updates an existing report. Pass `?folder=<folder_id>` to move the report to a different folder at the same time.
+      description: Updates an existing report. Pass `?folder=` to move the report to a different folder at the same time.
       operationId: UpdateReportV2
       parameters:
       - name: org_id
@@ -1101,20 +1101,29 @@ paths:
         enabled: false
 components:
   schemas:
-    ReportDashboardVariable:
+    ReportEmailAttachmentType:
+      type: string
+      enum:
+      - standard
+      - inline
+    BulkDeleteResponse:
       type: object
       required:
-      - key
-      - value
+      - successful
+      - unsuccessful
       properties:
-        id:
+        err:
           type:
           - string
           - 'null'
-        key:
-          type: string
-        value:
-          type: string
+        successful:
+          type: array
+          items:
+            type: string
+        unsuccessful:
+          type: array
+          items:
+            type: string
     ReportFrequency:
       type: object
       properties:
@@ -1129,14 +1138,33 @@ components:
           description: Frequency interval in the `frequency_type` unit
         type:
           $ref: '#/components/schemas/ReportFrequencyType'
-    ReportDestination:
-      oneOf:
-      - type: object
-        required:
-        - email
-        properties:
-          email:
-            type: string
+    ReportFrequencyType:
+      type: string
+      enum:
+      - once
+      - hours
+      - days
+      - weeks
+      - months
+      - cron
+    ReportTimerange:
+      type: object
+      required:
+      - type
+      - period
+      - from
+      - to
+      properties:
+        from:
+          type: integer
+          format: int64
+        period:
+          type: string
+        to:
+          type: integer
+          format: int64
+        type:
+          $ref: '#/components/schemas/ReportTimerangeType'
     ReportDashboard:
       type: object
       required:
@@ -1172,56 +1200,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ReportDashboardVariable'
-    ReportTimerange:
-      type: object
-      required:
-      - type
-      - period
-      - from
-      - to
-      properties:
-        from:
-          type: integer
-          format: int64
-        period:
-          type: string
-        to:
-          type: integer
-          format: int64
-        type:
-          $ref: '#/components/schemas/ReportTimerangeType'
-    ReportFrequencyType:
-      type: string
-      enum:
-      - once
-      - hours
-      - days
-      - weeks
-      - months
-      - cron
-    BulkDeleteResponse:
-      type: object
-      required:
-      - successful
-      - unsuccessful
-      properties:
-        err:
-          type:
-          - string
-          - 'null'
-        successful:
-          type: array
-          items:
-            type: string
-        unsuccessful:
-          type: array
-          items:
+    ReportDestination:
+      oneOf:
+      - type: object
+        required:
+        - email
+        properties:
+          email:
             type: string
     ReportMediaType:
       type: string
       enum:
       - pdf
       - png
+    ReportTimerangeType:
+      type: string
+      enum:
+      - relative
+      - absolute
     BulkDeleteRequest:
       type: object
       required:
@@ -1231,11 +1227,6 @@ components:
           type: array
           items:
             type: string
-    ReportEmailAttachmentType:
-      type: string
-      enum:
-      - standard
-      - inline
     ReportAttachmentDimensions:
       type: object
       required:
@@ -1250,11 +1241,20 @@ components:
           type: integer
           format: int32
           minimum: 0
-    ReportTimerangeType:
-      type: string
-      enum:
-      - relative
-      - absolute
+    ReportDashboardVariable:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        key:
+          type: string
+        value:
+          type: string
   securitySchemes:
     Authorization:
       type: apiKey

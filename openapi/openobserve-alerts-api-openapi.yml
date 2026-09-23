@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: openobserve Actions Alerts API
-  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  title: openobserve Alerts API
+  description: OpenObserve API documents https://openobserve.ai/docs/
   contact:
     name: OpenObserve
     url: https://openobserve.ai/
@@ -2005,6 +2005,191 @@ paths:
       - Authorization: []
 components:
   schemas:
+    FrequencyType:
+      type: string
+      enum:
+      - cron
+      - minutes
+    AggFunction:
+      type: string
+      enum:
+      - avg
+      - min
+      - max
+      - sum
+      - count
+      - median
+      - p50
+      - p75
+      - p90
+      - p95
+      - p99
+    CompareHistoricData:
+      type: object
+      required:
+      - offSet
+      properties:
+        offSet:
+          type: string
+    FieldAlias:
+      type: object
+      description: "Field alias group — defines a set of field names that represent the same concept.\n\nUsed for:\n- Mapping equivalent field names across logs, traces, and metrics (e.g., `service`,\n  `service.name`, `app` all mean \"service identity\")\n- Alert deduplication fingerprinting\n- Populating `ServiceIdentityConfig` and `IncidentGroupingConfig` via the recommendations UI\n\n# Field Name Overlaps\n\nField names can appear in multiple semantic groups. When extracting dimensions,\nthe **first-defined group** takes precedence. This allows flexible configurations\nwhere a field like \"service\" can have different meanings in different contexts.\n\nExample:\n```\n// Group 1: service-primary (defined first)\n//   field_names: [\"service\", \"primary_service\"]\n//\n// Group 2: service-backup (defined second)\n//   field_names: [\"service\", \"backup_service\"]\n//\n// When extracting dimensions from {\"service\": \"api\"}:\n// → Matches \"service-primary\" group (first occurrence wins)\n```"
+      required:
+      - id
+      - display
+      - fields
+      properties:
+        display:
+          type: string
+          description: Human-readable display name (e.g., "Host", "K8s Cluster")
+        fields:
+          type: array
+          items:
+            type: string
+          description: 'List of field names that are equivalent (e.g., ["host", "hostname", "node"])
+
+
+            Note: Field names can overlap with other groups. First-defined group wins.'
+        group:
+          type:
+          - string
+          - 'null'
+          description: 'Category/group this semantic field belongs to (e.g., "Common", "Kubernetes", "AWS", "GCP",
+
+            "Azure") Used for UI organization and preset templates'
+        id:
+          type: string
+          description: Unique identifier (lowercase, dash-separated, e.g., "host", "k8s-cluster")
+        is_workload_type:
+          type: boolean
+          description: 'When true, this alias is a workload-type dimension used to build identity sets.
+
+            Aliases with this flag are grouped by their `group` field to form `IdentitySet`
+
+            entries with `distinguish_by` populated from those alias IDs.
+
+            Aliases without this flag (HTTP, Database, System, etc.) are never used as
+
+            identity set discriminators.'
+    RowTemplateType:
+      type: string
+      enum:
+      - String
+      - Json
+    SemanticGroupDiff:
+      type: object
+      required:
+      - additions
+      - modifications
+      - unchanged
+      properties:
+        additions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldAlias'
+          description: Groups that exist in the imported JSON but not in DB (new)
+        modifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/SemanticGroupModification'
+          description: Groups that exist in both but have different content
+        unchanged:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldAlias'
+          description: Groups that are identical in both
+    Aggregation:
+      type: object
+      required:
+      - function
+      - having
+      properties:
+        function:
+          $ref: '#/components/schemas/AggFunction'
+        group_by:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        having:
+          $ref: '#/components/schemas/Condition'
+    AnomalyAlertFields:
+      type: object
+      description: Anomaly-detection-specific fields for `CreateAlertRequestBody`.
+      required:
+      - query_mode
+      - detection_function
+      - histogram_interval
+      - schedule_interval
+      - detection_window_seconds
+      properties:
+        alert_enabled:
+          type:
+          - boolean
+          - 'null'
+        custom_sql:
+          type:
+          - string
+          - 'null'
+        detection_function:
+          type: string
+          description: Aggregation function, e.g. "count(*)" or "avg(cpu_usage)"
+        detection_function_field:
+          type:
+          - string
+          - 'null'
+          description: 'Field to aggregate (required for avg/sum/min/max/pXX, ignored for count).
+
+            Combined with `detection_function` into "avg(field)" before saving.'
+        detection_window_seconds:
+          type: integer
+          format: int64
+          description: Look-back window per detection run, in seconds
+        filters: {}
+        histogram_interval:
+          type: string
+          description: SQL histogram bucket size, e.g. "5m", "1h"
+        percentile:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: 'Percentile threshold (50.0–99.9). Default: 97.0
+
+            Also accepts the name `threshold` (integer, e.g. 97) for API convenience.'
+        query_mode:
+          type: string
+          description: '"filters" or "custom_sql"'
+        rcf_num_trees:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        rcf_shingle_size:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        rcf_tree_size:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        retrain_interval_days:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 0 = never retrain automatically; otherwise days between retrains
+        schedule_interval:
+          type: string
+          description: How often the detection job fires, e.g. "1h", "30m"
+        training_window_days:
+          type:
+          - integer
+          - 'null'
+          format: int32
     AlertTypeFilter:
       type: string
       description: Filters the alert list by alert type (scheduled, realtime, anomaly detection, or all).
@@ -2013,24 +2198,399 @@ components:
       - scheduled
       - realtime
       - anomaly_detection
-    GroupingConfig:
+    SendStrategy:
+      type: string
+      description: Strategy for sending grouped alert notifications
+      enum:
+      - first_with_count
+      - summary
+      - all
+    DeduplicationConfig:
       type: object
-      description: Configuration for alert grouping
+      description: 'Per-alert deduplication configuration (from main branch)
+
+
+        This is stored on each Alert and specifies which fields to use for fingerprinting.
+
+        This matches the structure from the main branch exactly.
+
+        Configuration for alert deduplication'
       properties:
         enabled:
           type: boolean
-          description: Enable alert grouping
-        group_wait_seconds:
+          description: Enable/disable deduplication
+          default: false
+        fingerprint_fields:
+          type: array
+          items:
+            type: string
+          description: 'Fields from query results to use for fingerprinting
+
+            If empty, auto-detect based on query type:
+
+            - Custom: Fields from query conditions
+
+            - SQL: GROUP BY columns
+
+            - PromQL: All label dimensions'
+          default: []
+        grouping:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/GroupingConfig'
+            description: Optional alert grouping configuration
+          default: null
+        time_window_minutes:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'Time window in minutes for deduplication
+
+            If None, defaults to 2x alert frequency'
+          default: null
+    HTTPOutputFormat:
+      oneOf:
+      - type: string
+        enum:
+        - json
+      - type: string
+        enum:
+        - ndjson
+      - type: string
+        enum:
+        - nestedevent
+      - type: object
+        required:
+        - esbulk
+        properties:
+          esbulk:
+            type: object
+            required:
+            - index
+            properties:
+              index:
+                type: string
+      - type: object
+        required:
+        - stringseparated
+        properties:
+          stringseparated:
+            type: object
+            required:
+            - separator
+            properties:
+              separator:
+                type: string
+    StreamType:
+      type: string
+      enum:
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
+    DedupSummaryResponse:
+      type: object
+      required:
+      - total_alerts
+      - alerts_with_dedup
+      - suppressions_total
+      - passed_total
+      - suppression_rate
+      - pending_batches
+      - timestamp
+      properties:
+        alerts_with_dedup:
+          type: integer
+          description: Number of alerts with deduplication enabled
+          minimum: 0
+        passed_total:
           type: integer
           format: int64
-          description: Initial wait time before sending first notification (seconds)
-        max_group_size:
+          description: Total alerts that passed dedup in time period
+        pending_batches:
           type: integer
-          description: Maximum number of alerts in a single group
+          format: int64
+          description: Current pending batches (grouping)
+        suppression_rate:
+          type: number
+          format: double
+          description: Suppression rate (0.0 to 1.0)
+        suppressions_total:
+          type: integer
+          format: int64
+          description: Total alerts suppressed in time period
+        timestamp:
+          type: integer
+          format: int64
+          description: Timestamp when data was collected
+        total_alerts:
+          type: integer
+          description: Total number of alerts in organization
           minimum: 0
-        send_strategy:
-          $ref: '#/components/schemas/SendStrategy'
-          description: How to send grouped notifications
+    HTTPType:
+      type: string
+      enum:
+      - post
+      - put
+      - get
+    AlertHistoryEntry:
+      type: object
+      required:
+      - timestamp
+      - alert_name
+      - org
+      - status
+      - is_realtime
+      - is_silenced
+      - start_time
+      - end_time
+      - retries
+      properties:
+        alert_name:
+          type: string
+        anomaly_count:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: Number of anomalies found in this evaluation run (anomaly detection only).
+        dedup_count:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        dedup_enabled:
+          type:
+          - boolean
+          - 'null'
+        dedup_suppressed:
+          type:
+          - boolean
+          - 'null'
+        delay_in_secs:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        end_time:
+          type: integer
+          format: int64
+        error:
+          type:
+          - string
+          - 'null'
+        evaluation_took_in_secs:
+          type:
+          - number
+          - 'null'
+          format: double
+        group_size:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        grouped:
+          type:
+          - boolean
+          - 'null'
+        is_partial:
+          type:
+          - boolean
+          - 'null'
+        is_realtime:
+          type: boolean
+        is_silenced:
+          type: boolean
+        org:
+          type: string
+        query_took:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        retries:
+          type: integer
+          format: int32
+        source_node:
+          type:
+          - string
+          - 'null'
+        start_time:
+          type: integer
+          format: int64
+        status:
+          type: string
+        success_response:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type: integer
+          format: int64
+    SearchEventType:
+      type: string
+      enum:
+      - ui
+      - dashboards
+      - reports
+      - alerts
+      - values
+      - other
+      - rum
+      - derivedstream
+      - searchjob
+      - download
+      - insights
+    SemanticGroupModification:
+      type: object
+      required:
+      - current
+      - proposed
+      properties:
+        current:
+          $ref: '#/components/schemas/FieldAlias'
+          description: Current version in DB
+        proposed:
+          $ref: '#/components/schemas/FieldAlias'
+          description: New version from import
+    TriggerCondition:
+      type: object
+      properties:
+        align_time:
+          type: boolean
+          default: false
+        cron:
+          type: string
+          default: ''
+        frequency:
+          type: integer
+          format: int64
+          description: (seconds)
+          default: 0
+        frequency_type:
+          oneOf:
+          - $ref: '#/components/schemas/FrequencyType'
+          default: minutes
+        operator:
+          oneOf:
+          - $ref: '#/components/schemas/Operator'
+          default: '='
+        period:
+          type: integer
+          format: int64
+          description: (minutes)
+          default: 0
+        silence:
+          type: integer
+          format: int64
+          description: (minutes)
+          default: 0
+        threshold:
+          type: integer
+          format: int64
+          default: 0
+        timezone:
+          type:
+          - string
+          - 'null'
+          default: null
+        tolerance_in_secs:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: (seconds)
+          default: null
+    UpdateAnomalyAlertFields:
+      type: object
+      description: Anomaly-detection-specific fields for `UpdateAlertRequestBody` (all optional).
+      properties:
+        alert_enabled:
+          type:
+          - boolean
+          - 'null'
+        custom_sql:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        detection_function:
+          type:
+          - string
+          - 'null'
+        detection_function_field:
+          type:
+          - string
+          - 'null'
+          description: Field to aggregate. Combined with `detection_function` into "avg(field)" before saving.
+        detection_window_seconds:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        enabled:
+          type:
+          - boolean
+          - 'null'
+        filters: {}
+        folder_id:
+          type:
+          - string
+          - 'null'
+        histogram_interval:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        owner:
+          type:
+          - string
+          - 'null'
+        percentile:
+          type:
+          - number
+          - 'null'
+          format: double
+        query_mode:
+          type:
+          - string
+          - 'null'
+        retrain_interval_days:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        schedule_interval:
+          type:
+          - string
+          - 'null'
+        training_window_days:
+          type:
+          - integer
+          - 'null'
+          format: int32
+    Operator:
+      type: string
+      enum:
+      - '='
+      - '!='
+      - '>'
+      - '>='
+      - <
+      - <=
+      - contains
+      - not_contains
     QueryCondition:
       type: object
       properties:
@@ -2070,98 +2630,88 @@ components:
           type:
           - string
           - 'null'
-    ListAlertsResponseBodyItem:
+    GlobalDeduplicationConfig:
       type: object
-      description: 'An item in the list returned by the `ListAlerts` endpoint.
+      description: 'Organization-level deduplication configuration (Global settings)
 
 
-        For `scheduled` and `realtime` alert types, `condition` and
+        This configuration is stored at the organization level and defines:
 
-        `trigger_condition` are always present. For `anomaly_detection` items they
+        - Whether deduplication is enabled globally
 
-        are absent; use `last_trained_at` and `status` instead.'
-      required:
-      - alert_id
-      - folder_id
-      - folder_name
-      - name
-      - alert_type
-      - enabled
-      - is_real_time
+        - Semantic field groups that map field name variations to canonical dimensions
+
+        - Cross-alert deduplication based on shared semantic dimensions
+
+        - Default time window for deduplication
+
+
+        Per-alert fingerprint fields are stored in the Alert.deduplication field.'
       properties:
-        alert_id:
-          type: string
-        alert_type:
-          type: string
-          description: 'Discriminator: "scheduled" | "realtime" | "anomaly_detection"'
-        condition:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/QueryCondition'
-        description:
-          type:
-          - string
-          - 'null'
+        alert_dedup_enabled:
+          type: boolean
+          description: 'Enable cross-alert deduplication based on shared semantic dimensions
+
+
+            When true, alerts from DIFFERENT alert rules that share semantic dimensions
+
+            will be deduplicated if one already fired recently.
+
+
+            Example:
+
+            - Alert A fires: {host: "srv01", service: "api"}
+
+            - Alert B fires 30s later: {host: "srv01", region: "us-east"}
+
+            - If cross_alert_dedup=true: Alert B suppressed (shares "host" dimension)
+
+            - If cross_alert_dedup=false: Both sent (per-alert dedup only)'
+          default: false
+        alert_fingerprint_groups:
+          type: array
+          items:
+            type: string
+          description: 'Semantic group IDs to use for cross-alert fingerprinting
+
+
+            When cross_alert_dedup is enabled, these semantic group IDs are used
+
+            to generate fingerprints across all alerts (instead of per-alert fingerprint_fields).
+
+            Must reference IDs from semantic field groups (stored in system_settings).
+
+
+            Example: ["host", "service"] means fingerprint = hash(host_value + service_value)
+
+            Required when cross_alert_dedup is true.'
+          default: []
         enabled:
           type: boolean
-        folder_id:
-          type: string
-        folder_name:
-          type: string
-        is_real_time:
-          type: boolean
-        last_error:
-          type:
-          - string
-          - 'null'
-          description: Last error message from training or detection. Only present for `anomaly_detection` items.
-        last_satisfied_at:
+          description: Enable/disable deduplication globally for this organization
+          default: false
+        time_window_minutes:
           type:
           - integer
           - 'null'
-          format: int64
-        last_trained_at:
-          type:
-          - integer
-          - 'null'
-          format: int64
-          description: 'Timestamp (µs) when the anomaly model was last successfully trained.
+          format: int32
+          description: 'Default time window in minutes for deduplication
 
-            Only present for `anomaly_detection` items.'
-        last_triggered_at:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        name:
-          type: string
-        owner:
-          type:
-          - string
-          - 'null'
-        status:
-          type:
-          - string
-          - 'null'
-          description: 'Scheduler status string. Only present for `anomaly_detection` items.
 
-            Values: "waiting" | "ready" | "training" | "failed" | "disabled"'
-        trigger_condition:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/TriggerCondition'
-    SemanticGroupModification:
-      type: object
-      required:
-      - current
-      - proposed
-      properties:
-        current:
-          $ref: '#/components/schemas/FieldAlias'
-          description: Current version in DB
-        proposed:
-          $ref: '#/components/schemas/FieldAlias'
-          description: New version from import
+            Alerts with the same fingerprint within this window are suppressed.
+
+            If None, defaults to 2x the alert evaluation frequency.
+
+            Can be overridden per-alert.'
+          default: null
+        upgrade_window_minutes:
+          type: integer
+          format: int64
+          description: 'Time window for hierarchical incident upgrade (minutes)
+
+            Incidents created within this window can be upgraded from weak to strong correlation keys.'
+          default: 0
+          minimum: 0
     Alert:
       type: object
       properties:
@@ -2301,498 +2851,110 @@ components:
           type: string
           format: date-time
           default: null
-    FieldAlias:
+    GroupingConfig:
       type: object
-      description: "Field alias group — defines a set of field names that represent the same concept.\n\nUsed for:\n- Mapping equivalent field names across logs, traces, and metrics (e.g., `service`,\n  `service.name`, `app` all mean \"service identity\")\n- Alert deduplication fingerprinting\n- Populating `ServiceIdentityConfig` and `IncidentGroupingConfig` via the recommendations UI\n\n# Field Name Overlaps\n\nField names can appear in multiple semantic groups. When extracting dimensions,\nthe **first-defined group** takes precedence. This allows flexible configurations\nwhere a field like \"service\" can have different meanings in different contexts.\n\nExample:\n```\n// Group 1: service-primary (defined first)\n//   field_names: [\"service\", \"primary_service\"]\n//\n// Group 2: service-backup (defined second)\n//   field_names: [\"service\", \"backup_service\"]\n//\n// When extracting dimensions from {\"service\": \"api\"}:\n// → Matches \"service-primary\" group (first occurrence wins)\n```"
-      required:
-      - id
-      - display
-      - fields
-      properties:
-        display:
-          type: string
-          description: Human-readable display name (e.g., "Host", "K8s Cluster")
-        fields:
-          type: array
-          items:
-            type: string
-          description: 'List of field names that are equivalent (e.g., ["host", "hostname", "node"])
-
-
-            Note: Field names can overlap with other groups. First-defined group wins.'
-        group:
-          type:
-          - string
-          - 'null'
-          description: 'Category/group this semantic field belongs to (e.g., "Common", "Kubernetes", "AWS", "GCP",
-
-            "Azure") Used for UI organization and preset templates'
-        id:
-          type: string
-          description: Unique identifier (lowercase, dash-separated, e.g., "host", "k8s-cluster")
-        is_workload_type:
-          type: boolean
-          description: 'When true, this alias is a workload-type dimension used to build identity sets.
-
-            Aliases with this flag are grouped by their `group` field to form `IdentitySet`
-
-            entries with `distinguish_by` populated from those alias IDs.
-
-            Aliases without this flag (HTTP, Database, System, etc.) are never used as
-
-            identity set discriminators.'
-    SearchEventType:
-      type: string
-      enum:
-      - ui
-      - dashboards
-      - reports
-      - alerts
-      - values
-      - other
-      - rum
-      - derivedstream
-      - searchjob
-      - download
-      - insights
-    DeduplicationConfig:
-      type: object
-      description: 'Per-alert deduplication configuration (from main branch)
-
-
-        This is stored on each Alert and specifies which fields to use for fingerprinting.
-
-        This matches the structure from the main branch exactly.
-
-        Configuration for alert deduplication'
+      description: Configuration for alert grouping
       properties:
         enabled:
           type: boolean
-          description: Enable/disable deduplication
-          default: false
-        fingerprint_fields:
-          type: array
-          items:
-            type: string
-          description: 'Fields from query results to use for fingerprinting
+          description: Enable alert grouping
+        group_wait_seconds:
+          type: integer
+          format: int64
+          description: Initial wait time before sending first notification (seconds)
+        max_group_size:
+          type: integer
+          description: Maximum number of alerts in a single group
+          minimum: 0
+        send_strategy:
+          $ref: '#/components/schemas/SendStrategy'
+          description: How to send grouped notifications
+    QueryType:
+      type: string
+      enum:
+      - custom
+      - sql
+      - promql
+    ListAlertsResponseBodyItem:
+      type: object
+      description: 'An item in the list returned by the `ListAlerts` endpoint.
 
-            If empty, auto-detect based on query type:
 
-            - Custom: Fields from query conditions
+        For `scheduled` and `realtime` alert types, `condition` and
 
-            - SQL: GROUP BY columns
+        `trigger_condition` are always present. For `anomaly_detection` items they
 
-            - PromQL: All label dimensions'
-          default: []
-        grouping:
+        are absent; use `last_trained_at` and `status` instead.'
+      required:
+      - alert_id
+      - folder_id
+      - folder_name
+      - name
+      - alert_type
+      - enabled
+      - is_real_time
+      properties:
+        alert_id:
+          type: string
+        alert_type:
+          type: string
+          description: 'Discriminator: "scheduled" | "realtime" | "anomaly_detection"'
+        condition:
           oneOf:
           - type: 'null'
-          - $ref: '#/components/schemas/GroupingConfig'
-            description: Optional alert grouping configuration
-          default: null
-        time_window_minutes:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          description: 'Time window in minutes for deduplication
-
-            If None, defaults to 2x alert frequency'
-          default: null
-    AlertHistoryEntry:
-      type: object
-      required:
-      - timestamp
-      - alert_name
-      - org
-      - status
-      - is_realtime
-      - is_silenced
-      - start_time
-      - end_time
-      - retries
-      properties:
-        alert_name:
-          type: string
-        anomaly_count:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          description: Number of anomalies found in this evaluation run (anomaly detection only).
-        dedup_count:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        dedup_enabled:
-          type:
-          - boolean
-          - 'null'
-        dedup_suppressed:
-          type:
-          - boolean
-          - 'null'
-        delay_in_secs:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        end_time:
-          type: integer
-          format: int64
-        error:
-          type:
-          - string
-          - 'null'
-        evaluation_took_in_secs:
-          type:
-          - number
-          - 'null'
-          format: double
-        group_size:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        grouped:
-          type:
-          - boolean
-          - 'null'
-        is_partial:
-          type:
-          - boolean
-          - 'null'
-        is_realtime:
-          type: boolean
-        is_silenced:
-          type: boolean
-        org:
-          type: string
-        query_took:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        retries:
-          type: integer
-          format: int32
-        source_node:
-          type:
-          - string
-          - 'null'
-        start_time:
-          type: integer
-          format: int64
-        status:
-          type: string
-        success_response:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type: integer
-          format: int64
-    Aggregation:
-      type: object
-      required:
-      - function
-      - having
-      properties:
-        function:
-          $ref: '#/components/schemas/AggFunction'
-        group_by:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        having:
-          $ref: '#/components/schemas/Condition'
-    Condition:
-      type: object
-      required:
-      - column
-      - operator
-      - value
-      properties:
-        column:
-          type: string
-        ignore_case:
-          type: boolean
-        operator:
-          $ref: '#/components/schemas/Operator'
-        value:
-          type: object
-    DedupSummaryResponse:
-      type: object
-      required:
-      - total_alerts
-      - alerts_with_dedup
-      - suppressions_total
-      - passed_total
-      - suppression_rate
-      - pending_batches
-      - timestamp
-      properties:
-        alerts_with_dedup:
-          type: integer
-          description: Number of alerts with deduplication enabled
-          minimum: 0
-        passed_total:
-          type: integer
-          format: int64
-          description: Total alerts that passed dedup in time period
-        pending_batches:
-          type: integer
-          format: int64
-          description: Current pending batches (grouping)
-        suppression_rate:
-          type: number
-          format: double
-          description: Suppression rate (0.0 to 1.0)
-        suppressions_total:
-          type: integer
-          format: int64
-          description: Total alerts suppressed in time period
-        timestamp:
-          type: integer
-          format: int64
-          description: Timestamp when data was collected
-        total_alerts:
-          type: integer
-          description: Total number of alerts in organization
-          minimum: 0
-    CompareHistoricData:
-      type: object
-      required:
-      - offSet
-      properties:
-        offSet:
-          type: string
-    HTTPOutputFormat:
-      oneOf:
-      - type: string
-        enum:
-        - json
-      - type: string
-        enum:
-        - ndjson
-      - type: string
-        enum:
-        - nestedevent
-      - type: object
-        required:
-        - esbulk
-        properties:
-          esbulk:
-            type: object
-            required:
-            - index
-            properties:
-              index:
-                type: string
-      - type: object
-        required:
-        - stringseparated
-        properties:
-          stringseparated:
-            type: object
-            required:
-            - separator
-            properties:
-              separator:
-                type: string
-    SendStrategy:
-      type: string
-      description: Strategy for sending grouped alert notifications
-      enum:
-      - first_with_count
-      - summary
-      - all
-    FrequencyType:
-      type: string
-      enum:
-      - cron
-      - minutes
-    HTTPType:
-      type: string
-      enum:
-      - post
-      - put
-      - get
-    Operator:
-      type: string
-      enum:
-      - '='
-      - '!='
-      - '>'
-      - '>='
-      - <
-      - <=
-      - contains
-      - not_contains
-    RowTemplateType:
-      type: string
-      enum:
-      - String
-      - Json
-    GlobalDeduplicationConfig:
-      type: object
-      description: 'Organization-level deduplication configuration (Global settings)
-
-
-        This configuration is stored at the organization level and defines:
-
-        - Whether deduplication is enabled globally
-
-        - Semantic field groups that map field name variations to canonical dimensions
-
-        - Cross-alert deduplication based on shared semantic dimensions
-
-        - Default time window for deduplication
-
-
-        Per-alert fingerprint fields are stored in the Alert.deduplication field.'
-      properties:
-        alert_dedup_enabled:
-          type: boolean
-          description: 'Enable cross-alert deduplication based on shared semantic dimensions
-
-
-            When true, alerts from DIFFERENT alert rules that share semantic dimensions
-
-            will be deduplicated if one already fired recently.
-
-
-            Example:
-
-            - Alert A fires: {host: "srv01", service: "api"}
-
-            - Alert B fires 30s later: {host: "srv01", region: "us-east"}
-
-            - If cross_alert_dedup=true: Alert B suppressed (shares "host" dimension)
-
-            - If cross_alert_dedup=false: Both sent (per-alert dedup only)'
-          default: false
-        alert_fingerprint_groups:
-          type: array
-          items:
-            type: string
-          description: 'Semantic group IDs to use for cross-alert fingerprinting
-
-
-            When cross_alert_dedup is enabled, these semantic group IDs are used
-
-            to generate fingerprints across all alerts (instead of per-alert fingerprint_fields).
-
-            Must reference IDs from semantic field groups (stored in system_settings).
-
-
-            Example: ["host", "service"] means fingerprint = hash(host_value + service_value)
-
-            Required when cross_alert_dedup is true.'
-          default: []
-        enabled:
-          type: boolean
-          description: Enable/disable deduplication globally for this organization
-          default: false
-        time_window_minutes:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          description: 'Default time window in minutes for deduplication
-
-
-            Alerts with the same fingerprint within this window are suppressed.
-
-            If None, defaults to 2x the alert evaluation frequency.
-
-            Can be overridden per-alert.'
-          default: null
-        upgrade_window_minutes:
-          type: integer
-          format: int64
-          description: 'Time window for hierarchical incident upgrade (minutes)
-
-            Incidents created within this window can be upgraded from weak to strong correlation keys.'
-          default: 0
-          minimum: 0
-    UpdateAnomalyAlertFields:
-      type: object
-      description: Anomaly-detection-specific fields for `UpdateAlertRequestBody` (all optional).
-      properties:
-        alert_enabled:
-          type:
-          - boolean
-          - 'null'
-        custom_sql:
-          type:
-          - string
-          - 'null'
+          - $ref: '#/components/schemas/QueryCondition'
         description:
           type:
           - string
           - 'null'
-        detection_function:
+        enabled:
+          type: boolean
+        folder_id:
+          type: string
+        folder_name:
+          type: string
+        is_real_time:
+          type: boolean
+        last_error:
           type:
           - string
           - 'null'
-        detection_function_field:
-          type:
-          - string
-          - 'null'
-          description: Field to aggregate. Combined with `detection_function` into "avg(field)" before saving.
-        detection_window_seconds:
+          description: Last error message from training or detection. Only present for `anomaly_detection` items.
+        last_satisfied_at:
           type:
           - integer
           - 'null'
           format: int64
-        enabled:
+        last_trained_at:
           type:
-          - boolean
+          - integer
           - 'null'
-        filters: {}
-        folder_id:
+          format: int64
+          description: 'Timestamp (µs) when the anomaly model was last successfully trained.
+
+            Only present for `anomaly_detection` items.'
+        last_triggered_at:
           type:
-          - string
+          - integer
           - 'null'
-        histogram_interval:
-          type:
-          - string
-          - 'null'
+          format: int64
         name:
-          type:
-          - string
-          - 'null'
+          type: string
         owner:
           type:
           - string
           - 'null'
-        percentile:
-          type:
-          - number
-          - 'null'
-          format: double
-        query_mode:
+        status:
           type:
           - string
           - 'null'
-        retrain_interval_days:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        schedule_interval:
-          type:
-          - string
-          - 'null'
-        training_window_days:
-          type:
-          - integer
-          - 'null'
-          format: int32
+          description: 'Scheduler status string. Only present for `anomaly_detection` items.
+
+            Values: "waiting" | "ready" | "training" | "failed" | "disabled"'
+        trigger_condition:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/TriggerCondition'
     GenerateSqlMetadata:
       type: object
       description: Metadata about the generated SQL query.
@@ -2810,20 +2972,21 @@ components:
         has_group_by:
           type: boolean
           description: Whether GROUP BY is present
-    AggFunction:
-      type: string
-      enum:
-      - avg
-      - min
-      - max
-      - sum
-      - count
-      - median
-      - p50
-      - p75
-      - p90
-      - p95
-      - p99
+    Condition:
+      type: object
+      required:
+      - column
+      - operator
+      - value
+      properties:
+        column:
+          type: string
+        ignore_case:
+          type: boolean
+        operator:
+          $ref: '#/components/schemas/Operator'
+        value:
+          type: object
     DestinationType:
       type: string
       enum:
@@ -2831,169 +2994,6 @@ components:
       - email
       - sns
       - action
-    TriggerCondition:
-      type: object
-      properties:
-        align_time:
-          type: boolean
-          default: false
-        cron:
-          type: string
-          default: ''
-        frequency:
-          type: integer
-          format: int64
-          description: (seconds)
-          default: 0
-        frequency_type:
-          oneOf:
-          - $ref: '#/components/schemas/FrequencyType'
-          default: minutes
-        operator:
-          oneOf:
-          - $ref: '#/components/schemas/Operator'
-          default: '='
-        period:
-          type: integer
-          format: int64
-          description: (minutes)
-          default: 0
-        silence:
-          type: integer
-          format: int64
-          description: (minutes)
-          default: 0
-        threshold:
-          type: integer
-          format: int64
-          default: 0
-        timezone:
-          type:
-          - string
-          - 'null'
-          default: null
-        tolerance_in_secs:
-          type:
-          - integer
-          - 'null'
-          format: int64
-          description: (seconds)
-          default: null
-    SemanticGroupDiff:
-      type: object
-      required:
-      - additions
-      - modifications
-      - unchanged
-      properties:
-        additions:
-          type: array
-          items:
-            $ref: '#/components/schemas/FieldAlias'
-          description: Groups that exist in the imported JSON but not in DB (new)
-        modifications:
-          type: array
-          items:
-            $ref: '#/components/schemas/SemanticGroupModification'
-          description: Groups that exist in both but have different content
-        unchanged:
-          type: array
-          items:
-            $ref: '#/components/schemas/FieldAlias'
-          description: Groups that are identical in both
-    QueryType:
-      type: string
-      enum:
-      - custom
-      - sql
-      - promql
-    StreamType:
-      type: string
-      enum:
-      - logs
-      - metrics
-      - traces
-      - service_graph
-      - enrichment_tables
-      - file_list
-      - metadata
-      - index
-    AnomalyAlertFields:
-      type: object
-      description: Anomaly-detection-specific fields for `CreateAlertRequestBody`.
-      required:
-      - query_mode
-      - detection_function
-      - histogram_interval
-      - schedule_interval
-      - detection_window_seconds
-      properties:
-        alert_enabled:
-          type:
-          - boolean
-          - 'null'
-        custom_sql:
-          type:
-          - string
-          - 'null'
-        detection_function:
-          type: string
-          description: Aggregation function, e.g. "count(*)" or "avg(cpu_usage)"
-        detection_function_field:
-          type:
-          - string
-          - 'null'
-          description: 'Field to aggregate (required for avg/sum/min/max/pXX, ignored for count).
-
-            Combined with `detection_function` into "avg(field)" before saving.'
-        detection_window_seconds:
-          type: integer
-          format: int64
-          description: Look-back window per detection run, in seconds
-        filters: {}
-        histogram_interval:
-          type: string
-          description: SQL histogram bucket size, e.g. "5m", "1h"
-        percentile:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: 'Percentile threshold (50.0–99.9). Default: 97.0
-
-            Also accepts the name `threshold` (integer, e.g. 97) for API convenience.'
-        query_mode:
-          type: string
-          description: '"filters" or "custom_sql"'
-        rcf_num_trees:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        rcf_shingle_size:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        rcf_tree_size:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        retrain_interval_days:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          description: 0 = never retrain automatically; otherwise days between retrains
-        schedule_interval:
-          type: string
-          description: How often the detection job fires, e.g. "1h", "30m"
-        training_window_days:
-          type:
-          - integer
-          - 'null'
-          format: int32
   securitySchemes:
     Authorization:
       type: apiKey

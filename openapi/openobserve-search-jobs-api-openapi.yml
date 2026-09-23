@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: openobserve Actions Search Jobs API
-  description: OpenObserve API documents [https://openobserve.ai/docs/](https://openobserve.ai/docs/)
+  title: openobserve Search Jobs API
+  description: OpenObserve API documents https://openobserve.ai/docs/
   contact:
     name: OpenObserve
     url: https://openobserve.ai/
@@ -422,55 +422,6 @@ paths:
         operation: update
 components:
   schemas:
-    SearchEventType:
-      type: string
-      enum:
-      - ui
-      - dashboards
-      - reports
-      - alerts
-      - values
-      - other
-      - rum
-      - derivedstream
-      - searchjob
-      - download
-      - insights
-    SearchEventContext:
-      type: object
-      properties:
-        alert_key:
-          type:
-          - string
-          - 'null'
-        alert_name:
-          type:
-          - string
-          - 'null'
-        dashboard_id:
-          type:
-          - string
-          - 'null'
-        dashboard_name:
-          type:
-          - string
-          - 'null'
-        derived_stream_key:
-          type:
-          - string
-          - 'null'
-        folder_id:
-          type:
-          - string
-          - 'null'
-        folder_name:
-          type:
-          - string
-          - 'null'
-        report_id:
-          type:
-          - string
-          - 'null'
     RequestEncoding:
       type: string
       enum:
@@ -536,6 +487,55 @@ components:
           type: boolean
         uses_zo_fn:
           type: boolean
+    SearchEventType:
+      type: string
+      enum:
+      - ui
+      - dashboards
+      - reports
+      - alerts
+      - values
+      - other
+      - rum
+      - derivedstream
+      - searchjob
+      - download
+      - insights
+    SearchEventContext:
+      type: object
+      properties:
+        alert_key:
+          type:
+          - string
+          - 'null'
+        alert_name:
+          type:
+          - string
+          - 'null'
+        dashboard_id:
+          type:
+          - string
+          - 'null'
+        dashboard_name:
+          type:
+          - string
+          - 'null'
+        derived_stream_key:
+          type:
+          - string
+          - 'null'
+        folder_id:
+          type:
+          - string
+          - 'null'
+        folder_name:
+          type:
+          - string
+          - 'null'
+        report_id:
+          type:
+          - string
+          - 'null'
   securitySchemes:
     Authorization:
       type: apiKey
