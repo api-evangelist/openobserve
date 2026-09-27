@@ -1101,11 +1101,29 @@ paths:
         enabled: false
 components:
   schemas:
-    ReportEmailAttachmentType:
+    ReportFrequencyType:
       type: string
       enum:
-      - standard
-      - inline
+      - once
+      - hours
+      - days
+      - weeks
+      - months
+      - cron
+    ReportAttachmentDimensions:
+      type: object
+      required:
+      - width
+      - height
+      properties:
+        height:
+          type: integer
+          format: int32
+          minimum: 0
+        width:
+          type: integer
+          format: int32
+          minimum: 0
     BulkDeleteResponse:
       type: object
       required:
@@ -1124,47 +1142,15 @@ components:
           type: array
           items:
             type: string
-    ReportFrequency:
-      type: object
-      properties:
-        align_time:
-          type: boolean
-        cron:
-          type: string
-          description: Cron expression
-        interval:
-          type: integer
-          format: int64
-          description: Frequency interval in the `frequency_type` unit
-        type:
-          $ref: '#/components/schemas/ReportFrequencyType'
-    ReportFrequencyType:
-      type: string
-      enum:
-      - once
-      - hours
-      - days
-      - weeks
-      - months
-      - cron
-    ReportTimerange:
+    BulkDeleteRequest:
       type: object
       required:
-      - type
-      - period
-      - from
-      - to
+      - ids
       properties:
-        from:
-          type: integer
-          format: int64
-        period:
-          type: string
-        to:
-          type: integer
-          format: int64
-        type:
-          $ref: '#/components/schemas/ReportTimerangeType'
+        ids:
+          type: array
+          items:
+            type: string
     ReportDashboard:
       type: object
       required:
@@ -1200,47 +1186,48 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ReportDashboardVariable'
-    ReportDestination:
-      oneOf:
-      - type: object
-        required:
-        - email
-        properties:
-          email:
-            type: string
-    ReportMediaType:
+    ReportFrequency:
+      type: object
+      properties:
+        align_time:
+          type: boolean
+        cron:
+          type: string
+          description: Cron expression
+        interval:
+          type: integer
+          format: int64
+          description: Frequency interval in the `frequency_type` unit
+        type:
+          $ref: '#/components/schemas/ReportFrequencyType'
+    ReportEmailAttachmentType:
       type: string
       enum:
-      - pdf
-      - png
+      - standard
+      - inline
+    ReportTimerange:
+      type: object
+      required:
+      - type
+      - period
+      - from
+      - to
+      properties:
+        from:
+          type: integer
+          format: int64
+        period:
+          type: string
+        to:
+          type: integer
+          format: int64
+        type:
+          $ref: '#/components/schemas/ReportTimerangeType'
     ReportTimerangeType:
       type: string
       enum:
       - relative
       - absolute
-    BulkDeleteRequest:
-      type: object
-      required:
-      - ids
-      properties:
-        ids:
-          type: array
-          items:
-            type: string
-    ReportAttachmentDimensions:
-      type: object
-      required:
-      - width
-      - height
-      properties:
-        height:
-          type: integer
-          format: int32
-          minimum: 0
-        width:
-          type: integer
-          format: int32
-          minimum: 0
     ReportDashboardVariable:
       type: object
       required:
@@ -1255,6 +1242,19 @@ components:
           type: string
         value:
           type: string
+    ReportMediaType:
+      type: string
+      enum:
+      - pdf
+      - png
+    ReportDestination:
+      oneOf:
+      - type: object
+        required:
+        - email
+        properties:
+          email:
+            type: string
   securitySchemes:
     Authorization:
       type: apiKey

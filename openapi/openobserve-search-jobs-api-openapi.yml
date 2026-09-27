@@ -422,11 +422,6 @@ paths:
         operation: update
 components:
   schemas:
-    RequestEncoding:
-      type: string
-      enum:
-      - base64
-      - Empty
     SearchQuery:
       type: object
       required:
@@ -501,6 +496,11 @@ components:
       - searchjob
       - download
       - insights
+    RequestEncoding:
+      type: string
+      enum:
+      - base64
+      - Empty
     SearchEventContext:
       type: object
       properties:

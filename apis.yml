@@ -42,7 +42,7 @@ tags:
   - Metrics
   - Traces
   - RUM
-  - Open-Source
+  - Open Source
 tags_raw:
   - Observability
   - Logs
@@ -50,6 +50,7 @@ tags_raw:
   - Traces
   - RUM
   - Open Source
+  - Open-Source
 created: '2026-03-25'
 modified: '2026-05-19'
 specificationVersion: '0.23'
@@ -568,8 +569,6 @@ apis:
   humanURL: https://openobserve.ai
   baseURL: https://api.openobserve.ai
   tags:
-  - Rate-Limit
-  tags_raw:
   - Rate Limit
   properties:
   - type: OpenAPI

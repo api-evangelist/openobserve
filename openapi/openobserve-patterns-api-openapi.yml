@@ -70,6 +70,42 @@ paths:
         category: patterns
 components:
   schemas:
+    SearchRequest:
+      type: object
+      required:
+      - query
+      properties:
+        clear_cache:
+          type: boolean
+        clusters:
+          type: array
+          items:
+            type: string
+        encoding:
+          $ref: '#/components/schemas/RequestEncoding'
+        local_mode:
+          type:
+          - boolean
+          - 'null'
+        query:
+          $ref: '#/components/schemas/SearchQuery'
+        regions:
+          type: array
+          items:
+            type: string
+        search_event_context:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/SearchEventContext'
+        search_type:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/SearchEventType'
+        timeout:
+          type: integer
+          format: int64
+        use_cache:
+          type: boolean
     SearchQuery:
       type: object
       required:
@@ -130,61 +166,6 @@ components:
           type: boolean
         uses_zo_fn:
           type: boolean
-    SearchEventType:
-      type: string
-      enum:
-      - ui
-      - dashboards
-      - reports
-      - alerts
-      - values
-      - other
-      - rum
-      - derivedstream
-      - searchjob
-      - download
-      - insights
-    SearchRequest:
-      type: object
-      required:
-      - query
-      properties:
-        clear_cache:
-          type: boolean
-        clusters:
-          type: array
-          items:
-            type: string
-        encoding:
-          $ref: '#/components/schemas/RequestEncoding'
-        local_mode:
-          type:
-          - boolean
-          - 'null'
-        query:
-          $ref: '#/components/schemas/SearchQuery'
-        regions:
-          type: array
-          items:
-            type: string
-        search_event_context:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/SearchEventContext'
-        search_type:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/SearchEventType'
-        timeout:
-          type: integer
-          format: int64
-        use_cache:
-          type: boolean
-    RequestEncoding:
-      type: string
-      enum:
-      - base64
-      - Empty
     SearchEventContext:
       type: object
       properties:
@@ -220,6 +201,25 @@ components:
           type:
           - string
           - 'null'
+    SearchEventType:
+      type: string
+      enum:
+      - ui
+      - dashboards
+      - reports
+      - alerts
+      - values
+      - other
+      - rum
+      - derivedstream
+      - searchjob
+      - download
+      - insights
+    RequestEncoding:
+      type: string
+      enum:
+      - base64
+      - Empty
   securitySchemes:
     Authorization:
       type: apiKey

@@ -778,11 +778,6 @@ paths:
         category: pipelines
 components:
   schemas:
-    FrequencyType:
-      type: string
-      enum:
-      - cron
-      - minutes
     AggFunction:
       type: string
       enum:
@@ -797,131 +792,70 @@ components:
       - p90
       - p95
       - p99
-    StreamParams:
+    FrequencyType:
+      type: string
+      enum:
+      - cron
+      - minutes
+    TriggerCondition:
       type: object
       properties:
-        org_id:
+        align_time:
+          type: boolean
+          default: false
+        cron:
           type: string
           default: ''
-        stream_name:
-          type: string
-          default: ''
-        stream_type:
+        frequency:
+          type: integer
+          format: int64
+          description: (seconds)
+          default: 0
+        frequency_type:
           oneOf:
-          - $ref: '#/components/schemas/StreamType'
-          default: logs
-    CompareHistoricData:
-      type: object
-      required:
-      - offSet
-      properties:
-        offSet:
-          type: string
-    Node:
-      type: object
-      required:
-      - id
-      - data
-      - position
-      - io_type
-      properties:
-        data:
-          type: object
-          description: "Node configuration. Structure depends on node_type:\n- stream: { \"node_type\": \"stream\", \"org_id\": \"org\", \"stream_name\": \"name\", \"stream_type\":\n  \"logs\"|\"metrics\"|\"traces\" }\n- function: { \"node_type\": \"function\", \"name\": \"func_name\", \"after_flatten\": bool }\n- condition: { \"node_type\": \"condition\", \"conditions\": {...} }\n- query: { \"node_type\": \"query\", \"org_id\": \"org\", \"stream_type\": \"logs\", \"query_condition\":\n  {...}, \"trigger_condition\": {...} }\n- remote_stream: { \"node_type\": \"remote_stream\", \"org_id\": \"org\", \"destination_name\":\n  \"dest\" }"
-        id:
-          type: string
-          description: Unique identifier for the node (use UUID format)
-        io_type:
-          type: string
-          description: 'Node role in the pipeline. MUST be one of:
-
-            - "input": Source stream node (first node in pipeline)
-
-            - "output": Destination stream node (last node in pipeline)
-
-            - "default": Processing node (function, condition, etc.)'
-          example: input
-        meta:
+          - $ref: '#/components/schemas/FrequencyType'
+          default: minutes
+        operator:
+          oneOf:
+          - $ref: '#/components/schemas/Operator'
+          default: '='
+        period:
+          type: integer
+          format: int64
+          description: (minutes)
+          default: 0
+        silence:
+          type: integer
+          format: int64
+          description: (minutes)
+          default: 0
+        threshold:
+          type: integer
+          format: int64
+          default: 0
+        timezone:
           type:
-          - object
+          - string
           - 'null'
-          additionalProperties:
-            type: string
-          propertyNames:
-            type: string
-        position:
-          $ref: '#/components/schemas/Position'
-          description: Visual position for UI rendering
-        style:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/NodeStyle'
-    PipelineHistoryEntry:
-      type: object
-      required:
-      - timestamp
-      - pipeline_name
-      - org
-      - status
-      - is_realtime
-      - is_silenced
-      - start_time
-      - end_time
-      - retries
-      properties:
-        delay_in_secs:
+          default: null
+        tolerance_in_secs:
           type:
           - integer
           - 'null'
           format: int64
-        end_time:
-          type: integer
-          format: int64
-        error:
-          type:
-          - string
-          - 'null'
-        evaluation_took_in_secs:
-          type:
-          - number
-          - 'null'
-          format: double
-        is_partial:
-          type:
-          - boolean
-          - 'null'
-        is_realtime:
-          type: boolean
-        is_silenced:
-          type: boolean
-        org:
-          type: string
-        pipeline_name:
-          type: string
-        query_took:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        retries:
-          type: integer
-          format: int32
-        source_node:
-          type:
-          - string
-          - 'null'
-        start_time:
-          type: integer
-          format: int64
-        status:
-          type: string
-        success_response:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type: integer
-          format: int64
+          description: (seconds)
+          default: null
+    StreamType:
+      type: string
+      enum:
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
     BackfillJobStatus:
       type: object
       required:
@@ -1009,22 +943,6 @@ components:
           format: int64
         status:
           type: string
-    Aggregation:
-      type: object
-      required:
-      - function
-      - having
-      properties:
-        function:
-          $ref: '#/components/schemas/AggFunction'
-        group_by:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        having:
-          $ref: '#/components/schemas/Condition'
     Edge:
       type: object
       description: Connection between two nodes in the pipeline
@@ -1043,156 +961,27 @@ components:
         target:
           type: string
           description: Target node id (data flows to this node)
-    PipelineErrorInfo:
+    PipelineHistoryResponse:
       type: object
       required:
-      - last_error_timestamp
+      - total
+      - from
+      - size
+      - hits
       properties:
-        error_summary:
-          type:
-          - string
-          - 'null'
-        last_error_timestamp:
+        from:
           type: integer
           format: int64
-        node_errors: {}
-    DeletionStatus:
-      type: string
-      enum:
-      - not_required
-      - pending
-      - in_progress
-      - completed
-    StreamType:
-      type: string
-      enum:
-      - logs
-      - metrics
-      - traces
-      - service_graph
-      - enrichment_tables
-      - file_list
-      - metadata
-      - index
-    NodeStyle:
-      type: object
-      properties:
-        backgroundColor:
-          type:
-          - string
-          - 'null'
-    SearchEventType:
-      type: string
-      enum:
-      - ui
-      - dashboards
-      - reports
-      - alerts
-      - values
-      - other
-      - rum
-      - derivedstream
-      - searchjob
-      - download
-      - insights
-    TriggerCondition:
-      type: object
-      properties:
-        align_time:
-          type: boolean
-          default: false
-        cron:
-          type: string
-          default: ''
-        frequency:
-          type: integer
-          format: int64
-          description: (seconds)
-          default: 0
-        frequency_type:
-          oneOf:
-          - $ref: '#/components/schemas/FrequencyType'
-          default: minutes
-        operator:
-          oneOf:
-          - $ref: '#/components/schemas/Operator'
-          default: '='
-        period:
-          type: integer
-          format: int64
-          description: (minutes)
-          default: 0
-        silence:
-          type: integer
-          format: int64
-          description: (minutes)
-          default: 0
-        threshold:
-          type: integer
-          format: int64
-          default: 0
-        timezone:
-          type:
-          - string
-          - 'null'
-          default: null
-        tolerance_in_secs:
-          type:
-          - integer
-          - 'null'
-          format: int64
-          description: (seconds)
-          default: null
-    Operator:
-      type: string
-      enum:
-      - '='
-      - '!='
-      - '>'
-      - '>='
-      - <
-      - <=
-      - contains
-      - not_contains
-    QueryCondition:
-      type: object
-      properties:
-        aggregation:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Aggregation'
-        conditions:
-          type:
-          - object
-          - 'null'
-        multi_time_range:
-          type:
-          - array
-          - 'null'
+        hits:
+          type: array
           items:
-            $ref: '#/components/schemas/CompareHistoricData'
-        promql:
-          type:
-          - string
-          - 'null'
-        promql_condition:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Condition'
-        search_event_type:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/SearchEventType'
-        sql:
-          type:
-          - string
-          - 'null'
-        type:
-          $ref: '#/components/schemas/QueryType'
-        vrl_function:
-          type:
-          - string
-          - 'null'
+            $ref: '#/components/schemas/PipelineHistoryEntry'
+        size:
+          type: integer
+          format: int64
+        total:
+          type: integer
+          minimum: 0
     BackfillRequest:
       type: object
       required:
@@ -1219,51 +1008,100 @@ components:
           type: integer
           format: int64
           description: Start time in microseconds
-    QueryType:
-      type: string
-      enum:
-      - custom
-      - sql
-      - promql
-    Pipeline:
+    CompareHistoricData:
       type: object
       required:
-      - name
-      - nodes
-      - edges
+      - offSet
       properties:
-        description:
+        offSet:
           type: string
-        edges:
-          type: array
-          items:
-            $ref: '#/components/schemas/Edge'
-        enabled:
-          type: boolean
-        last_error:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/PipelineErrorInfo'
-        name:
-          type: string
-        nodes:
-          type: array
-          items:
-            $ref: '#/components/schemas/Node'
-        org:
-          type: string
-        paused_at:
+    SearchEventType:
+      type: string
+      enum:
+      - ui
+      - dashboards
+      - reports
+      - alerts
+      - values
+      - other
+      - rum
+      - derivedstream
+      - searchjob
+      - download
+      - insights
+    NodeStyle:
+      type: object
+      properties:
+        backgroundColor:
+          type:
+          - string
+          - 'null'
+    PipelineHistoryEntry:
+      type: object
+      required:
+      - timestamp
+      - pipeline_name
+      - org
+      - status
+      - is_realtime
+      - is_silenced
+      - start_time
+      - end_time
+      - retries
+      properties:
+        delay_in_secs:
           type:
           - integer
           - 'null'
           format: int64
-        pipeline_id:
+        end_time:
+          type: integer
+          format: int64
+        error:
+          type:
+          - string
+          - 'null'
+        evaluation_took_in_secs:
+          type:
+          - number
+          - 'null'
+          format: double
+        is_partial:
+          type:
+          - boolean
+          - 'null'
+        is_realtime:
+          type: boolean
+        is_silenced:
+          type: boolean
+        org:
           type: string
-        source:
-          $ref: '#/components/schemas/PipelineSource'
-        version:
+        pipeline_name:
+          type: string
+        query_took:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        retries:
           type: integer
           format: int32
+        source_node:
+          type:
+          - string
+          - 'null'
+        start_time:
+          type: integer
+          format: int64
+        status:
+          type: string
+        success_response:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type: integer
+          format: int64
     BackfillResponse:
       type: object
       required:
@@ -1274,21 +1112,47 @@ components:
           type: string
         message:
           type: string
-    Condition:
-      type: object
-      required:
-      - column
-      - operator
-      - value
-      properties:
-        column:
-          type: string
-        ignore_case:
-          type: boolean
-        operator:
-          $ref: '#/components/schemas/Operator'
-        value:
-          type: object
+    PipelineSource:
+      oneOf:
+      - allOf:
+        - $ref: '#/components/schemas/StreamParams'
+          description: 'Real-time pipeline: processes data immediately as it''s ingested.
+
+            Example: { "source_type": "realtime" }'
+        - type: object
+          required:
+          - source_type
+          properties:
+            source_type:
+              type: string
+              enum:
+              - realtime
+        description: 'Real-time pipeline: processes data immediately as it''s ingested.
+
+          Example: { "source_type": "realtime" }'
+      - allOf:
+        - $ref: '#/components/schemas/DerivedStream'
+          description: 'Scheduled pipeline: runs periodically based on trigger_condition.
+
+            Example: { "source_type": "scheduled", "org_id": "default", "stream_type": "logs",
+
+            "query_condition": {...}, "trigger_condition": {...} }'
+        - type: object
+          required:
+          - source_type
+          properties:
+            source_type:
+              type: string
+              enum:
+              - scheduled
+        description: 'Scheduled pipeline: runs periodically based on trigger_condition.
+
+          Example: { "source_type": "scheduled", "org_id": "default", "stream_type": "logs",
+
+          "query_condition": {...}, "trigger_condition": {...} }'
+      description: 'Pipeline source type determines when the pipeline runs.
+
+        Use "realtime" for processing data as it arrives, "scheduled" for periodic batch processing.'
     DerivedStream:
       type: object
       properties:
@@ -1345,6 +1209,63 @@ components:
 
             The negative secs means the Western Hemisphere'
           default: 0
+    StreamParams:
+      type: object
+      properties:
+        org_id:
+          type: string
+          default: ''
+        stream_name:
+          type: string
+          default: ''
+        stream_type:
+          oneOf:
+          - $ref: '#/components/schemas/StreamType'
+          default: logs
+    Aggregation:
+      type: object
+      required:
+      - function
+      - having
+      properties:
+        function:
+          $ref: '#/components/schemas/AggFunction'
+        group_by:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        having:
+          $ref: '#/components/schemas/Condition'
+    PipelineErrorInfo:
+      type: object
+      required:
+      - last_error_timestamp
+      properties:
+        error_summary:
+          type:
+          - string
+          - 'null'
+        last_error_timestamp:
+          type: integer
+          format: int64
+        node_errors: {}
+    Condition:
+      type: object
+      required:
+      - column
+      - operator
+      - value
+      properties:
+        column:
+          type: string
+        ignore_case:
+          type: boolean
+        operator:
+          $ref: '#/components/schemas/Operator'
+        value:
+          type: object
     Position:
       type: object
       required:
@@ -1357,68 +1278,147 @@ components:
         y:
           type: number
           format: float
-    PipelineSource:
-      oneOf:
-      - allOf:
-        - $ref: '#/components/schemas/StreamParams'
-          description: 'Real-time pipeline: processes data immediately as it''s ingested.
-
-            Example: { "source_type": "realtime" }'
-        - type: object
-          required:
-          - source_type
-          properties:
-            source_type:
-              type: string
-              enum:
-              - realtime
-        description: 'Real-time pipeline: processes data immediately as it''s ingested.
-
-          Example: { "source_type": "realtime" }'
-      - allOf:
-        - $ref: '#/components/schemas/DerivedStream'
-          description: 'Scheduled pipeline: runs periodically based on trigger_condition.
-
-            Example: { "source_type": "scheduled", "org_id": "default", "stream_type": "logs",
-
-            "query_condition": {...}, "trigger_condition": {...} }'
-        - type: object
-          required:
-          - source_type
-          properties:
-            source_type:
-              type: string
-              enum:
-              - scheduled
-        description: 'Scheduled pipeline: runs periodically based on trigger_condition.
-
-          Example: { "source_type": "scheduled", "org_id": "default", "stream_type": "logs",
-
-          "query_condition": {...}, "trigger_condition": {...} }'
-      description: 'Pipeline source type determines when the pipeline runs.
-
-        Use "realtime" for processing data as it arrives, "scheduled" for periodic batch processing.'
-    PipelineHistoryResponse:
+    Pipeline:
       type: object
       required:
-      - total
-      - from
-      - size
-      - hits
+      - name
+      - nodes
+      - edges
       properties:
-        from:
-          type: integer
-          format: int64
-        hits:
+        description:
+          type: string
+        edges:
           type: array
           items:
-            $ref: '#/components/schemas/PipelineHistoryEntry'
-        size:
-          type: integer
+            $ref: '#/components/schemas/Edge'
+        enabled:
+          type: boolean
+        last_error:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/PipelineErrorInfo'
+        name:
+          type: string
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Node'
+        org:
+          type: string
+        paused_at:
+          type:
+          - integer
+          - 'null'
           format: int64
-        total:
+        pipeline_id:
+          type: string
+        source:
+          $ref: '#/components/schemas/PipelineSource'
+        version:
           type: integer
-          minimum: 0
+          format: int32
+    Node:
+      type: object
+      required:
+      - id
+      - data
+      - position
+      - io_type
+      properties:
+        data:
+          type: object
+          description: "Node configuration. Structure depends on node_type:\n- stream: { \"node_type\": \"stream\", \"org_id\": \"org\", \"stream_name\": \"name\", \"stream_type\":\n  \"logs\"|\"metrics\"|\"traces\" }\n- function: { \"node_type\": \"function\", \"name\": \"func_name\", \"after_flatten\": bool }\n- condition: { \"node_type\": \"condition\", \"conditions\": {...} }\n- query: { \"node_type\": \"query\", \"org_id\": \"org\", \"stream_type\": \"logs\", \"query_condition\":\n  {...}, \"trigger_condition\": {...} }\n- remote_stream: { \"node_type\": \"remote_stream\", \"org_id\": \"org\", \"destination_name\":\n  \"dest\" }"
+        id:
+          type: string
+          description: Unique identifier for the node (use UUID format)
+        io_type:
+          type: string
+          description: 'Node role in the pipeline. MUST be one of:
+
+            - "input": Source stream node (first node in pipeline)
+
+            - "output": Destination stream node (last node in pipeline)
+
+            - "default": Processing node (function, condition, etc.)'
+          example: input
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        position:
+          $ref: '#/components/schemas/Position'
+          description: Visual position for UI rendering
+        style:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/NodeStyle'
+    QueryType:
+      type: string
+      enum:
+      - custom
+      - sql
+      - promql
+    QueryCondition:
+      type: object
+      properties:
+        aggregation:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Aggregation'
+        conditions:
+          type:
+          - object
+          - 'null'
+        multi_time_range:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CompareHistoricData'
+        promql:
+          type:
+          - string
+          - 'null'
+        promql_condition:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Condition'
+        search_event_type:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/SearchEventType'
+        sql:
+          type:
+          - string
+          - 'null'
+        type:
+          $ref: '#/components/schemas/QueryType'
+        vrl_function:
+          type:
+          - string
+          - 'null'
+    DeletionStatus:
+      type: string
+      enum:
+      - not_required
+      - pending
+      - in_progress
+      - completed
+    Operator:
+      type: string
+      enum:
+      - '='
+      - '!='
+      - '>'
+      - '>='
+      - <
+      - <=
+      - contains
+      - not_contains
   securitySchemes:
     Authorization:
       type: apiKey

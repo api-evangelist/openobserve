@@ -877,6 +877,40 @@ paths:
         operation: get
 components:
   schemas:
+    OrgDetails:
+      type: object
+      required:
+      - id
+      - identifier
+      - name
+      - user_email
+      - ingest_threshold
+      - search_threshold
+      - type
+      - UserObj
+      properties:
+        UserObj:
+          $ref: '#/components/schemas/OrgUser'
+        id:
+          type: integer
+          format: int64
+        identifier:
+          type: string
+        ingest_threshold:
+          type: integer
+          format: int64
+        name:
+          type: string
+        plan:
+          type: integer
+          format: int32
+        search_threshold:
+          type: integer
+          format: int64
+        type:
+          type: string
+        user_email:
+          type: string
     SettingScope:
       type: string
       description: Setting scope levels
@@ -884,71 +918,36 @@ components:
       - system
       - org
       - user
-    CrossLink:
+    AssumeServiceAccountResponse:
       type: object
-      description: A cross-link entry for drill-down/navigation from log/trace records
-      required:
-      - name
-      - url
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/CrossLinkField'
-          description: 'Show link only when at least one field matches the record.
+      description: 'Response from assume service account operation
 
-            If empty, the link is always shown.'
-        name:
-          type: string
-          description: Display name for the link
-        url:
-          type: string
-          description: URL template with {field_name} placeholders
-    IngestionPasscode:
-      type: object
+
+        Contains the session credentials needed to access the target organization.'
       required:
-      - passcode
-      - user
+      - session_id
+      - org_id
+      - role_name
+      - expires_at
+      - expires_in
       properties:
-        passcode:
+        expires_at:
           type: string
-        user:
+          description: Expiration timestamp (ISO 8601)
+        expires_in:
+          type: integer
+          format: int64
+          description: Duration in seconds until expiration
+          minimum: 0
+        org_id:
           type: string
-    SystemSettingPayload:
-      type: object
-      description: Request to create or update a setting
-      required:
-      - setting_key
-      - setting_value
-      properties:
-        description:
-          type:
-          - string
-          - 'null'
-          description: Optional description
-        setting_category:
-          type:
-          - string
-          - 'null'
-          description: Optional category
-        setting_key:
+          description: Target organization ID
+        role_name:
           type: string
-          description: Setting key
-        setting_value:
-          description: Setting value (JSON)
-    OrgUser:
-      type: object
-      required:
-      - first_name
-      - last_name
-      - email
-      properties:
-        email:
+          description: Assumed service account role
+        session_id:
           type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
+          description: Session ID to use for authentication
     SystemSetting:
       type: object
       description: A system setting record
@@ -1009,39 +1008,69 @@ components:
           - string
           - 'null'
           description: User ID (required for user scope)
-    OrgDetails:
+    SystemSettingPayload:
       type: object
+      description: Request to create or update a setting
       required:
-      - id
-      - identifier
-      - name
-      - user_email
-      - ingest_threshold
-      - search_threshold
-      - type
-      - UserObj
+      - setting_key
+      - setting_value
       properties:
-        UserObj:
-          $ref: '#/components/schemas/OrgUser'
-        id:
-          type: integer
-          format: int64
-        identifier:
+        description:
+          type:
+          - string
+          - 'null'
+          description: Optional description
+        setting_category:
+          type:
+          - string
+          - 'null'
+          description: Optional category
+        setting_key:
           type: string
-        ingest_threshold:
-          type: integer
-          format: int64
+          description: Setting key
+        setting_value:
+          description: Setting value (JSON)
+    CrossLink:
+      type: object
+      description: A cross-link entry for drill-down/navigation from log/trace records
+      required:
+      - name
+      - url
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CrossLinkField'
+          description: 'Show link only when at least one field matches the record.
+
+            If empty, the link is always shown.'
         name:
           type: string
-        plan:
-          type: integer
-          format: int32
-        search_threshold:
-          type: integer
-          format: int64
-        type:
+          description: Display name for the link
+        url:
           type: string
-        user_email:
+          description: URL template with {field_name} placeholders
+    IngestionPasscode:
+      type: object
+      required:
+      - passcode
+      - user
+      properties:
+        passcode:
+          type: string
+        user:
+          type: string
+    CrossLinkField:
+      type: object
+      required:
+      - name
+      properties:
+        alias:
+          type:
+          - string
+          - 'null'
+          description: 'Populated by result_schema: the alias used in the query for this field.'
+        name:
           type: string
     RumIngestionToken:
       type: object
@@ -1054,6 +1083,38 @@ components:
           - 'null'
         user:
           type: string
+    OrgUser:
+      type: object
+      required:
+      - first_name
+      - last_name
+      - email
+      properties:
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    Organization:
+      type: object
+      required:
+      - name
+      properties:
+        identifier:
+          type: string
+        name:
+          type: string
+          description: Only alphanumeric characters (A-Z, a-z, 0-9), spaces, and underscores are allowed
+        org_type:
+          type: string
+        service_account:
+          type:
+          - string
+          - 'null'
+          description: 'Optional service account email to add to the organization
+
+            When specified, only this service account will be added (not the API caller)'
     AssumeServiceAccountRequest:
       type: object
       description: 'Request to assume a service account in a target organization
@@ -1094,67 +1155,6 @@ components:
           description: Instructions for obtaining a temporary session token
         role:
           type: string
-    CrossLinkField:
-      type: object
-      required:
-      - name
-      properties:
-        alias:
-          type:
-          - string
-          - 'null'
-          description: 'Populated by result_schema: the alias used in the query for this field.'
-        name:
-          type: string
-    AssumeServiceAccountResponse:
-      type: object
-      description: 'Response from assume service account operation
-
-
-        Contains the session credentials needed to access the target organization.'
-      required:
-      - session_id
-      - org_id
-      - role_name
-      - expires_at
-      - expires_in
-      properties:
-        expires_at:
-          type: string
-          description: Expiration timestamp (ISO 8601)
-        expires_in:
-          type: integer
-          format: int64
-          description: Duration in seconds until expiration
-          minimum: 0
-        org_id:
-          type: string
-          description: Target organization ID
-        role_name:
-          type: string
-          description: Assumed service account role
-        session_id:
-          type: string
-          description: Session ID to use for authentication
-    Organization:
-      type: object
-      required:
-      - name
-      properties:
-        identifier:
-          type: string
-        name:
-          type: string
-          description: Only alphanumeric characters (A-Z, a-z, 0-9), spaces, and underscores are allowed
-        org_type:
-          type: string
-        service_account:
-          type:
-          - string
-          - 'null'
-          description: 'Optional service account email to add to the organization
-
-            When specified, only this service account will be added (not the API caller)'
   securitySchemes:
     Authorization:
       type: apiKey

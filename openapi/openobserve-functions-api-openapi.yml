@@ -449,6 +449,59 @@ paths:
         requires_confirmation: true
 components:
   schemas:
+    StreamOrder:
+      type: object
+      properties:
+        applyBeforeFlattening:
+          type: boolean
+        isRemoved:
+          type: boolean
+        order:
+          type: integer
+          format: int32
+          minimum: 0
+        stream:
+          type: string
+        streamType:
+          $ref: '#/components/schemas/StreamType'
+    Transform:
+      type: object
+      required:
+      - function
+      properties:
+        function:
+          type: string
+        name:
+          type: string
+        numArgs:
+          type: integer
+          format: int32
+          minimum: 0
+        params:
+          type: string
+        streams:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/StreamOrder'
+        transType:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          minimum: 0
+    StreamType:
+      type: string
+      enum:
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
     EnrichmentTableUrlRequest:
       type: object
       description: 'Request body for creating an enrichment table from a public URL.
@@ -487,59 +540,6 @@ components:
             - Should return CSV content-type (not enforced but recommended)
 
             - File can be any size - streaming handles large files efficiently'
-    StreamType:
-      type: string
-      enum:
-      - logs
-      - metrics
-      - traces
-      - service_graph
-      - enrichment_tables
-      - file_list
-      - metadata
-      - index
-    Transform:
-      type: object
-      required:
-      - function
-      properties:
-        function:
-          type: string
-        name:
-          type: string
-        numArgs:
-          type: integer
-          format: int32
-          minimum: 0
-        params:
-          type: string
-        streams:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/StreamOrder'
-        transType:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          minimum: 0
-    StreamOrder:
-      type: object
-      properties:
-        applyBeforeFlattening:
-          type: boolean
-        isRemoved:
-          type: boolean
-        order:
-          type: integer
-          format: int32
-          minimum: 0
-        stream:
-          type: string
-        streamType:
-          $ref: '#/components/schemas/StreamType'
   securitySchemes:
     Authorization:
       type: apiKey
