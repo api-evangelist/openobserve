@@ -489,324 +489,6 @@ paths:
         operation: update
 components:
   schemas:
-    StreamPartition:
-      type: object
-      required:
-      - field
-      properties:
-        disabled:
-          type: boolean
-        field:
-          type: string
-        types:
-          $ref: '#/components/schemas/StreamPartitionType'
-    CrossLinkField:
-      type: object
-      required:
-      - name
-      properties:
-        alias:
-          type:
-          - string
-          - 'null'
-          description: 'Populated by result_schema: the alias used in the query for this field.'
-        name:
-          type: string
-    StreamType:
-      type: string
-      enum:
-      - logs
-      - metrics
-      - traces
-      - service_graph
-      - enrichment_tables
-      - file_list
-      - metadata
-      - index
-    UpdateSettingsWrapper_String:
-      type: object
-      properties:
-        add:
-          type: array
-          items:
-            type: string
-        remove:
-          type: array
-          items:
-            type: string
-    MetricType:
-      type: string
-      enum:
-      - Unknown
-      - Counter
-      - Gauge
-      - Histogram
-      - GaugeHistogram
-      - ExponentialHistogram
-      - Summary
-      - Info
-      - StateSet
-      - Empty
-    CrossLink:
-      type: object
-      description: A cross-link entry for drill-down/navigation from log/trace records
-      required:
-      - name
-      - url
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/CrossLinkField'
-          description: 'Show link only when at least one field matches the record.
-
-            If empty, the link is always shown.'
-        name:
-          type: string
-          description: Display name for the link
-        url:
-          type: string
-          description: URL template with {field_name} placeholders
-    UpdateSettingsWrapper_TimeRange:
-      type: object
-      properties:
-        add:
-          type: array
-          items:
-            type: object
-            required:
-            - start
-            - end
-            properties:
-              end:
-                type: integer
-                format: int64
-                description: End timestamp in microseconds
-              start:
-                type: integer
-                format: int64
-                description: Start timestamp in microseconds
-        remove:
-          type: array
-          items:
-            type: object
-            required:
-            - start
-            - end
-            properties:
-              end:
-                type: integer
-                format: int64
-                description: End timestamp in microseconds
-              start:
-                type: integer
-                format: int64
-                description: Start timestamp in microseconds
-    StorageType:
-      type: string
-      enum:
-      - normal
-      - compliance
-    UpdateSettingsWrapper_StreamPartition:
-      type: object
-      properties:
-        add:
-          type: array
-          items:
-            type: object
-            required:
-            - field
-            properties:
-              disabled:
-                type: boolean
-              field:
-                type: string
-              types:
-                $ref: '#/components/schemas/StreamPartitionType'
-        remove:
-          type: array
-          items:
-            type: object
-            required:
-            - field
-            properties:
-              disabled:
-                type: boolean
-              field:
-                type: string
-              types:
-                $ref: '#/components/schemas/StreamPartitionType'
-    StreamStats:
-      type: object
-      required:
-      - created_at
-      - doc_time_min
-      - doc_time_max
-      - doc_num
-      - file_num
-      - storage_size
-      - compressed_size
-      - index_size
-      properties:
-        compressed_size:
-          type: number
-          format: double
-        created_at:
-          type: integer
-          format: int64
-        doc_num:
-          type: integer
-          format: int64
-        doc_time_max:
-          type: integer
-          format: int64
-        doc_time_min:
-          type: integer
-          format: int64
-        file_num:
-          type: integer
-          format: int64
-        index_size:
-          type: number
-          format: double
-        storage_size:
-          type: number
-          format: double
-    DistinctField:
-      type: object
-      description: 'WARNING: this implements Eq trait based only on the name,
-
-        so the timestamp will not be considered when comparing two entries'
-      required:
-      - name
-      - added_ts
-      properties:
-        added_ts:
-          type: integer
-          format: int64
-        name:
-          type: string
-    Stream:
-      type: object
-      required:
-      - name
-      - storage_type
-      - stream_type
-      - stats
-      - schema
-      - settings
-      - total_fields
-      properties:
-        is_derived:
-          type:
-          - boolean
-          - 'null'
-        metrics_meta:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Metadata'
-        name:
-          type: string
-        pattern_associations:
-          type: array
-          items:
-            $ref: '#/components/schemas/PatternAssociation'
-        schema:
-          type: array
-          items:
-            $ref: '#/components/schemas/StreamField'
-        settings:
-          $ref: '#/components/schemas/StreamSettings'
-        stats:
-          $ref: '#/components/schemas/StreamStats'
-        storage_type:
-          type: string
-        stream_type:
-          $ref: '#/components/schemas/StreamType'
-        total_fields:
-          type: integer
-          minimum: 0
-        uds_schema:
-          type: array
-          items:
-            $ref: '#/components/schemas/StreamField'
-    TimeRange:
-      type: object
-      required:
-      - start
-      - end
-      properties:
-        end:
-          type: integer
-          format: int64
-          description: End timestamp in microseconds
-        start:
-          type: integer
-          format: int64
-          description: Start timestamp in microseconds
-    UpdateSettingsWrapper_CrossLink:
-      type: object
-      properties:
-        add:
-          type: array
-          items:
-            type: object
-            description: A cross-link entry for drill-down/navigation from log/trace records
-            required:
-            - name
-            - url
-            properties:
-              fields:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CrossLinkField'
-                description: 'Show link only when at least one field matches the record.
-
-                  If empty, the link is always shown.'
-              name:
-                type: string
-                description: Display name for the link
-              url:
-                type: string
-                description: URL template with {field_name} placeholders
-        remove:
-          type: array
-          items:
-            type: object
-            description: A cross-link entry for drill-down/navigation from log/trace records
-            required:
-            - name
-            - url
-            properties:
-              fields:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CrossLinkField'
-                description: 'Show link only when at least one field matches the record.
-
-                  If empty, the link is always shown.'
-              name:
-                type: string
-                description: Display name for the link
-              url:
-                type: string
-                description: URL template with {field_name} placeholders
-    Metadata:
-      type: object
-      required:
-      - metric_type
-      - metric_family_name
-      - help
-      - unit
-      properties:
-        help:
-          type: string
-        metric_family_name:
-          type: string
-        metric_type:
-          $ref: '#/components/schemas/MetricType'
-        unit:
-          type: string
     UpdateSettingsWrapper_PatternAssociation:
       type: object
       properties:
@@ -864,6 +546,243 @@ components:
                 type: string
               policy:
                 type: string
+    Metadata:
+      type: object
+      required:
+      - metric_type
+      - metric_family_name
+      - help
+      - unit
+      properties:
+        help:
+          type: string
+        metric_family_name:
+          type: string
+        metric_type:
+          $ref: '#/components/schemas/MetricType'
+        unit:
+          type: string
+    UpdateSettingsWrapper_TimeRange:
+      type: object
+      properties:
+        add:
+          type: array
+          items:
+            type: object
+            required:
+            - start
+            - end
+            properties:
+              end:
+                type: integer
+                format: int64
+                description: End timestamp in microseconds
+              start:
+                type: integer
+                format: int64
+                description: Start timestamp in microseconds
+        remove:
+          type: array
+          items:
+            type: object
+            required:
+            - start
+            - end
+            properties:
+              end:
+                type: integer
+                format: int64
+                description: End timestamp in microseconds
+              start:
+                type: integer
+                format: int64
+                description: Start timestamp in microseconds
+    StreamField:
+      type: object
+      required:
+      - name
+      - type
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+    StreamStats:
+      type: object
+      required:
+      - created_at
+      - doc_time_min
+      - doc_time_max
+      - doc_num
+      - file_num
+      - storage_size
+      - compressed_size
+      - index_size
+      properties:
+        compressed_size:
+          type: number
+          format: double
+        created_at:
+          type: integer
+          format: int64
+        doc_num:
+          type: integer
+          format: int64
+        doc_time_max:
+          type: integer
+          format: int64
+        doc_time_min:
+          type: integer
+          format: int64
+        file_num:
+          type: integer
+          format: int64
+        index_size:
+          type: number
+          format: double
+        storage_size:
+          type: number
+          format: double
+    CrossLink:
+      type: object
+      description: A cross-link entry for drill-down/navigation from log/trace records
+      required:
+      - name
+      - url
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CrossLinkField'
+          description: 'Show link only when at least one field matches the record.
+
+            If empty, the link is always shown.'
+        name:
+          type: string
+          description: Display name for the link
+        url:
+          type: string
+          description: URL template with {field_name} placeholders
+    DistinctField:
+      type: object
+      description: 'WARNING: this implements Eq trait based only on the name,
+
+        so the timestamp will not be considered when comparing two entries'
+      required:
+      - name
+      - added_ts
+      properties:
+        added_ts:
+          type: integer
+          format: int64
+        name:
+          type: string
+    TimeRange:
+      type: object
+      required:
+      - start
+      - end
+      properties:
+        end:
+          type: integer
+          format: int64
+          description: End timestamp in microseconds
+        start:
+          type: integer
+          format: int64
+          description: Start timestamp in microseconds
+    StreamPartitionType:
+      oneOf:
+      - type: string
+        enum:
+        - value
+      - type: object
+        required:
+        - hash
+        properties:
+          hash:
+            type: integer
+            format: int64
+            minimum: 0
+      - type: string
+        enum:
+        - prefix
+    MetricType:
+      type: string
+      enum:
+      - Unknown
+      - Counter
+      - Gauge
+      - Histogram
+      - GaugeHistogram
+      - ExponentialHistogram
+      - Summary
+      - Info
+      - StateSet
+      - Empty
+    UpdateSettingsWrapper_CrossLink:
+      type: object
+      properties:
+        add:
+          type: array
+          items:
+            type: object
+            description: A cross-link entry for drill-down/navigation from log/trace records
+            required:
+            - name
+            - url
+            properties:
+              fields:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrossLinkField'
+                description: 'Show link only when at least one field matches the record.
+
+                  If empty, the link is always shown.'
+              name:
+                type: string
+                description: Display name for the link
+              url:
+                type: string
+                description: URL template with {field_name} placeholders
+        remove:
+          type: array
+          items:
+            type: object
+            description: A cross-link entry for drill-down/navigation from log/trace records
+            required:
+            - name
+            - url
+            properties:
+              fields:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrossLinkField'
+                description: 'Show link only when at least one field matches the record.
+
+                  If empty, the link is always shown.'
+              name:
+                type: string
+                description: Display name for the link
+              url:
+                type: string
+                description: URL template with {field_name} placeholders
+    StorageType:
+      type: string
+      enum:
+      - normal
+      - compliance
+    UpdateSettingsWrapper_String:
+      type: object
+      properties:
+        add:
+          type: array
+          items:
+            type: string
+        remove:
+          type: array
+          items:
+            type: string
     StreamSettings:
       type: object
       properties:
@@ -929,6 +848,101 @@ components:
           $ref: '#/components/schemas/StorageType'
         store_original_data:
           type: boolean
+    Stream:
+      type: object
+      required:
+      - name
+      - storage_type
+      - stream_type
+      - stats
+      - schema
+      - settings
+      - total_fields
+      properties:
+        is_derived:
+          type:
+          - boolean
+          - 'null'
+        metrics_meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Metadata'
+        name:
+          type: string
+        pattern_associations:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatternAssociation'
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamField'
+        settings:
+          $ref: '#/components/schemas/StreamSettings'
+        stats:
+          $ref: '#/components/schemas/StreamStats'
+        storage_type:
+          type: string
+        stream_type:
+          $ref: '#/components/schemas/StreamType'
+        total_fields:
+          type: integer
+          minimum: 0
+        uds_schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamField'
+    StreamType:
+      type: string
+      enum:
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
+    UpdateSettingsWrapper_StreamPartition:
+      type: object
+      properties:
+        add:
+          type: array
+          items:
+            type: object
+            required:
+            - field
+            properties:
+              disabled:
+                type: boolean
+              field:
+                type: string
+              types:
+                $ref: '#/components/schemas/StreamPartitionType'
+        remove:
+          type: array
+          items:
+            type: object
+            required:
+            - field
+            properties:
+              disabled:
+                type: boolean
+              field:
+                type: string
+              types:
+                $ref: '#/components/schemas/StreamPartitionType'
+    StreamPartition:
+      type: object
+      required:
+      - field
+      properties:
+        disabled:
+          type: boolean
+        field:
+          type: string
+        types:
+          $ref: '#/components/schemas/StreamPartitionType'
     PatternAssociation:
       type: object
       required:
@@ -954,32 +968,18 @@ components:
           type: string
         policy:
           type: string
-    StreamField:
+    CrossLinkField:
       type: object
       required:
       - name
-      - type
       properties:
+        alias:
+          type:
+          - string
+          - 'null'
+          description: 'Populated by result_schema: the alias used in the query for this field.'
         name:
           type: string
-        type:
-          type: string
-    StreamPartitionType:
-      oneOf:
-      - type: string
-        enum:
-        - value
-      - type: object
-        required:
-        - hash
-        properties:
-          hash:
-            type: integer
-            format: int64
-            minimum: 0
-      - type: string
-        enum:
-        - prefix
   securitySchemes:
     Authorization:
       type: apiKey

@@ -482,6 +482,11 @@ components:
           type: boolean
         uses_zo_fn:
           type: boolean
+    RequestEncoding:
+      type: string
+      enum:
+      - base64
+      - Empty
     SearchEventType:
       type: string
       enum:
@@ -496,11 +501,6 @@ components:
       - searchjob
       - download
       - insights
-    RequestEncoding:
-      type: string
-      enum:
-      - base64
-      - Empty
     SearchEventContext:
       type: object
       properties:

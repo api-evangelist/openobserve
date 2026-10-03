@@ -491,17 +491,6 @@ components:
           - 'null'
           format: int32
           minimum: 0
-    StreamType:
-      type: string
-      enum:
-      - logs
-      - metrics
-      - traces
-      - service_graph
-      - enrichment_tables
-      - file_list
-      - metadata
-      - index
     EnrichmentTableUrlRequest:
       type: object
       description: 'Request body for creating an enrichment table from a public URL.
@@ -540,6 +529,17 @@ components:
             - Should return CSV content-type (not enforced but recommended)
 
             - File can be any size - streaming handles large files efficiently'
+    StreamType:
+      type: string
+      enum:
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
   securitySchemes:
     Authorization:
       type: apiKey
