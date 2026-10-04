@@ -217,70 +217,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    CorrelationRequest:
-      type: object
-      required:
-      - source_stream
-      - source_type
-      - available_dimensions
-      properties:
-        available_dimensions:
-          type: object
-          description: Available dimensions from the source event
-          additionalProperties:
-            type: string
-          propertyNames:
-            type: string
-        source_stream:
-          type: string
-          description: Source stream name
-        source_type:
-          type: string
-          description: Source stream type (logs/traces/metrics)
-    CardinalityClass:
-      type: string
-      description: 'Cardinality classification for dimensions
-
-
-        Used to determine which dimensions are stable (good for correlation)
-
-        vs transient (should be filtered out or used only for additional filtering)'
-      enum:
-      - VeryLow
-      - Low
-      - Medium
-      - High
-      - VeryHigh
-    StreamInfo:
-      type: object
-      description: Information about a stream where a service was discovered
-      required:
-      - stream_name
-      properties:
-        filters:
-          type: object
-          description: 'Optional filter conditions that identify this service in the stream
-
-            Example: {"namespace": "production", "cluster": "us-east-1"}'
-          additionalProperties:
-            type: string
-          propertyNames:
-            type: string
-        stream_name:
-          type: string
-          description: Stream name
-        stream_type:
-          $ref: '#/components/schemas/StreamType'
-          description: 'Stream type (logs, metrics, traces)
-
-
-            This field explicitly identifies the stream type, enabling UIs to:
-
-            1. Query the correct API endpoint (logs/_search vs metrics/_search)
-
-            2. Display appropriate type badges/icons
-
-            3. Handle flattened stream lists without losing type information'
     ServiceFieldSource:
       type: object
       description: 'Describes a raw field name that was used to populate a semantic group,
@@ -357,70 +293,6 @@ components:
         total_dimensions:
           type: integer
           description: Total number of dimensions tracked
-          minimum: 0
-    RelatedStreams:
-      type: object
-      description: Related streams grouped by type
-      required:
-      - logs
-      - traces
-      - metrics
-      properties:
-        logs:
-          type: array
-          items:
-            $ref: '#/components/schemas/StreamInfo'
-        metrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/StreamInfo'
-        traces:
-          type: array
-          items:
-            $ref: '#/components/schemas/StreamInfo'
-    FoundGroup:
-      type: object
-      description: A semantic alias group found in the org's stream schemas.
-      required:
-      - group_id
-      - display
-      - stream_types
-      - aliases
-      - recommended
-      properties:
-        aliases:
-          type: object
-          description: 'Actual field name found per stream type, e.g., {"logs": "k8s_cluster_name"}'
-          additionalProperties:
-            type: string
-          propertyNames:
-            type: string
-        cardinality_class:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/CardinalityClass'
-            description: Cardinality class derived from unique_values (None if no data yet)
-        display:
-          type: string
-          description: Human-readable display name, e.g., "K8s Cluster"
-        group_id:
-          type: string
-          description: Semantic group ID, e.g., "k8s-cluster"
-        recommended:
-          type: boolean
-          description: 'True if this group appears in 2+ stream types AND has acceptable cardinality
-
-            (Deprecated: logic moving to UI)'
-        stream_types:
-          type: array
-          items:
-            type: string
-          description: Which stream types contain a field from this group (e.g., ["logs", "traces"])
-        unique_values:
-          type:
-          - integer
-          - 'null'
-          description: Number of unique values seen in actual data (None if no data collected yet)
           minimum: 0
     StreamType:
       type: string
@@ -560,6 +432,134 @@ components:
             minimum: 0
           propertyNames:
             type: string
+    RelatedStreams:
+      type: object
+      description: Related streams grouped by type
+      required:
+      - logs
+      - traces
+      - metrics
+      properties:
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamInfo'
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamInfo'
+        traces:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamInfo'
+    StreamInfo:
+      type: object
+      description: Information about a stream where a service was discovered
+      required:
+      - stream_name
+      properties:
+        filters:
+          type: object
+          description: 'Optional filter conditions that identify this service in the stream
+
+            Example: {"namespace": "production", "cluster": "us-east-1"}'
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        stream_name:
+          type: string
+          description: Stream name
+        stream_type:
+          $ref: '#/components/schemas/StreamType'
+          description: 'Stream type (logs, metrics, traces)
+
+
+            This field explicitly identifies the stream type, enabling UIs to:
+
+            1. Query the correct API endpoint (logs/_search vs metrics/_search)
+
+            2. Display appropriate type badges/icons
+
+            3. Handle flattened stream lists without losing type information'
+    FoundGroup:
+      type: object
+      description: A semantic alias group found in the org's stream schemas.
+      required:
+      - group_id
+      - display
+      - stream_types
+      - aliases
+      - recommended
+      properties:
+        aliases:
+          type: object
+          description: 'Actual field name found per stream type, e.g., {"logs": "k8s_cluster_name"}'
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        cardinality_class:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/CardinalityClass'
+            description: Cardinality class derived from unique_values (None if no data yet)
+        display:
+          type: string
+          description: Human-readable display name, e.g., "K8s Cluster"
+        group_id:
+          type: string
+          description: Semantic group ID, e.g., "k8s-cluster"
+        recommended:
+          type: boolean
+          description: 'True if this group appears in 2+ stream types AND has acceptable cardinality
+
+            (Deprecated: logic moving to UI)'
+        stream_types:
+          type: array
+          items:
+            type: string
+          description: Which stream types contain a field from this group (e.g., ["logs", "traces"])
+        unique_values:
+          type:
+          - integer
+          - 'null'
+          description: Number of unique values seen in actual data (None if no data collected yet)
+          minimum: 0
+    CardinalityClass:
+      type: string
+      description: 'Cardinality classification for dimensions
+
+
+        Used to determine which dimensions are stable (good for correlation)
+
+        vs transient (should be filtered out or used only for additional filtering)'
+      enum:
+      - VeryLow
+      - Low
+      - Medium
+      - High
+      - VeryHigh
+    CorrelationRequest:
+      type: object
+      required:
+      - source_stream
+      - source_type
+      - available_dimensions
+      properties:
+        available_dimensions:
+          type: object
+          description: Available dimensions from the source event
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        source_stream:
+          type: string
+          description: Source stream name
+        source_type:
+          type: string
+          description: Source stream type (logs/traces/metrics)
   securitySchemes:
     Authorization:
       type: apiKey

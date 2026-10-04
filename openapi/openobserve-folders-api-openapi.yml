@@ -618,6 +618,13 @@ paths:
         operation: delete
 components:
   schemas:
+    FolderType:
+      type: string
+      description: Indicates the type of data that the folder can contain.
+      enum:
+      - dashboards
+      - alerts
+      - reports
     Folder:
       type: object
       description: Common folder fields used in HTTP request and response bodies.
@@ -631,13 +638,6 @@ components:
           type: string
         name:
           type: string
-    FolderType:
-      type: string
-      description: Indicates the type of data that the folder can contain.
-      enum:
-      - dashboards
-      - alerts
-      - reports
   securitySchemes:
     Authorization:
       type: apiKey

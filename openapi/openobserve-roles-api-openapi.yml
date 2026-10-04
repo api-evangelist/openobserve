@@ -299,16 +299,6 @@ paths:
       - Authorization: []
 components:
   schemas:
-    O2EntityAuthorization:
-      type: object
-      required:
-      - object
-      - permission
-      properties:
-        object:
-          type: string
-        permission:
-          $ref: '#/components/schemas/Permission'
     Permission:
       type: string
       enum:
@@ -319,6 +309,16 @@ components:
       - AllowPost
       - AllowPut
       - None
+    O2EntityAuthorization:
+      type: object
+      required:
+      - object
+      - permission
+      properties:
+        object:
+          type: string
+        permission:
+          $ref: '#/components/schemas/Permission'
   securitySchemes:
     Authorization:
       type: apiKey

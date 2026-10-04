@@ -449,6 +449,44 @@ paths:
         requires_confirmation: true
 components:
   schemas:
+    EnrichmentTableUrlRequest:
+      type: object
+      description: 'Request body for creating an enrichment table from a public URL.
+
+
+        The URL must point to a publicly accessible CSV file. Authentication-required
+
+        URLs (e.g., S3 presigned URLs with complex headers) are not currently supported.
+
+
+        The `append` behavior is controlled via query parameter, matching the file upload endpoint.'
+      required:
+      - url
+      properties:
+        replace_failed:
+          type: boolean
+          description: 'Replace only the failed job''s URL (optional, default: false)
+
+
+            When true, only updates the failed job with the new URL while keeping
+
+            all successful jobs unchanged. Useful for fixing typos or broken URLs
+
+            without re-downloading working data sources.'
+        url:
+          type: string
+          description: 'Public URL to the CSV file.
+
+
+            Requirements:
+
+            - Must start with http:// or https://
+
+            - Must be publicly accessible (no authentication)
+
+            - Should return CSV content-type (not enforced but recommended)
+
+            - File can be any size - streaming handles large files efficiently'
     StreamOrder:
       type: object
       properties:
@@ -491,44 +529,6 @@ components:
           - 'null'
           format: int32
           minimum: 0
-    EnrichmentTableUrlRequest:
-      type: object
-      description: 'Request body for creating an enrichment table from a public URL.
-
-
-        The URL must point to a publicly accessible CSV file. Authentication-required
-
-        URLs (e.g., S3 presigned URLs with complex headers) are not currently supported.
-
-
-        The `append` behavior is controlled via query parameter, matching the file upload endpoint.'
-      required:
-      - url
-      properties:
-        replace_failed:
-          type: boolean
-          description: 'Replace only the failed job''s URL (optional, default: false)
-
-
-            When true, only updates the failed job with the new URL while keeping
-
-            all successful jobs unchanged. Useful for fixing typos or broken URLs
-
-            without re-downloading working data sources.'
-        url:
-          type: string
-          description: 'Public URL to the CSV file.
-
-
-            Requirements:
-
-            - Must start with http:// or https://
-
-            - Must be publicly accessible (no authentication)
-
-            - Should return CSV content-type (not enforced but recommended)
-
-            - File can be any size - streaming handles large files efficiently'
     StreamType:
       type: string
       enum:

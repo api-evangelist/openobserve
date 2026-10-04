@@ -70,20 +70,6 @@ paths:
         category: patterns
 components:
   schemas:
-    SearchEventType:
-      type: string
-      enum:
-      - ui
-      - dashboards
-      - reports
-      - alerts
-      - values
-      - other
-      - rum
-      - derivedstream
-      - searchjob
-      - download
-      - insights
     SearchRequest:
       type: object
       required:
@@ -120,41 +106,6 @@ components:
           format: int64
         use_cache:
           type: boolean
-    SearchEventContext:
-      type: object
-      properties:
-        alert_key:
-          type:
-          - string
-          - 'null'
-        alert_name:
-          type:
-          - string
-          - 'null'
-        dashboard_id:
-          type:
-          - string
-          - 'null'
-        dashboard_name:
-          type:
-          - string
-          - 'null'
-        derived_stream_key:
-          type:
-          - string
-          - 'null'
-        folder_id:
-          type:
-          - string
-          - 'null'
-        folder_name:
-          type:
-          - string
-          - 'null'
-        report_id:
-          type:
-          - string
-          - 'null'
     SearchQuery:
       type: object
       required:
@@ -220,6 +171,55 @@ components:
       enum:
       - base64
       - Empty
+    SearchEventContext:
+      type: object
+      properties:
+        alert_key:
+          type:
+          - string
+          - 'null'
+        alert_name:
+          type:
+          - string
+          - 'null'
+        dashboard_id:
+          type:
+          - string
+          - 'null'
+        dashboard_name:
+          type:
+          - string
+          - 'null'
+        derived_stream_key:
+          type:
+          - string
+          - 'null'
+        folder_id:
+          type:
+          - string
+          - 'null'
+        folder_name:
+          type:
+          - string
+          - 'null'
+        report_id:
+          type:
+          - string
+          - 'null'
+    SearchEventType:
+      type: string
+      enum:
+      - ui
+      - dashboards
+      - reports
+      - alerts
+      - values
+      - other
+      - rum
+      - derivedstream
+      - searchjob
+      - download
+      - insights
   securitySchemes:
     Authorization:
       type: apiKey
