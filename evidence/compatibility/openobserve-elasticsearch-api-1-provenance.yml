@@ -1,0 +1,12 @@
+fetched: '2026-10-13'
+method: fetched
+source: https://raw.githubusercontent.com/openobserve/openobserve/main/README.md
+page: https://raw.githubusercontent.com/openobserve/openobserve/main/README.md
+file: openobserve-elasticsearch-api-1.md
+bytes: 19337
+sha256: 8f4c1c0077f01adb060e65c0a593b02ae58b56a52e23ada87182768864e4fabe
+anchor: elastic
+shape: elasticsearch-api
+classification: no-compatibility-statement
+quote: null
+note: text extracted from the provider's own page (tags stripped), saved for evidence

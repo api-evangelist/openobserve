@@ -45,6 +45,20 @@ edges:
   seller_name: OpenObserve
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
+- partner_name: Elastic
+  partner: elastic
+  partner_match: shape-anchor
+  channel: provider-built
+  relationship: compatible
+  direction: provider-built
+  shape: elasticsearch-api
+  type: contract
+  degree: declared-unqualified
+  evidence: https://github.com/api-evangelist/openobserve/blob/main/openapi/openobserve-logs-api-openapi.yml#L21
+  evidence_kind: own-contract
+  quote: 'summary: Bulk ingest logs (Elasticsearch compatible)'
+  detected_by: sweep-shape-compat.py
+  first_seen: '2026-10-13'
 source:
 - https://github.com/open-telemetry/opentelemetry.io/blob/main/data/ecosystem/vendors.yaml
 - https://github.com/open-telemetry/opentelemetry.io/blob/main/data/registry/
