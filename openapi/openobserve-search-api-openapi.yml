@@ -799,11 +799,20 @@ paths:
         operation: get
 components:
   schemas:
-    RequestEncoding:
+    SearchEventType:
       type: string
       enum:
-      - base64
-      - Empty
+      - ui
+      - dashboards
+      - reports
+      - alerts
+      - values
+      - other
+      - rum
+      - derivedstream
+      - searchjob
+      - download
+      - insights
     SearchQuery:
       type: object
       required:
@@ -864,20 +873,6 @@ components:
           type: boolean
         uses_zo_fn:
           type: boolean
-    SearchEventType:
-      type: string
-      enum:
-      - ui
-      - dashboards
-      - reports
-      - alerts
-      - values
-      - other
-      - rum
-      - derivedstream
-      - searchjob
-      - download
-      - insights
     SearchEventContext:
       type: object
       properties:
@@ -913,6 +908,11 @@ components:
           type:
           - string
           - 'null'
+    RequestEncoding:
+      type: string
+      enum:
+      - base64
+      - Empty
   securitySchemes:
     Authorization:
       type: apiKey

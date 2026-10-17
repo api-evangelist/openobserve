@@ -1101,6 +1101,34 @@ paths:
         enabled: false
 components:
   schemas:
+    ReportDashboardVariable:
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        key:
+          type: string
+        value:
+          type: string
+    ReportFrequency:
+      type: object
+      properties:
+        align_time:
+          type: boolean
+        cron:
+          type: string
+          description: Cron expression
+        interval:
+          type: integer
+          format: int64
+          description: Frequency interval in the `frequency_type` unit
+        type:
+          $ref: '#/components/schemas/ReportFrequencyType'
     ReportFrequencyType:
       type: string
       enum:
@@ -1110,19 +1138,16 @@ components:
       - weeks
       - months
       - cron
-    ReportMediaType:
+    ReportEmailAttachmentType:
       type: string
       enum:
-      - pdf
-      - png
-    ReportDestination:
-      oneOf:
-      - type: object
-        required:
-        - email
-        properties:
-          email:
-            type: string
+      - standard
+      - inline
+    ReportTimerangeType:
+      type: string
+      enum:
+      - relative
+      - absolute
     BulkDeleteResponse:
       type: object
       required:
@@ -1138,6 +1163,60 @@ components:
           items:
             type: string
         unsuccessful:
+          type: array
+          items:
+            type: string
+    ReportAttachmentDimensions:
+      type: object
+      required:
+      - width
+      - height
+      properties:
+        height:
+          type: integer
+          format: int32
+          minimum: 0
+        width:
+          type: integer
+          format: int32
+          minimum: 0
+    ReportDestination:
+      oneOf:
+      - type: object
+        required:
+        - email
+        properties:
+          email:
+            type: string
+    ReportMediaType:
+      type: string
+      enum:
+      - pdf
+      - png
+    ReportTimerange:
+      type: object
+      required:
+      - type
+      - period
+      - from
+      - to
+      properties:
+        from:
+          type: integer
+          format: int64
+        period:
+          type: string
+        to:
+          type: integer
+          format: int64
+        type:
+          $ref: '#/components/schemas/ReportTimerangeType'
+    BulkDeleteRequest:
+      type: object
+      required:
+      - ids
+      properties:
+        ids:
           type: array
           items:
             type: string
@@ -1176,85 +1255,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ReportDashboardVariable'
-    ReportEmailAttachmentType:
-      type: string
-      enum:
-      - standard
-      - inline
-    ReportFrequency:
-      type: object
-      properties:
-        align_time:
-          type: boolean
-        cron:
-          type: string
-          description: Cron expression
-        interval:
-          type: integer
-          format: int64
-          description: Frequency interval in the `frequency_type` unit
-        type:
-          $ref: '#/components/schemas/ReportFrequencyType'
-    BulkDeleteRequest:
-      type: object
-      required:
-      - ids
-      properties:
-        ids:
-          type: array
-          items:
-            type: string
-    ReportTimerange:
-      type: object
-      required:
-      - type
-      - period
-      - from
-      - to
-      properties:
-        from:
-          type: integer
-          format: int64
-        period:
-          type: string
-        to:
-          type: integer
-          format: int64
-        type:
-          $ref: '#/components/schemas/ReportTimerangeType'
-    ReportAttachmentDimensions:
-      type: object
-      required:
-      - width
-      - height
-      properties:
-        height:
-          type: integer
-          format: int32
-          minimum: 0
-        width:
-          type: integer
-          format: int32
-          minimum: 0
-    ReportDashboardVariable:
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-        key:
-          type: string
-        value:
-          type: string
-    ReportTimerangeType:
-      type: string
-      enum:
-      - relative
-      - absolute
   securitySchemes:
     Authorization:
       type: apiKey

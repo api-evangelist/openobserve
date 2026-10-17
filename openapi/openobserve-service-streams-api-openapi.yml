@@ -217,28 +217,58 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ServiceFieldSource:
+    CorrelationResponse:
       type: object
-      description: 'Describes a raw field name that was used to populate a semantic group,
-
-        along with which stream types it appeared in and how many services used it.'
+      description: Response from the correlate API
       required:
-      - field_name
-      - stream_types
-      - hit_count
+      - service_name
+      - matched_dimensions
+      - additional_dimensions
+      - related_streams
       properties:
-        field_name:
-          type: string
-          description: The raw field name in the stream, e.g. "kubernetes_labels_app"
-        hit_count:
-          type: integer
-          description: Number of services where this field provided the semantic group value
-          minimum: 0
-        stream_types:
+        additional_dimensions:
+          type: object
+          description: Additional dimensions available for filtering
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        all_streams:
           type: array
           items:
+            $ref: '#/components/schemas/StreamInfo'
+          description: 'Flattened list of all streams with explicit stream_type
+
+
+            This field provides a flat list of all streams where each stream has its
+
+            stream_type explicitly set. This is useful for UIs that:
+
+            1. Display all streams in a single list/table
+
+            2. Need to query streams without maintaining the nested structure
+
+            3. Pass streams between components (type info is preserved)'
+        matched_dimensions:
+          type: object
+          description: Dimensions that were used for matching (minimal set)
+          additionalProperties:
             type: string
-          description: Stream types where this field was used, e.g. ["logs", "traces"]
+          propertyNames:
+            type: string
+        matched_set_id:
+          type:
+          - string
+          - 'null'
+          description: 'The identity set that was selected for this correlation (by best-coverage resolution).
+
+            `None` if the feature is not enabled or the set was not determined.'
+        related_streams:
+          $ref: '#/components/schemas/RelatedStreams'
+          description: Related streams grouped by type (for backward compatibility)
+        service_name:
+          type: string
+          description: Matched service name
     DimensionAnalyticsSummary:
       type: object
       description: Dimension analytics summary for an organization
@@ -294,69 +324,20 @@ components:
           type: integer
           description: Total number of dimensions tracked
           minimum: 0
-    StreamType:
+    CardinalityClass:
       type: string
+      description: 'Cardinality classification for dimensions
+
+
+        Used to determine which dimensions are stable (good for correlation)
+
+        vs transient (should be filtered out or used only for additional filtering)'
       enum:
-      - logs
-      - metrics
-      - traces
-      - service_graph
-      - enrichment_tables
-      - file_list
-      - metadata
-      - index
-    CorrelationResponse:
-      type: object
-      description: Response from the correlate API
-      required:
-      - service_name
-      - matched_dimensions
-      - additional_dimensions
-      - related_streams
-      properties:
-        additional_dimensions:
-          type: object
-          description: Additional dimensions available for filtering
-          additionalProperties:
-            type: string
-          propertyNames:
-            type: string
-        all_streams:
-          type: array
-          items:
-            $ref: '#/components/schemas/StreamInfo'
-          description: 'Flattened list of all streams with explicit stream_type
-
-
-            This field provides a flat list of all streams where each stream has its
-
-            stream_type explicitly set. This is useful for UIs that:
-
-            1. Display all streams in a single list/table
-
-            2. Need to query streams without maintaining the nested structure
-
-            3. Pass streams between components (type info is preserved)'
-        matched_dimensions:
-          type: object
-          description: Dimensions that were used for matching (minimal set)
-          additionalProperties:
-            type: string
-          propertyNames:
-            type: string
-        matched_set_id:
-          type:
-          - string
-          - 'null'
-          description: 'The identity set that was selected for this correlation (by best-coverage resolution).
-
-            `None` if the feature is not enabled or the set was not determined.'
-        related_streams:
-          $ref: '#/components/schemas/RelatedStreams'
-          description: Related streams grouped by type (for backward compatibility)
-        service_name:
-          type: string
-          description: Matched service name
+      - VeryLow
+      - Low
+      - Medium
+      - High
+      - VeryHigh
     DimensionAnalytics:
       type: object
       description: Dimension analytics tracking
@@ -432,56 +413,6 @@ components:
             minimum: 0
           propertyNames:
             type: string
-    RelatedStreams:
-      type: object
-      description: Related streams grouped by type
-      required:
-      - logs
-      - traces
-      - metrics
-      properties:
-        logs:
-          type: array
-          items:
-            $ref: '#/components/schemas/StreamInfo'
-        metrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/StreamInfo'
-        traces:
-          type: array
-          items:
-            $ref: '#/components/schemas/StreamInfo'
-    StreamInfo:
-      type: object
-      description: Information about a stream where a service was discovered
-      required:
-      - stream_name
-      properties:
-        filters:
-          type: object
-          description: 'Optional filter conditions that identify this service in the stream
-
-            Example: {"namespace": "production", "cluster": "us-east-1"}'
-          additionalProperties:
-            type: string
-          propertyNames:
-            type: string
-        stream_name:
-          type: string
-          description: Stream name
-        stream_type:
-          $ref: '#/components/schemas/StreamType'
-          description: 'Stream type (logs, metrics, traces)
-
-
-            This field explicitly identifies the stream type, enabling UIs to:
-
-            1. Query the correct API endpoint (logs/_search vs metrics/_search)
-
-            2. Display appropriate type badges/icons
-
-            3. Handle flattened stream lists without losing type information'
     FoundGroup:
       type: object
       description: A semantic alias group found in the org's stream schemas.
@@ -526,20 +457,17 @@ components:
           - 'null'
           description: Number of unique values seen in actual data (None if no data collected yet)
           minimum: 0
-    CardinalityClass:
+    StreamType:
       type: string
-      description: 'Cardinality classification for dimensions
-
-
-        Used to determine which dimensions are stable (good for correlation)
-
-        vs transient (should be filtered out or used only for additional filtering)'
       enum:
-      - VeryLow
-      - Low
-      - Medium
-      - High
-      - VeryHigh
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
     CorrelationRequest:
       type: object
       required:
@@ -560,6 +488,78 @@ components:
         source_type:
           type: string
           description: Source stream type (logs/traces/metrics)
+    RelatedStreams:
+      type: object
+      description: Related streams grouped by type
+      required:
+      - logs
+      - traces
+      - metrics
+      properties:
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamInfo'
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamInfo'
+        traces:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamInfo'
+    ServiceFieldSource:
+      type: object
+      description: 'Describes a raw field name that was used to populate a semantic group,
+
+        along with which stream types it appeared in and how many services used it.'
+      required:
+      - field_name
+      - stream_types
+      - hit_count
+      properties:
+        field_name:
+          type: string
+          description: The raw field name in the stream, e.g. "kubernetes_labels_app"
+        hit_count:
+          type: integer
+          description: Number of services where this field provided the semantic group value
+          minimum: 0
+        stream_types:
+          type: array
+          items:
+            type: string
+          description: Stream types where this field was used, e.g. ["logs", "traces"]
+    StreamInfo:
+      type: object
+      description: Information about a stream where a service was discovered
+      required:
+      - stream_name
+      properties:
+        filters:
+          type: object
+          description: 'Optional filter conditions that identify this service in the stream
+
+            Example: {"namespace": "production", "cluster": "us-east-1"}'
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        stream_name:
+          type: string
+          description: Stream name
+        stream_type:
+          $ref: '#/components/schemas/StreamType'
+          description: 'Stream type (logs, metrics, traces)
+
+
+            This field explicitly identifies the stream type, enabling UIs to:
+
+            1. Query the correct API endpoint (logs/_search vs metrics/_search)
+
+            2. Display appropriate type badges/icons
+
+            3. Handle flattened stream lists without losing type information'
   securitySchemes:
     Authorization:
       type: apiKey

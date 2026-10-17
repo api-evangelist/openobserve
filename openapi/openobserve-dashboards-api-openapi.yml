@@ -1054,152 +1054,6 @@ paths:
         operation: update
 components:
   schemas:
-    MarkLine:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          default: null
-        type:
-          type:
-          - string
-          - 'null'
-          default: null
-        value:
-          type:
-          - string
-          - 'null'
-          default: null
-    AxisItem:
-      type: object
-      required:
-      - label
-      - alias
-      properties:
-        alias:
-          type: string
-        args:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AxisArg'
-        color:
-          type:
-          - string
-          - 'null'
-        column:
-          type:
-          - string
-          - 'null'
-        functionName:
-          type:
-          - string
-          - 'null'
-        havingConditions:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/HavingConditions'
-        isDerived:
-          type:
-          - boolean
-          - 'null'
-        label:
-          type: string
-        rawQuery:
-          type:
-          - string
-          - 'null'
-        showFieldAsJson:
-          type:
-          - boolean
-          - 'null'
-        sortBy:
-          type:
-          - string
-          - 'null'
-        treatAsNonTimestamp:
-          type:
-          - boolean
-          - 'null'
-        type:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/AxisType'
-    LineInterpolation:
-      type: string
-      enum:
-      - smooth
-      - linear
-      - step-start
-      - step-end
-      - step-middle
-    OverrideConfig:
-      type: object
-      properties:
-        config:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Config'
-          default: null
-        field:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Field'
-          default: null
-    BaseMap:
-      type: object
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-          default: null
-    AxisArg:
-      type: object
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-        value:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/AxisArgValueWrapper'
-    GroupType:
-      type: object
-      required:
-      - filterType
-      - logicalOperator
-      - conditions
-      properties:
-        conditions:
-          type: array
-          items:
-            type: object
-        filterType:
-          type: string
-        logicalOperator:
-          type: string
-    DrillDownVariables:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          default: null
-        value:
-          type:
-          - string
-          - 'null'
-          default: null
     SelectedField:
       type: object
       required:
@@ -1211,457 +1065,6 @@ components:
           type:
           - string
           - 'null'
-    TimeShift:
-      type: object
-      properties:
-        offSet:
-          type:
-          - string
-          - 'null'
-          default: null
-    Dashboard:
-      type: object
-      required:
-      - title
-      - description
-      properties:
-        created:
-          type: string
-          format: date-time
-          default: '1970-01-01T00:00:00Z'
-        dashboardId:
-          type: string
-          default: ''
-        defaultDatetimeDuration:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/DateTimeOptions'
-          default: null
-        description:
-          type: string
-          default: ''
-        owner:
-          type: string
-          default: ''
-        role:
-          type: string
-          default: ''
-        tabs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Tab'
-          default: []
-        title:
-          type: string
-          default: ''
-        variables:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Variables'
-          default: null
-        version:
-          type: integer
-          format: int32
-          default: 0
-    Tab:
-      type: object
-      required:
-      - tabId
-      - name
-      properties:
-        name:
-          type: string
-        panels:
-          type: array
-          items:
-            $ref: '#/components/schemas/Panel'
-        tabId:
-          type: string
-    AxisArgValue:
-      type: object
-      properties:
-        field:
-          type:
-          - string
-          - 'null'
-        streamAlias:
-          type:
-          - string
-          - 'null'
-    Filters:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          default: null
-        operator:
-          type:
-          - string
-          - 'null'
-          default: null
-        value:
-          type: string
-          default: ''
-    MapSymbolStyle:
-      type: object
-      properties:
-        size:
-          type: string
-          default: ''
-        size_by_value:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/SizeByValue'
-          default: null
-        size_fixed:
-          type: number
-          format: double
-          default: 0.0
-    Field:
-      type: object
-      properties:
-        matchBy:
-          type: string
-          default: ''
-        value:
-          type: string
-          default: ''
-    Join:
-      type: object
-      required:
-      - stream
-      - streamAlias
-      - joinType
-      - conditions
-      properties:
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/JoinCondition'
-        joinType:
-          type: string
-        stream:
-          type: string
-        streamAlias:
-          type: string
-    CustomFieldsOption:
-      type: object
-      properties:
-        label:
-          type: string
-          default: ''
-        selected:
-          type:
-          - boolean
-          - 'null'
-          default: null
-        value:
-          type: string
-          default: ''
-    HavingConditions:
-      type: object
-      properties:
-        operator:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - number
-          - 'null'
-          format: double
-    Background:
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          type: string
-        value:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/BackgroundValue'
-    AxisArgValueWrapper:
-      oneOf:
-      - $ref: '#/components/schemas/AxisArgValue'
-      - type: string
-      - type: number
-        format: double
-    ListDashboardsResponseBodyItem:
-      type: object
-      description: An item in the list returned by the `ListDashboards` endpoint.
-      required:
-      - version
-      - hash
-      - folder_id
-      - folder_name
-      - dashboard_id
-      - title
-      - description
-      - role
-      - owner
-      - created
-      - updatedAt
-      properties:
-        created:
-          type: string
-          format: date-time
-        dashboard_id:
-          type: string
-        description:
-          type: string
-        folder_id:
-          type: string
-        folder_name:
-          type: string
-        hash:
-          type: string
-        owner:
-          type: string
-        role:
-          type: string
-        title:
-          type: string
-        updatedAt:
-          type: integer
-          format: int64
-        v1:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Dashboard'
-        v2:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Dashboard'
-        v3:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Dashboard'
-        v4:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Dashboard'
-        v5:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Dashboard'
-        v6:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Dashboard'
-        v7:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Dashboard'
-        v8:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Dashboard'
-        version:
-          type: integer
-          format: int32
-    Config:
-      oneOf:
-      - type: object
-        required:
-        - type
-        properties:
-          type:
-            type: string
-            enum:
-            - unit
-          value: {}
-      - type: object
-        required:
-        - type
-        properties:
-          autoColor:
-            type: boolean
-          type:
-            type: string
-            enum:
-            - unique_value_color
-    PanelFilter:
-      oneOf:
-      - $ref: '#/components/schemas/FilterCondition'
-      - $ref: '#/components/schemas/GroupType'
-    AxisType:
-      type: string
-      enum:
-      - build
-      - raw
-      - custom
-    ColorBySeries:
-      type: object
-      properties:
-        color:
-          type:
-          - string
-          - 'null'
-          default: null
-        type:
-          type:
-          - string
-          - 'null'
-          default: null
-        value:
-          type:
-          - string
-          - 'null'
-          default: null
-    MapType:
-      type: object
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-          default: null
-    StreamType:
-      type: string
-      enum:
-      - logs
-      - metrics
-      - traces
-      - service_graph
-      - enrichment_tables
-      - file_list
-      - metadata
-      - index
-    JoinCondition:
-      type: object
-      required:
-      - leftField
-      - rightField
-      - operation
-      properties:
-        leftField:
-          $ref: '#/components/schemas/SelectedField'
-        operation:
-          type: string
-        rightField:
-          $ref: '#/components/schemas/SelectedField'
-    QueryData:
-      type: object
-      properties:
-        field:
-          type: string
-          default: ''
-        filter:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Filters'
-          default: null
-        max_record_size:
-          type:
-          - integer
-          - 'null'
-          format: int64
-          default: null
-        stream:
-          type: string
-          default: ''
-        stream_type:
-          oneOf:
-          - $ref: '#/components/schemas/StreamType'
-          default: logs
-    DrillDown:
-      type: object
-      properties:
-        data:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/DrillDownData'
-          default: null
-        findBy:
-          type:
-          - string
-          - 'null'
-          default: null
-        name:
-          type:
-          - string
-          - 'null'
-          default: null
-        targetBlank:
-          type:
-          - boolean
-          - 'null'
-          default: null
-        type:
-          type:
-          - string
-          - 'null'
-          default: null
-    PromQLOperation:
-      type: object
-      properties:
-        id:
-          type: string
-          default: ''
-        params:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/PromQLOperationParam'
-          default: null
-    QueryConfig:
-      type: object
-      required:
-      - promql_legend
-      properties:
-        layer_type:
-          type:
-          - string
-          - 'null'
-        limit:
-          type:
-          - number
-          - 'null'
-          format: double
-        max:
-          type:
-          - number
-          - 'null'
-          format: double
-        min:
-          type:
-          - number
-          - 'null'
-          format: double
-        promql_legend:
-          type: string
-        step_value:
-          type:
-          - string
-          - 'null'
-        time_shift:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/TimeShift'
-        weight_fixed:
-          type:
-          - number
-          - 'null'
-          format: double
-    SizeByValue:
-      type: object
-      properties:
-        max:
-          type: number
-          format: double
-          default: 0.0
-        min:
-          type: number
-          format: double
-          default: 0.0
     PromQLLabelFilter:
       type: object
       properties:
@@ -1674,253 +1077,14 @@ components:
         value:
           type: string
           default: ''
-    LegendHeight:
+    BaseMap:
       type: object
       properties:
-        unit:
-          type:
-          - string
-          - 'null'
-          default: null
-        value:
-          type:
-          - number
-          - 'null'
-          format: double
-          default: null
-    PanelFields:
-      type: object
-      required:
-      - stream
-      - stream_type
-      - x
-      - y
-      - filter
-      properties:
-        breakdown:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AxisItem'
-        filter:
-          $ref: '#/components/schemas/PanelFilter'
-        latitude:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/AxisItem'
-        longitude:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/AxisItem'
-        name:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/AxisItem'
-        promql_labels:
-          type: array
-          items:
-            $ref: '#/components/schemas/PromQLLabelFilter'
-        promql_operations:
-          type: array
-          items:
-            $ref: '#/components/schemas/PromQLOperation'
-        source:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/AxisItem'
-        stream:
-          type: string
-        stream_type:
-          $ref: '#/components/schemas/StreamType'
-        target:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/AxisItem'
-        value:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/AxisItem'
-        value_for_maps:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/AxisItem'
-        weight:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/AxisItem'
-        x:
-          type: array
-          items:
-            $ref: '#/components/schemas/AxisItem'
-        y:
-          type: array
-          items:
-            $ref: '#/components/schemas/AxisItem'
-        z:
-          type: array
-          items:
-            $ref: '#/components/schemas/AxisItem'
-    ColorCfg:
-      type: object
-      properties:
-        colorBySeries:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ColorBySeries'
-          default: null
-        fixedColor:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          default: null
-        mode:
-          type:
-          - string
-          - 'null'
-          default: null
-        seriesBy:
-          type:
-          - string
-          - 'null'
-          default: null
-    LegendWidth:
-      type: object
-      properties:
-        unit:
-          type:
-          - string
-          - 'null'
-          default: null
-        value:
-          type:
-          - number
-          - 'null'
-          format: double
-          default: null
-    LabelOption:
-      type: object
-      properties:
-        position:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/LabelPosition'
-          default: null
-        rotate:
-          type:
-          - number
-          - 'null'
-          format: double
-          default: null
-    Query:
-      type: object
-      required:
-      - customQuery
-      - fields
-      - config
-      properties:
-        config:
-          $ref: '#/components/schemas/QueryConfig'
-        customQuery:
-          type: boolean
-        fields:
-          $ref: '#/components/schemas/PanelFields'
-        joins:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Join'
-        query:
-          type:
-          - string
-          - 'null'
-        vrlFunctionQuery:
-          type:
-          - string
-          - 'null'
-    Panel:
-      type: object
-      required:
-      - id
-      - type
-      - title
-      - description
-      - config
-      - queries
-      properties:
-        config:
-          $ref: '#/components/schemas/PanelConfig'
-        customChartContent:
-          type:
-          - string
-          - 'null'
-        description:
-          type: string
-        htmlContent:
-          type:
-          - string
-          - 'null'
-        id:
-          type: string
-        layout:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Layout'
-        markdownContent:
-          type:
-          - string
-          - 'null'
-        queries:
-          type: array
-          items:
-            $ref: '#/components/schemas/Query'
-        queryType:
-          type: string
-        title:
-          type: string
         type:
-          type: string
-    TimedAnnotation:
-      type: object
-      properties:
-        annotation_id:
           type:
           - string
           - 'null'
           default: null
-        end_time:
-          type:
-          - integer
-          - 'null'
-          format: int64
-          default: null
-        panels:
-          type: array
-          items:
-            type: string
-          default: []
-        start_time:
-          type: integer
-          format: int64
-          default: 0
-        tags:
-          type: array
-          items:
-            type: string
-          default: []
-        text:
-          type:
-          - string
-          - 'null'
-          default: null
-        title:
-          type: string
-          default: ''
     Mapping:
       type: object
       properties:
@@ -1964,6 +1128,123 @@ components:
           - string
           - 'null'
           default: null
+    SizeByValue:
+      type: object
+      properties:
+        max:
+          type: number
+          format: double
+          default: 0.0
+        min:
+          type: number
+          format: double
+          default: 0.0
+    PromQLOperation:
+      type: object
+      properties:
+        id:
+          type: string
+          default: ''
+        params:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PromQLOperationParam'
+          default: null
+    HavingConditions:
+      type: object
+      properties:
+        operator:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - number
+          - 'null'
+          format: double
+    CustomFieldsOption:
+      type: object
+      properties:
+        label:
+          type: string
+          default: ''
+        selected:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        value:
+          type: string
+          default: ''
+    AxisArgValueWrapper:
+      oneOf:
+      - $ref: '#/components/schemas/AxisArgValue'
+      - type: string
+      - type: number
+        format: double
+    Variables:
+      type: object
+      properties:
+        list:
+          type: array
+          items:
+            $ref: '#/components/schemas/VariableList'
+          default: []
+        showDynamicFilters:
+          type:
+          - boolean
+          - 'null'
+          default: null
+    Tab:
+      type: object
+      required:
+      - tabId
+      - name
+      properties:
+        name:
+          type: string
+        panels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Panel'
+        tabId:
+          type: string
+    MapView:
+      type: object
+      properties:
+        lat:
+          type: number
+          format: double
+          default: 0.0
+        lng:
+          type: number
+          format: double
+          default: 0.0
+        zoom:
+          type: number
+          format: double
+          default: 0.0
+    AxisType:
+      type: string
+      enum:
+      - build
+      - raw
+      - custom
+    DrillDownVariables:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type:
+          - string
+          - 'null'
+          default: null
     Trellis:
       type: object
       properties:
@@ -1981,115 +1262,6 @@ components:
           type: integer
           format: int64
           default: 0
-    FilterCondition:
-      type: object
-      required:
-      - type
-      - values
-      - logicalOperator
-      - filterType
-      properties:
-        column:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/StreamFieldObj'
-        filterType:
-          type: string
-        logicalOperator:
-          type: string
-        operator:
-          type:
-          - string
-          - 'null'
-        type:
-          type: string
-        value:
-          type:
-          - string
-          - 'null'
-        values:
-          type: array
-          items:
-            type: string
-    Layout:
-      type: object
-      properties:
-        h:
-          type: integer
-          format: int64
-          default: 0
-        i:
-          type: integer
-          format: int64
-          default: 0
-        w:
-          type: integer
-          format: int64
-          default: 0
-        x:
-          type: integer
-          format: int64
-          default: 0
-        y:
-          type: integer
-          format: int64
-          default: 0
-    DrillDownData:
-      type: object
-      properties:
-        dashboard:
-          type:
-          - string
-          - 'null'
-          default: null
-        folder:
-          type:
-          - string
-          - 'null'
-          default: null
-        logsMode:
-          type:
-          - string
-          - 'null'
-          default: null
-        logsQuery:
-          type:
-          - string
-          - 'null'
-          default: null
-        passAllVariables:
-          type:
-          - boolean
-          - 'null'
-          default: null
-        tab:
-          type:
-          - string
-          - 'null'
-          default: null
-        url:
-          type:
-          - string
-          - 'null'
-          default: null
-        variables:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DrillDownVariables'
-          default: null
-    StreamFieldObj:
-      type: object
-      properties:
-        field:
-          type:
-          - string
-          - 'null'
-        streamAlias:
-          type:
-          - string
-          - 'null'
     VariableList:
       type: object
       properties:
@@ -2165,38 +1337,117 @@ components:
           - string
           - 'null'
           default: null
-    LabelPosition:
-      type: string
-      enum:
-      - top
-      - left
-      - right
-      - bottom
-      - inside
-      - insideLeft
-      - insideRight
-      - insideTop
-      - insideBottom
-      - insideTopLeft
-      - insideBottomLeft
-      - insideTopRight
-      - insideBottomRight
-      - outside
-    MapView:
+    Dashboard:
+      type: object
+      required:
+      - title
+      - description
+      properties:
+        created:
+          type: string
+          format: date-time
+          default: '1970-01-01T00:00:00Z'
+        dashboardId:
+          type: string
+          default: ''
+        defaultDatetimeDuration:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/DateTimeOptions'
+          default: null
+        description:
+          type: string
+          default: ''
+        owner:
+          type: string
+          default: ''
+        role:
+          type: string
+          default: ''
+        tabs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tab'
+          default: []
+        title:
+          type: string
+          default: ''
+        variables:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Variables'
+          default: null
+        version:
+          type: integer
+          format: int32
+          default: 0
+    AxisArg:
       type: object
       properties:
-        lat:
-          type: number
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisArgValueWrapper'
+    QueryConfig:
+      type: object
+      required:
+      - promql_legend
+      properties:
+        layer_type:
+          type:
+          - string
+          - 'null'
+        limit:
+          type:
+          - number
+          - 'null'
           format: double
-          default: 0.0
-        lng:
-          type: number
+        max:
+          type:
+          - number
+          - 'null'
           format: double
-          default: 0.0
-        zoom:
-          type: number
+        min:
+          type:
+          - number
+          - 'null'
           format: double
-          default: 0.0
+        promql_legend:
+          type: string
+        step_value:
+          type:
+          - string
+          - 'null'
+        time_shift:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/TimeShift'
+        weight_fixed:
+          type:
+          - number
+          - 'null'
+          format: double
+    GroupType:
+      type: object
+      required:
+      - filterType
+      - logicalOperator
+      - conditions
+      properties:
+        conditions:
+          type: array
+          items:
+            type: object
+        filterType:
+          type: string
+        logicalOperator:
+          type: string
     DateTimeOptions:
       type: object
       properties:
@@ -2220,22 +1471,240 @@ components:
         type:
           type: string
           default: ''
-    BackgroundValue:
+    PanelFields:
       type: object
       required:
-      - color
+      - stream
+      - stream_type
+      - x
+      - y
+      - filter
       properties:
-        color:
+        breakdown:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AxisItem'
+        filter:
+          $ref: '#/components/schemas/PanelFilter'
+        latitude:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        longitude:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        name:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        promql_labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/PromQLLabelFilter'
+        promql_operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/PromQLOperation'
+        source:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        stream:
           type: string
-    PromQLOperationParam:
-      oneOf:
-      - type: array
-        items:
+        stream_type:
+          $ref: '#/components/schemas/StreamType'
+        target:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        value:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        value_for_maps:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        weight:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisItem'
+        x:
+          type: array
+          items:
+            $ref: '#/components/schemas/AxisItem'
+        y:
+          type: array
+          items:
+            $ref: '#/components/schemas/AxisItem'
+        z:
+          type: array
+          items:
+            $ref: '#/components/schemas/AxisItem'
+    Panel:
+      type: object
+      required:
+      - id
+      - type
+      - title
+      - description
+      - config
+      - queries
+      properties:
+        config:
+          $ref: '#/components/schemas/PanelConfig'
+        customChartContent:
+          type:
+          - string
+          - 'null'
+        description:
           type: string
-      - type: string
-      - type: number
-        format: double
-      - type: boolean
+        htmlContent:
+          type:
+          - string
+          - 'null'
+        id:
+          type: string
+        layout:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Layout'
+        markdownContent:
+          type:
+          - string
+          - 'null'
+        queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Query'
+        queryType:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+    Join:
+      type: object
+      required:
+      - stream
+      - streamAlias
+      - joinType
+      - conditions
+      properties:
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/JoinCondition'
+        joinType:
+          type: string
+        stream:
+          type: string
+        streamAlias:
+          type: string
+    OverrideConfig:
+      type: object
+      properties:
+        config:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Config'
+          default: null
+        field:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Field'
+          default: null
+    JoinCondition:
+      type: object
+      required:
+      - leftField
+      - rightField
+      - operation
+      properties:
+        leftField:
+          $ref: '#/components/schemas/SelectedField'
+        operation:
+          type: string
+        rightField:
+          $ref: '#/components/schemas/SelectedField'
+    ListDashboardsResponseBodyItem:
+      type: object
+      description: An item in the list returned by the `ListDashboards` endpoint.
+      required:
+      - version
+      - hash
+      - folder_id
+      - folder_name
+      - dashboard_id
+      - title
+      - description
+      - role
+      - owner
+      - created
+      - updatedAt
+      properties:
+        created:
+          type: string
+          format: date-time
+        dashboard_id:
+          type: string
+        description:
+          type: string
+        folder_id:
+          type: string
+        folder_name:
+          type: string
+        hash:
+          type: string
+        owner:
+          type: string
+        role:
+          type: string
+        title:
+          type: string
+        updatedAt:
+          type: integer
+          format: int64
+        v1:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v2:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v3:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v4:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v5:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v6:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v7:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        v8:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Dashboard'
+        version:
+          type: integer
+          format: int32
     PanelConfig:
       type: object
       required:
@@ -2502,19 +1971,550 @@ components:
           - number
           - 'null'
           format: double
-    Variables:
+    AxisArgValue:
       type: object
       properties:
-        list:
+        field:
+          type:
+          - string
+          - 'null'
+        streamAlias:
+          type:
+          - string
+          - 'null'
+    TimedAnnotation:
+      type: object
+      properties:
+        annotation_id:
+          type:
+          - string
+          - 'null'
+          default: null
+        end_time:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          default: null
+        panels:
           type: array
           items:
-            $ref: '#/components/schemas/VariableList'
+            type: string
           default: []
-        showDynamicFilters:
+        start_time:
+          type: integer
+          format: int64
+          default: 0
+        tags:
+          type: array
+          items:
+            type: string
+          default: []
+        text:
+          type:
+          - string
+          - 'null'
+          default: null
+        title:
+          type: string
+          default: ''
+    BackgroundValue:
+      type: object
+      required:
+      - color
+      properties:
+        color:
+          type: string
+    MapSymbolStyle:
+      type: object
+      properties:
+        size:
+          type: string
+          default: ''
+        size_by_value:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/SizeByValue'
+          default: null
+        size_fixed:
+          type: number
+          format: double
+          default: 0.0
+    LineInterpolation:
+      type: string
+      enum:
+      - smooth
+      - linear
+      - step-start
+      - step-end
+      - step-middle
+    Layout:
+      type: object
+      properties:
+        h:
+          type: integer
+          format: int64
+          default: 0
+        i:
+          type: integer
+          format: int64
+          default: 0
+        w:
+          type: integer
+          format: int64
+          default: 0
+        x:
+          type: integer
+          format: int64
+          default: 0
+        y:
+          type: integer
+          format: int64
+          default: 0
+    ColorBySeries:
+      type: object
+      properties:
+        color:
+          type:
+          - string
+          - 'null'
+          default: null
+        type:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type:
+          - string
+          - 'null'
+          default: null
+    Filters:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          default: null
+        operator:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type: string
+          default: ''
+    MarkLine:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          default: null
+        type:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type:
+          - string
+          - 'null'
+          default: null
+    TimeShift:
+      type: object
+      properties:
+        offSet:
+          type:
+          - string
+          - 'null'
+          default: null
+    QueryData:
+      type: object
+      properties:
+        field:
+          type: string
+          default: ''
+        filter:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Filters'
+          default: null
+        max_record_size:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          default: null
+        stream:
+          type: string
+          default: ''
+        stream_type:
+          oneOf:
+          - $ref: '#/components/schemas/StreamType'
+          default: logs
+    Field:
+      type: object
+      properties:
+        matchBy:
+          type: string
+          default: ''
+        value:
+          type: string
+          default: ''
+    MapType:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          default: null
+    ColorCfg:
+      type: object
+      properties:
+        colorBySeries:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ColorBySeries'
+          default: null
+        fixedColor:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          default: null
+        mode:
+          type:
+          - string
+          - 'null'
+          default: null
+        seriesBy:
+          type:
+          - string
+          - 'null'
+          default: null
+    LegendWidth:
+      type: object
+      properties:
+        unit:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type:
+          - number
+          - 'null'
+          format: double
+          default: null
+    LabelPosition:
+      type: string
+      enum:
+      - top
+      - left
+      - right
+      - bottom
+      - inside
+      - insideLeft
+      - insideRight
+      - insideTop
+      - insideBottom
+      - insideTopLeft
+      - insideBottomLeft
+      - insideTopRight
+      - insideBottomRight
+      - outside
+    DrillDown:
+      type: object
+      properties:
+        data:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/DrillDownData'
+          default: null
+        findBy:
+          type:
+          - string
+          - 'null'
+          default: null
+        name:
+          type:
+          - string
+          - 'null'
+          default: null
+        targetBlank:
           type:
           - boolean
           - 'null'
           default: null
+        type:
+          type:
+          - string
+          - 'null'
+          default: null
+    PromQLOperationParam:
+      oneOf:
+      - type: array
+        items:
+          type: string
+      - type: string
+      - type: number
+        format: double
+      - type: boolean
+    PanelFilter:
+      oneOf:
+      - $ref: '#/components/schemas/FilterCondition'
+      - $ref: '#/components/schemas/GroupType'
+    StreamType:
+      type: string
+      enum:
+      - logs
+      - metrics
+      - traces
+      - service_graph
+      - enrichment_tables
+      - file_list
+      - metadata
+      - index
+    DrillDownData:
+      type: object
+      properties:
+        dashboard:
+          type:
+          - string
+          - 'null'
+          default: null
+        folder:
+          type:
+          - string
+          - 'null'
+          default: null
+        logsMode:
+          type:
+          - string
+          - 'null'
+          default: null
+        logsQuery:
+          type:
+          - string
+          - 'null'
+          default: null
+        passAllVariables:
+          type:
+          - boolean
+          - 'null'
+          default: null
+        tab:
+          type:
+          - string
+          - 'null'
+          default: null
+        url:
+          type:
+          - string
+          - 'null'
+          default: null
+        variables:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DrillDownVariables'
+          default: null
+    LegendHeight:
+      type: object
+      properties:
+        unit:
+          type:
+          - string
+          - 'null'
+          default: null
+        value:
+          type:
+          - number
+          - 'null'
+          format: double
+          default: null
+    Config:
+      oneOf:
+      - type: object
+        required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - unit
+          value: {}
+      - type: object
+        required:
+        - type
+        properties:
+          autoColor:
+            type: boolean
+          type:
+            type: string
+            enum:
+            - unique_value_color
+    Background:
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+        value:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/BackgroundValue'
+    LabelOption:
+      type: object
+      properties:
+        position:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/LabelPosition'
+          default: null
+        rotate:
+          type:
+          - number
+          - 'null'
+          format: double
+          default: null
+    StreamFieldObj:
+      type: object
+      properties:
+        field:
+          type:
+          - string
+          - 'null'
+        streamAlias:
+          type:
+          - string
+          - 'null'
+    AxisItem:
+      type: object
+      required:
+      - label
+      - alias
+      properties:
+        alias:
+          type: string
+        args:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AxisArg'
+        color:
+          type:
+          - string
+          - 'null'
+        column:
+          type:
+          - string
+          - 'null'
+        functionName:
+          type:
+          - string
+          - 'null'
+        havingConditions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/HavingConditions'
+        isDerived:
+          type:
+          - boolean
+          - 'null'
+        label:
+          type: string
+        rawQuery:
+          type:
+          - string
+          - 'null'
+        showFieldAsJson:
+          type:
+          - boolean
+          - 'null'
+        sortBy:
+          type:
+          - string
+          - 'null'
+        treatAsNonTimestamp:
+          type:
+          - boolean
+          - 'null'
+        type:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/AxisType'
+    FilterCondition:
+      type: object
+      required:
+      - type
+      - values
+      - logicalOperator
+      - filterType
+      properties:
+        column:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/StreamFieldObj'
+        filterType:
+          type: string
+        logicalOperator:
+          type: string
+        operator:
+          type:
+          - string
+          - 'null'
+        type:
+          type: string
+        value:
+          type:
+          - string
+          - 'null'
+        values:
+          type: array
+          items:
+            type: string
+    Query:
+      type: object
+      required:
+      - customQuery
+      - fields
+      - config
+      properties:
+        config:
+          $ref: '#/components/schemas/QueryConfig'
+        customQuery:
+          type: boolean
+        fields:
+          $ref: '#/components/schemas/PanelFields'
+        joins:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Join'
+        query:
+          type:
+          - string
+          - 'null'
+        vrlFunctionQuery:
+          type:
+          - string
+          - 'null'
   securitySchemes:
     Authorization:
       type: apiKey
