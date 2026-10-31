@@ -1,4 +1,4 @@
-# OpenObserve (openobserve)
+# OpenObserve
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,68 +66,180 @@
 
 OpenObserve is an open source petabyte-scale observability platform with unified logs, metrics, traces, and front-end telemetry in a single UI with SQL and PromQL querying. The HTTP API exposes ingestion, search, alerting, dashboards, pipelines, RUM, and administration endpoints.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/openobserve/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/openobserve/refs/heads/main/apis.yml)
+**Areas:** Observability · Logs · Metrics · Traces · RUM · Open Source
 
-## Scope
+## OpenObserve on APIs.io
 
-- **Type:** Index
-- **Position:** Consumer
-- **Access:** 3rd-Party
+Everything profiled for OpenObserve is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/openobserve/](https://apis.io/providers/openobserve/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (33)
 
-- Observability
-- Logs
-- Metrics
-- Traces
-- RUM
-- Open Source
+- [OpenObserve Actions API](https://apis.io/apis/openobserve/openobserve-actions-api/) — The Actions API from OpenObserve — 5 operation(s) for actions.
+- [OpenObserve Alerts API](https://apis.io/apis/openobserve/openobserve-alerts-api/) — Alerts retrieval & management operations
+- [OpenObserve Clusters API](https://apis.io/apis/openobserve/openobserve-clusters-api/) — Super cluster operations
+- [OpenObserve Dashboards API](https://apis.io/apis/openobserve/openobserve-dashboards-api/) — Dashboard operations
+- [OpenObserve Folders API](https://apis.io/apis/openobserve/openobserve-folders-api/) — The Folders API from OpenObserve — 6 operation(s) for folders.
+- [OpenObserve Functions API](https://apis.io/apis/openobserve/openobserve-functions-api/) — Functions retrieval & management operations
+- [OpenObserve Groups API](https://apis.io/apis/openobserve/openobserve-groups-api/) — The Groups API from OpenObserve — 2 operation(s) for groups.
+- [OpenObserve Incidents API](https://apis.io/apis/openobserve/openobserve-incidents-api/) — Alert incident correlation & management operations
+- [OpenObserve Key API](https://apis.io/apis/openobserve/openobserve-key-api/) — The Key API from OpenObserve — 2 operation(s) for key.
+- [OpenObserve Keys API](https://apis.io/apis/openobserve/openobserve-keys-api/) — The Keys API from OpenObserve — 1 operation(s) for keys.
+- [OpenObserve KV API](https://apis.io/apis/openobserve/openobserve-kv-api/) — Key Value retrieval & management operations
+- [OpenObserve Logs API](https://apis.io/apis/openobserve/openobserve-logs-api/) — Logs data ingestion operations
+- [OpenObserve MCP API](https://apis.io/apis/openobserve/openobserve-mcp-api/) — The MCP API from OpenObserve — 2 operation(s) for mcp.
+- [OpenObserve Meta API](https://apis.io/apis/openobserve/openobserve-meta-api/) — Meta details about the OpenObserve state itself. e.g. healthz
+- [OpenObserve Metrics API](https://apis.io/apis/openobserve/openobserve-metrics-api/) — Metrics data ingestion operations
+- [OpenObserve Organizations API](https://apis.io/apis/openobserve/openobserve-organizations-api/) — Organizations retrieval & management operations
+- [OpenObserve Patterns API](https://apis.io/apis/openobserve/openobserve-patterns-api/) — Log pattern extraction operations (enterprise)
+- [OpenObserve Pipelines API](https://apis.io/apis/openobserve/openobserve-pipelines-api/) — The Pipelines API from OpenObserve — 10 operation(s) for pipelines.
+- [OpenObserve Report API](https://apis.io/apis/openobserve/openobserve-report-api/) — The Report API from OpenObserve — 1 operation(s) for report.
+- [OpenObserve Reports API](https://apis.io/apis/openobserve/openobserve-reports-api/) — The Reports API from OpenObserve — 9 operation(s) for reports.
+- [OpenObserve Roles API](https://apis.io/apis/openobserve/openobserve-roles-api/) — The Roles API from OpenObserve — 4 operation(s) for roles.
+- [OpenObserve Rum API](https://apis.io/apis/openobserve/openobserve-rum-api/) — The Rum API from OpenObserve — 3 operation(s) for rum.
+- [OpenObserve Saved Views API](https://apis.io/apis/openobserve/openobserve-saved-views-api/) — Collection of saved search views for easy retrieval
+- [OpenObserve Search API](https://apis.io/apis/openobserve/openobserve-search-api/) — Search/Query operations
+- [OpenObserve Search Jobs API](https://apis.io/apis/openobserve/openobserve-search-jobs-api/) — The Search Jobs API from OpenObserve — 5 operation(s) for search jobs.
+- [OpenObserve Service Streams API](https://apis.io/apis/openobserve/openobserve-service-streams-api/) — Multi-signal correlation across logs, traces, and metrics (enterprise)
+- [OpenObserve Short Url API](https://apis.io/apis/openobserve/openobserve-short-url-api/) — Short Url Service
+- [OpenObserve Streams API](https://apis.io/apis/openobserve/openobserve-streams-api/) — Stream retrieval & management operations
+- [OpenObserve Templates API](https://apis.io/apis/openobserve/openobserve-templates-api/) — The Templates API from OpenObserve — 3 operation(s) for templates.
+- [OpenObserve Traces API](https://apis.io/apis/openobserve/openobserve-traces-api/) — Traces data ingestion operations
+- [OpenObserve Users API](https://apis.io/apis/openobserve/openobserve-users-api/) — Users retrieval & management operations
+- [OpenObserve Rate Limit API](https://apis.io/apis/openobserve/openobserve-rate-limit-api/) — Ratelimit operations
+- [OpenObserve Service Accounts API](https://apis.io/apis/openobserve/openobserve-service-accounts-api/) — The Service Accounts API from OpenObserve — 2 operation(s) for service accounts.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-03-25
-- **Modified:** 2026-05-19
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### MCP servers (1)
 
-### OpenObserve
+Model Context Protocol servers that expose the API to agents.
 
-OpenObserve HTTP API for ingesting logs, metrics, and traces; running SQL and PromQL search; managing alerts, dashboards, folders, pipelines, reports, RUM, saved views, service streams, and short URLs; and administering organizations, users, roles, groups, service accounts, rate limits, and meta resources.
+- [openobserve](https://apis.io/servers/openobserve/openobserve/)
 
-- **Human URL:** [https://openobserve.ai](https://openobserve.ai)
-- **Base URL:** `https://api.openobserve.ai`
+#### Agentic access (1)
 
-#### Tags
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- Observability
-- Logs
-- Metrics
-- Traces
-- RUM
-- Search
-- Alerts
-- Dashboards
-- Pipelines
+- [Openobserve Agentic Access](https://apis.io/agentic-access/openobserve/openobserve-agentic-access/)
 
-#### Properties
+#### Collections (34)
 
-- [Documentation](https://openobserve.ai/docs/)
-- [OpenAPI](https://raw.githubusercontent.com/api-evangelist/openobserve/refs/heads/main/openapi/openobserve-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Swagger U I](https://api.openobserve.ai/swagger/)
-- [GitHub Repository](https://github.com/openobserve/openobserve)
-- [Postman Collection](collections/openobserve.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/openobserve.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Postman and Open Collection request collections.
 
-## Common Properties
+- [openobserve](https://apis.io/collections/openobserve/open-openobserve/)
+- [openobserve Actions API](https://apis.io/collections/openobserve/open-openobserve-actions-api/)
+- [openobserve Actions Alerts API](https://apis.io/collections/openobserve/open-openobserve-alerts-api/)
+- [openobserve Actions Clusters API](https://apis.io/collections/openobserve/open-openobserve-clusters-api/)
+- [openobserve Actions Dashboards API](https://apis.io/collections/openobserve/open-openobserve-dashboards-api/)
+- [openobserve Actions Folders API](https://apis.io/collections/openobserve/open-openobserve-folders-api/)
+- [openobserve Actions Functions API](https://apis.io/collections/openobserve/open-openobserve-functions-api/)
+- [openobserve Actions Groups API](https://apis.io/collections/openobserve/open-openobserve-groups-api/)
+- [openobserve Actions Incidents API](https://apis.io/collections/openobserve/open-openobserve-incidents-api/)
+- [openobserve Actions Key API](https://apis.io/collections/openobserve/open-openobserve-key-api/)
+- [openobserve Actions Keys API](https://apis.io/collections/openobserve/open-openobserve-keys-api/)
+- [openobserve Actions KV API](https://apis.io/collections/openobserve/open-openobserve-kv-api/)
+- [openobserve Actions Logs API](https://apis.io/collections/openobserve/open-openobserve-logs-api/)
+- [openobserve Actions MCP API](https://apis.io/collections/openobserve/open-openobserve-mcp-api/)
+- [openobserve Actions Meta API](https://apis.io/collections/openobserve/open-openobserve-meta-api/)
+- [openobserve Actions Metrics API](https://apis.io/collections/openobserve/open-openobserve-metrics-api/)
+- [openobserve Actions Organizations API](https://apis.io/collections/openobserve/open-openobserve-organizations-api/)
+- [openobserve Actions Patterns API](https://apis.io/collections/openobserve/open-openobserve-patterns-api/)
+- [openobserve Actions Pipelines API](https://apis.io/collections/openobserve/open-openobserve-pipelines-api/)
+- [openobserve Actions Ratelimit API](https://apis.io/collections/openobserve/open-openobserve-ratelimit-api/)
+- [openobserve Actions Report API](https://apis.io/collections/openobserve/open-openobserve-report-api/)
+- [openobserve Actions Reports API](https://apis.io/collections/openobserve/open-openobserve-reports-api/)
+- [openobserve Actions Roles API](https://apis.io/collections/openobserve/open-openobserve-roles-api/)
+- [openobserve Actions Rum API](https://apis.io/collections/openobserve/open-openobserve-rum-api/)
+- [openobserve Actions Saved Views API](https://apis.io/collections/openobserve/open-openobserve-saved-views-api/)
+- …and 9 more published on APIs.io
 
-- [LinkedIn](https://www.linkedin.com/company/openobserve)
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Openobserve Authentication](https://apis.io/security/openobserve/openobserve-authentication/)
+- [Openobserve Domain Security](https://apis.io/security/openobserve/openobserve-domain-security/)
+- [Openobserve Trust Center](https://apis.io/security/openobserve/openobserve-trust-center/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Openobserve Plans Pricing](https://apis.io/plans/openobserve/openobserve-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Openobserve Rate Limits](https://apis.io/rate-limits/openobserve/openobserve-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Openobserve Finops](https://apis.io/finops/openobserve/openobserve-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
 - [Website](https://openobserve.ai)
 - [Documentation](https://openobserve.ai/docs/)
-- [Git Hub Org](https://github.com/openobserve)
-- [Integrations](https://openobserve.ai/partners/)
-- [L L Ms Txt](https://openobserve.ai/llms.txt)
+- [Blog](https://openobserve.ai/blog/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 40.3** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 46.6 |
+| Contract governance | 0.0 |
+| Operational transparency | 39.5 |
+| Developer ergonomics | 23.8 |
+| Access clarity | 15.8 |
+
+**Agent readiness 46.4** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 16.7** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/openobserve/](https://apis.io/providers/openobserve/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for OpenObserve: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/openobserve/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
